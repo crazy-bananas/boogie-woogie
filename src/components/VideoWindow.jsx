@@ -3,7 +3,7 @@ import * as posenet from "@tensorflow-models/posenet";
 
 export class VideoWindow extends Component {
   render() {
-    const imageScaleFactor = 0.2;
+    const imageScaleFactor = 0.7;
     const outputStride = 16;
     let savePose = false;
     const recordedPoses = [];
@@ -97,11 +97,27 @@ export class VideoWindow extends Component {
           savePose = false;
         }
 
-        for (const pose of recordedPoses) {
-          for (const part in pose) {
-            drawPoint(pose[part], ctx);
-          }
+        // for (const pose of recordedPoses) {
+        //   for (const part in pose) {
+        //     drawPoint(pose[part], ctx);
+        //   }
+        // }
+
+        const latestCatch = {};
+        for (let index = 0; index < pose.keypoints.length; index++) {
+          const part = pose.keypoints[index].part;
+          latestCatch[part] = {};
+          latestCatch[part].x = pose.keypoints[index].position.x;
+          latestCatch[part].y = pose.keypoints[index].position.y;
+          latestCatch[part].score = pose.keypoints[index].score;
         }
+
+        for (const part in latestCatch) {
+          //console.log(pose)
+          drawPoint(latestCatch[part], ctx);
+        }
+        
+
 
         requestAnimationFrame(poseDetectionFrame);
       }
