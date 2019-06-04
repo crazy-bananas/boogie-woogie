@@ -5,6 +5,11 @@ export class VideoWindow extends Component{
   render(){
     const imageScaleFactor = 0.2;
     const outputStride = 16;
+    let savePose = false;
+    const recordedPoses = [];
+    setInterval(() => {
+      savePose = true;
+    }, 3000)
 
     async function bindPage() {
       const net = await posenet.load();
@@ -54,26 +59,31 @@ export class VideoWindow extends Component{
     function detectPoseInRealTime(video, net) {
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
-      const flipHorizontal = true; // TODO: Check if to remove const to use variable on row 6. Flips the bot
+      const flipHorizontal = true;
 
       const contentWidth = 800;
       const contentHeight = 600;
 
 
       async function poseDetectionFrame() {
-        let poses = [];
-        const pose = await net.estimateSinglePose(video, imageScaleFactor, flipHorizontal, outputStride);
-        poses.push(pose);
+        const pose = await net.estimateSinglePose(video, imageScaleFactor, flipHorizontal, outputStride);;
 
         ctx.clearRect(0, 0, contentWidth, contentHeight);
         ctx.save();
-        //ctx.scale(1, 1);
+        ctx.scale(-1, 1);
         ctx.translate(-contentWidth, 0);
         ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
         ctx.restore();
 
-        poses.forEach(({score, keypoints}) => {
-          drawWristPoint(keypoints[0], ctx)
+        if(savePose) {
+          recordedPoses.push(pose);
+          console.log(recordedPoses)
+          savePose = false;
+        }
+
+
+        recordedPoses.forEach(pose => {
+          drawWristPoint(pose.keypoints[0], ctx)
         })
 
         requestAnimationFrame(poseDetectionFrame);
