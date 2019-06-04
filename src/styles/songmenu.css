@@ -1,0 +1,10 @@
+#songIcon {
+  background-color: pink !important;
+  align-items: center !important;
+  justify-content: center;
+}
+
+.sidebar {
+  display: flex;
+  height: 100% !important;
+}

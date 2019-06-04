@@ -6,9 +6,22 @@ import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 
-const initialState = {};
-const appReducer = (state = initialState, action) => {};
+const initialState = {
+  songSelected: false
+};
+const appReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "PLAY_SONG": {
+      const newState = { ...state };
+      newState.songSelected = true;
+      return newState;
+    }
+    default:
+      return state;
+  }
+};
 const store = createStore(appReducer);
+
 ReactDOM.render(
   <Provider store={store}>
     <App />
