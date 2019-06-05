@@ -9,7 +9,7 @@ class DanceWindow extends Component {
   render() {
     return (
       <div>
-        <VideoWindow />
+        {/* <VideoWindow /> */}
         <Counter style={{ position: "absolute" }} />
         {this.props.isCountdownFinished && <AudioPlayer />}
       </div>
