@@ -32,11 +32,11 @@ const MyPaper = styled(Paper)({
 export class SongMenu extends Component {
   constructor(props) {
     super(props);
-    this.myRef = React.createRef();
+    this.songRef = React.createRef();
   }
 
   playSong = () => {
-    this.myRef.current.play();
+    this.songRef.current.play();
     // this.props.playSong();
   };
   render() {
@@ -91,18 +91,18 @@ export class SongMenu extends Component {
               </ListItem>
             </List>
           </div>
-          <Audio ref={this.myRef} />
+          <Audio ref={this.songRef} />
         </Grid>
         <div />
       </Grid>
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     playSong: () => {
       dispatch({
