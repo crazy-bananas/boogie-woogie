@@ -3,7 +3,7 @@ import "./App.css";
 import { Navbar } from "./components/Navbar";
 import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
-import { DanceWindow } from "./components/DanceWindow";
+import DanceWindow from "./components/DanceWindow";
 
 class App extends Component {
   render() {

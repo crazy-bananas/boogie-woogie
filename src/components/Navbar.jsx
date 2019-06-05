@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import navbar from "../styles/navbar.css";
 
 import { styled } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";

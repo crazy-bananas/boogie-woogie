@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 const Audio = function() {
   class AudioPlayer extends React.Component {
@@ -9,6 +9,7 @@ const Audio = function() {
           ref={forwardedRef}
           src="https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio_taiso.mp3"
           controls
+          autoPlay
         />
       );
     }

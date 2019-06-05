@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Paper from "@material-ui/core/Paper";
-import Zoom from "@material-ui/core/Zoom";
 import { ReactComponent as One } from "../images/1.svg";
 import { ReactComponent as Two } from "../images/2.svg";
 import { ReactComponent as Three } from "../images/3.svg";
@@ -19,8 +17,8 @@ class Counter extends Component {
   startCountdown = () => {
     let endTimeout = setInterval(() => {
       this.decrementCountdown();
-      console.log(this.state.countdown);
       if (this.state.countdown === 0) {
+        this.props.countdownFinished();
         clearInterval(endTimeout);
       }
     }, 2000);
@@ -46,4 +44,17 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(Counter);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    countdownFinished: () => {
+      dispatch({
+        type: "COUNTDOWN_FINISHED"
+      });
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Counter);

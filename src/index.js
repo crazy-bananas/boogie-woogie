@@ -22,7 +22,8 @@ const initialState = {
       url:
         "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio_taiso.mp3"
     }
-  ]
+  ],
+  isCountdownFinished: false
 };
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -30,6 +31,12 @@ const appReducer = (state = initialState, action) => {
       const newState = { ...state };
       newState.isSongSelected = true;
       newState.songSelected = action.payload;
+      return newState;
+    }
+    case "COUNTDOWN_FINISHED": {
+      const newState = { ...state };
+      newState.isCountdownFinished = true;
+
       return newState;
     }
     default:
