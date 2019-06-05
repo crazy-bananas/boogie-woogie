@@ -7,14 +7,21 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 
 const initialState = {
-  songSelected: false
+  songSelected: false,
+  userReady: false
 };
+
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case "PLAY_SONG": {
       const newState = { ...state };
       newState.songSelected = true;
       return newState;
+    }
+    case "USER_READY": {
+      const newStateUserReady = { ...state };
+      newStateUserReady.userReady = true;
+      return newStateUserReady;
     }
     default:
       return state;

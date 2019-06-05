@@ -3,12 +3,14 @@ import "./App.css";
 import { Navbar } from "./components/Navbar";
 import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
+import { VideoWindow } from "./components/VideoWindow";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <Navbar />
+        <VideoWindow />
         {!this.props.songSelected && <SongMenu />}
       </div>
     );
