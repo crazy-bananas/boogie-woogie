@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import * as posenet from "@tensorflow-models/posenet";
+import "../styles/videowindow.css";
 
 export class VideoWindow extends Component {
   render() {
@@ -132,19 +133,8 @@ export class VideoWindow extends Component {
 
     return (
       <div>
-        <video
-          id="video"
-          width="800px"
-          height="600px"
-          autoPlay="1"
-          style={{ position: "absolute" }}
-        />
-        <canvas
-          id="canvas"
-          width="800px"
-          height="600px"
-          style={{ position: "absolute" }}
-        />
+        <video id="video" width="800px" height="600px" autoPlay="1" />
+        <canvas id="canvas" width="800px" height="600px" />
       </div>
     );
   }
