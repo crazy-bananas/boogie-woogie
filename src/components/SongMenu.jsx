@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Audio } from "./Audio";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import songmenu from "../styles/songmenu.css";
@@ -35,9 +34,8 @@ export class SongMenu extends Component {
     this.songRef = React.createRef();
   }
 
-  playSong = () => {
-    this.songRef.current.play();
-    // this.props.playSong();
+  playSong = (event) => {
+    this.props.playSong(event);
   };
   render() {
     return (
@@ -55,43 +53,30 @@ export class SongMenu extends Component {
           className="sideBar"
         >
           <div>
-            <Avatar id="songIcon">
-              <MusicVideo />
-            </Avatar>
             <Typography component="h1" variant="h5">
               Select your song
             </Typography>
 
             <List>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar id="songIcon">
-                    <MusicNote />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Radio Taiso" onClick={this.playSong} />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar id="songIcon">
-                    <MusicNote />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Work" />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar id="songIcon">
-                    <MusicNote />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Vacation" />
-              </ListItem>
+              {this.props.songList.map((song, index) => {
+                return (
+                  <ListItem key={index}>
+                    <ListItemAvatar>
+                      <Avatar id="songIcon">
+                        <MusicNote />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      key={index}
+                      primary={song.title}
+                      secondary={song.artist}
+                      onClick={() => this.playSong({ songIndex: index })}
+                    />
+                  </ListItem>
+                );
+              })}
             </List>
           </div>
-          <Audio ref={this.songRef} />
         </Grid>
         <div />
       </Grid>
@@ -99,14 +84,18 @@ export class SongMenu extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  return {};
+  return {
+    songList: state.songList,
+    indexOfSelectedSong: state.songSelected
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    playSong: () => {
+    playSong: (song) => {
       dispatch({
-        type: "PLAY_SONG"
+        type: "SELECT_SONG",
+        payload: song.songIndex
       });
     }
   };

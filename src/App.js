@@ -3,13 +3,15 @@ import "./App.css";
 import { Navbar } from "./components/Navbar";
 import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
+import { VideoWindow } from "./components/VideoWindow";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <Navbar />
-        {!this.props.songSelected && <SongMenu />}
+        {!this.props.isSongSelected && <SongMenu />}
+        {this.props.isSongSelected && <VideoWindow />}
       </div>
     );
   }
@@ -17,7 +19,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    songSelected: state.songSelected
+    isSongSelected: state.isSongSelected
   };
 };
 

@@ -49,7 +49,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = stream;
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -116,8 +116,6 @@ export class VideoWindow extends Component {
           //console.log(pose)
           drawPoint(latestCatch[part], ctx);
         }
-        
-
 
         requestAnimationFrame(poseDetectionFrame);
       }

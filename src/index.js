@@ -7,13 +7,29 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 
 const initialState = {
-  songSelected: false
+  isSongSelected: false,
+  songSelected: -1,
+  songList: [
+    {
+      artist: "NHK",
+      title: "Radio Taiso",
+      url:
+        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio_taiso.mp3"
+    },
+    {
+      artist: "CC",
+      title: "EIGHT",
+      url:
+        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio_taiso.mp3"
+    }
+  ]
 };
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "PLAY_SONG": {
+    case "SELECT_SONG": {
       const newState = { ...state };
-      newState.songSelected = true;
+      newState.isSongSelected = true;
+      newState.songSelected = action.payload;
       return newState;
     }
     default:
