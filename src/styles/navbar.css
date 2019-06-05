@@ -1,7 +1,7 @@
-.navbar {
-  background-color: cyan;
-}
-
 .songIcon {
   background-color: cyan !important;
+}
+
+.heading {
+  text-shadow: 2px 2px #d3d3d3;
 }

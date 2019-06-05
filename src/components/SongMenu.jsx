@@ -18,39 +18,16 @@ import List from "@material-ui/core/List";
 import { makeStyles } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
 import { connect } from "react-redux";
+import { styled } from "@material-ui/styles";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100vh"
-  },
-  image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "center"
-  },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
-}));
-
-function FriendStatus(props) {
-  const classes = useStyles();
-}
+const MyPaper = styled(Paper)({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  height: "100vh",
+  justifyContent: "center",
+  alignContent: "center"
+});
 
 export class SongMenu extends Component {
   constructor(props) {
@@ -60,7 +37,7 @@ export class SongMenu extends Component {
 
   playSong = () => {
     this.myRef.current.play();
-    this.props.playSong();
+    // this.props.playSong();
   };
   render() {
     return (
@@ -72,7 +49,7 @@ export class SongMenu extends Component {
           xs={12}
           sm={8}
           md={4}
-          component={Paper}
+          component={MyPaper}
           elevation={6}
           square
           className="sideBar"
@@ -88,7 +65,7 @@ export class SongMenu extends Component {
             <List>
               <ListItem>
                 <ListItemAvatar>
-                  <Avatar>
+                  <Avatar id="songIcon">
                     <MusicNote />
                   </Avatar>
                 </ListItemAvatar>
@@ -97,7 +74,7 @@ export class SongMenu extends Component {
               <Divider variant="inset" component="li" />
               <ListItem>
                 <ListItemAvatar>
-                  <Avatar>
+                  <Avatar id="songIcon">
                     <MusicNote />
                   </Avatar>
                 </ListItemAvatar>
@@ -106,7 +83,7 @@ export class SongMenu extends Component {
               <Divider variant="inset" component="li" />
               <ListItem>
                 <ListItemAvatar>
-                  <Avatar>
+                  <Avatar id="songIcon">
                     <MusicNote />
                   </Avatar>
                 </ListItemAvatar>
@@ -114,18 +91,18 @@ export class SongMenu extends Component {
               </ListItem>
             </List>
           </div>
+          <Audio ref={this.myRef} />
         </Grid>
         <div />
-        <Audio ref={this.myRef} />
       </Grid>
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     playSong: () => {
       dispatch({
