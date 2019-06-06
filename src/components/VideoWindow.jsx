@@ -12,7 +12,7 @@ export class VideoWindow extends Component {
     this.a = 0;
     this.indexCorrectP = 0;
     this.savePose = false;
-    this.userReady = false;
+    //   this.userReady = false;
     this.danceFinished = false;
     this.score = 0;
     this.recordedPoses = [];
@@ -70,7 +70,7 @@ export class VideoWindow extends Component {
       this.savePose = true;
       this.increment();
       if (this.indexCorrectP >= correctPoses.length - 1) {
-        this.danceFinished = true;
+        this.props.danceIsFinished();
         this.calculateScore();
         console.log("total score", this.score);
         clearInterval(this.a);
@@ -190,7 +190,7 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
-        if (!this.props.userReady) {
+        if (!this.props.isUserReady) {
           this.drawPoint(this.matchingPosition[0].nose, this.ctx);
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
@@ -233,8 +233,8 @@ export class VideoWindow extends Component {
 
     return (
       <div>
-        {this.props.userReady && <div>Dance Starting</div>}
-        {!this.props.userReady && (
+        {this.props.isUserReady && <div>Dance Starting</div>}
+        {!this.props.isUserReady && (
           <div>Match your position to indicated position</div>
         )}
         <video
@@ -256,7 +256,8 @@ export class VideoWindow extends Component {
 }
 const mapStateToProps = state => {
   return {
-    userReady: state.userReady
+    isUserReady: state.isUserReady,
+    isDanceFinished: state.isDanceFinished
   };
 };
 
@@ -265,6 +266,11 @@ const mapDispatchToProps = dispatch => {
     userIsReady: () => {
       dispatch({
         type: "USER_READY"
+      });
+    },
+    danceIsFinished: () => {
+      dispatch({
+        type: "DANCE_FINISHED"
       });
     }
   };
