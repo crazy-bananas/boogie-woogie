@@ -72,18 +72,14 @@ export class VideoWindow extends Component {
       if (this.indexCorrectP >= correctPoses.length - 1) {
         this.props.danceIsFinished();
         this.calculateScore();
-        console.log("total score", this.score);
         clearInterval(this.a);
       }
     }, 500);
   };
 
   calculateScore = () => {
-    console.log(correctPoses);
-    console.log(this.recordedPoses);
     for (let i = 0; i < 10; i++) {
       for (let body of this.bodyParts) {
-        console.log(correctPoses[i][body], this.recordedPoses[i][body]);
         if (
           correctPoses[i][body].x <=
             Math.round(this.recordedPoses[i][body].x) + 30 &&
@@ -95,7 +91,6 @@ export class VideoWindow extends Component {
             Math.round(this.recordedPoses[i][body].y) - 30
         ) {
           this.score++;
-          console.log("Scored!!!", body);
         }
       }
     }
@@ -225,7 +220,6 @@ export class VideoWindow extends Component {
         this.matchingPosition[0].nose.y >=
           Math.round(currentPosition.nose.y) - 30
       ) {
-        console.log("Matched!!");
         this.a = this.displayCorrectPoses();
         this.props.userIsReady();
       }
