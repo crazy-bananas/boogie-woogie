@@ -72,6 +72,7 @@ export class VideoWindow extends Component {
       if (this.indexCorrectP >= correctPoses.length - 1) {
         this.props.danceIsFinished();
         this.calculateScore();
+        this.props.updateTotalScore(this.score);
         clearInterval(this.a);
       }
     }, 500);
@@ -96,21 +97,36 @@ export class VideoWindow extends Component {
     }
   };
 
+  recordPose = (pose) => {
+    const correctPose = {};
+    for (let index = 0; index < pose.keypoints.length; index++) {
+      const part = pose.keypoints[index].part;
+      correctPose[part] = {};
+      correctPose[part].x = pose.keypoints[index].position.x;
+      correctPose[part].y = pose.keypoints[index].position.y;
+      correctPose[part].score = pose.keypoints[index].score;
+    }
+    this.recordedPoses.push(correctPose);
+  };
+
+  isMatched = (currentPosition) => {
+    if (
+      this.matchingPosition[0].nose.x <=
+        Math.round(currentPosition.nose.x) + 30 &&
+      this.matchingPosition[0].nose.x >=
+        Math.round(currentPosition.nose.x) - 30 &&
+      this.matchingPosition[0].nose.y <=
+        Math.round(currentPosition.nose.y) + 30 &&
+      this.matchingPosition[0].nose.y >= Math.round(currentPosition.nose.y) - 30
+    ) {
+      this.a = this.displayCorrectPoses();
+      this.props.userIsReady();
+    }
+  };
+
   render() {
     const imageScaleFactor = 0.7;
     const outputStride = 16;
-
-    const recordPose = pose => {
-      const correctPose = {};
-      for (let index = 0; index < pose.keypoints.length; index++) {
-        const part = pose.keypoints[index].part;
-        correctPose[part] = {};
-        correctPose[part].x = pose.keypoints[index].position.x;
-        correctPose[part].y = pose.keypoints[index].position.y;
-        correctPose[part].score = pose.keypoints[index].score;
-      }
-      this.recordedPoses.push(correctPose);
-    };
 
     async function bindPage() {
       const net = await posenet.load();
@@ -138,7 +154,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = stream;
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -158,10 +174,7 @@ export class VideoWindow extends Component {
     };
 
     const detectPoseInRealTime = (video, net) => {
-      // const canvas = document.getElementById("canvas");
-      // const ctx = canvas.getContext("2d");
       const flipHorizontal = true;
-
       const contentWidth = 800;
       const contentHeight = 600;
 
@@ -181,7 +194,7 @@ export class VideoWindow extends Component {
         this.ctx.restore();
 
         if (this.savePose) {
-          recordPose(pose);
+          this.recordPose(pose);
           this.savePose = false;
         }
 
@@ -196,33 +209,13 @@ export class VideoWindow extends Component {
             latestCatch[part].score = pose.keypoints[index].score;
           }
 
-          isMatched(latestCatch);
-
-          for (const part in latestCatch) {
-            // this.drawPoint(latestCatch[part], this.ctx);
-          }
+          this.isMatched(latestCatch);
         }
 
         requestAnimationFrame(poseDetectionFrame);
       };
 
       poseDetectionFrame();
-    };
-
-    const isMatched = currentPosition => {
-      if (
-        this.matchingPosition[0].nose.x <=
-          Math.round(currentPosition.nose.x) + 30 &&
-        this.matchingPosition[0].nose.x >=
-          Math.round(currentPosition.nose.x) - 30 &&
-        this.matchingPosition[0].nose.y <=
-          Math.round(currentPosition.nose.y) + 30 &&
-        this.matchingPosition[0].nose.y >=
-          Math.round(currentPosition.nose.y) - 30
-      ) {
-        this.a = this.displayCorrectPoses();
-        this.props.userIsReady();
-      }
     };
 
     return (
@@ -237,14 +230,15 @@ export class VideoWindow extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isUserReady: state.isUserReady,
-    isDanceFinished: state.isDanceFinished
+    isDanceFinished: state.isDanceFinished,
+    totalScore: state.totalScore
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     userIsReady: () => {
       dispatch({
@@ -254,6 +248,12 @@ const mapDispatchToProps = dispatch => {
     danceIsFinished: () => {
       dispatch({
         type: "DANCE_FINISHED"
+      });
+    },
+    updateTotalScore: (score) => {
+      dispatch({
+        type: "UPDATE_TOTALSCORE",
+        payload: score
       });
     }
   };

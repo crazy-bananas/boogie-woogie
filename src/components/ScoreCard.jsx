@@ -115,7 +115,7 @@ const mapStateToProps = (state) => {
   return {
     title: state.songList[state.songSelected].title,
     artist: state.songList[state.songSelected].artist,
-    score: state.currentScore
+    score: state.totalScore
   };
 };
 

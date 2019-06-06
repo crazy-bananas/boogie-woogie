@@ -7,9 +7,9 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 
 const initialState = {
-  currentScore: 0,
   isSongSelected: false,
-  songSelected: 0, //Change to -1
+  songSelected: -1,
+  totalScore: 0,
   songList: [
     {
       artist: "NHK",
@@ -52,6 +52,12 @@ const appReducer = (state = initialState, action) => {
     case "DANCE_FINISHED": {
       const newState = { ...state };
       newState.isDanceFinished = true;
+      return newState;
+    }
+
+    case "UPDATE_TOTALSCORE": {
+      const newState = { ...state };
+      newState.totalScore = action.payload;
       return newState;
     }
 
