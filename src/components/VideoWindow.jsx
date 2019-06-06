@@ -180,19 +180,8 @@ export class VideoWindow extends Component {
         {!this.props.userReady && (
           <div>Match your position to indicated position</div>
         )}
-        <video
-          id="video"
-          width="800px"
-          height="600px"
-          autoPlay="1"
-          style={{ position: "absolute" }}
-        />
-        <canvas
-          id="canvas"
-          width="800px"
-          height="600px"
-          style={{ position: "absolute" }}
-        />
+        <video id="video" width="800px" height="600px" autoPlay="1" />
+        <canvas id="canvas" width="800px" height="600px" />
       </div>
     );
   }
