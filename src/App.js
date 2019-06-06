@@ -11,7 +11,10 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar />
-        {!this.props.isSongSelected ? <SongMenu /> : <DanceWindow />}
+        {!this.props.isSongSelected && <SongMenu />}
+        {this.props.isSongSelected && !this.props.isDanceFinished && (
+          <DanceWindow />
+        )}
         {this.props.isDanceFinished && <Score />}
       </div>
     );
