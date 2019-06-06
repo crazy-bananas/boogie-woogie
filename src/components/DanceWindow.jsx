@@ -15,7 +15,6 @@ class DanceWindow extends Component {
         <VideoWindow />
         <Counter />
         <audio id="audio_player" src={this.props.songURL} controls />
-        <button onClick={this.startLevel} />
       </div>
     );
   }
