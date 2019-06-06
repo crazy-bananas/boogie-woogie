@@ -4,6 +4,7 @@ import { Navbar } from "./components/Navbar";
 import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
 import DanceWindow from "./components/DanceWindow";
+import Score from "./components/Score";
 
 class App extends Component {
   render() {
@@ -11,6 +12,7 @@ class App extends Component {
       <div className="App">
         <Navbar />
         {!this.props.isSongSelected ? <SongMenu /> : <DanceWindow />}
+        <Score />
       </div>
     );
   }
