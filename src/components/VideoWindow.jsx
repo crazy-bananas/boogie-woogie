@@ -13,6 +13,28 @@ export class VideoWindow extends Component {
     this.indexCorrectP = 0;
     this.savePose = false;
     this.userReady = false;
+    this.danceFinished = false;
+    this.score = 0;
+    this.recordedPoses = [];
+    this.bodyParts = [
+      "leftAnkle",
+      "leftEar",
+      "leftElbow",
+      "leftEye",
+      "leftHip",
+      "leftKnee",
+      "leftShoulder",
+      "leftWrist",
+      "nose",
+      "rightAnkle",
+      "rightEar",
+      "rightElbow",
+      "rightEye",
+      "rightHip",
+      "rightKnee",
+      "rightShoulder",
+      "rightWrist"
+    ];
     // to check user's standing at right position before dancing
     this.matchingPosition = [
       {
@@ -46,26 +68,44 @@ export class VideoWindow extends Component {
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
-      // this.setState({ savePose: true });
-      console.log("incrementing");
       this.increment();
       if (this.indexCorrectP >= correctPoses.length - 1) {
-        // console.log(this.state.indexCorrectP, correctPoses.length);
-        console.log("Dance Finished", this.a);
+        this.danceFinished = true;
+        this.calculateScore();
+        console.log("total score", this.score);
         clearInterval(this.a);
       }
-    }, 1000);
+    }, 500);
+  };
+
+  calculateScore = () => {
+    console.log(correctPoses);
+    console.log(this.recordedPoses);
+    for (let i = 0; i < 10; i++) {
+      for (let body of this.bodyParts) {
+        console.log(correctPoses[i][body], this.recordedPoses[i][body]);
+        if (
+          correctPoses[i][body].x <=
+            Math.round(this.recordedPoses[i][body].x) + 30 &&
+          correctPoses[i][body].x >=
+            Math.round(this.recordedPoses[i][body].x) - 30 &&
+          correctPoses[i][body].y <=
+            Math.round(this.recordedPoses[i][body].y) + 30 &&
+          correctPoses[i][body].y >=
+            Math.round(this.recordedPoses[i][body].y) - 30
+        ) {
+          this.score++;
+          console.log("Scored!!!", body);
+        }
+      }
+    }
   };
 
   render() {
     const imageScaleFactor = 0.7;
     const outputStride = 16;
-    const recordedPoses = [];
-    if (this.props.userReady) {
-      console.log("the user is ready ", this.a);
-    }
 
-    function recordPose(pose) {
+    const recordPose = pose => {
       const correctPose = {};
       for (let index = 0; index < pose.keypoints.length; index++) {
         const part = pose.keypoints[index].part;
@@ -74,9 +114,8 @@ export class VideoWindow extends Component {
         correctPose[part].y = pose.keypoints[index].position.y;
         correctPose[part].score = pose.keypoints[index].score;
       }
-      recordedPoses.push(correctPose);
-      console.log(recordedPoses);
-    }
+      this.recordedPoses.push(correctPose);
+    };
 
     async function bindPage() {
       const net = await posenet.load();
