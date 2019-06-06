@@ -64,7 +64,7 @@ function ScoreCard(props) {
           </IconButton>
         }
         title={props.title}
-        subheader={props.artist}
+        subheader={props.score}
       />
       <div id="trophy">
         <CardMedia
@@ -114,7 +114,8 @@ function ScoreCard(props) {
 const mapStateToProps = (state) => {
   return {
     title: state.songList[state.songSelected].title,
-    artist: state.songList[state.songSelected].artist
+    artist: state.songList[state.songSelected].artist,
+    score: state.currentScore
   };
 };
 
