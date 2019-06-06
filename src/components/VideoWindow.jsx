@@ -7,6 +7,11 @@ import correctPoses from "./correctPose";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
+    this.canvas = "";
+    this.ctx = "";
+    this.a = 0;
+    this.indexCorrectP = 0;
+    this.savePose = false;
     this.userReady = false;
     // to check user's standing at right position before dancing
     this.matchingPosition = [
@@ -19,17 +24,45 @@ export class VideoWindow extends Component {
     ];
   }
 
+  componentDidMount() {
+    this.canvas = document.getElementById("canvas");
+    this.ctx = this.canvas.getContext("2d");
+  }
+
+  drawPoint = (keypoint, ctx) => {
+    ctx.beginPath();
+    ctx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI);
+
+    ctx.fillStyle = "red"; // TODO not hardcode color
+    ctx.fill();
+  };
+
+  increment = () => {
+    this.indexCorrectP++;
+    this.drawPoint(correctPoses[this.indexCorrectP].rightWrist, this.ctx);
+    this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
+  };
+
+  displayCorrectPoses = () => {
+    return setInterval(() => {
+      this.savePose = true;
+      // this.setState({ savePose: true });
+      console.log("incrementing");
+      this.increment();
+      if (this.indexCorrectP >= correctPoses.length - 1) {
+        // console.log(this.state.indexCorrectP, correctPoses.length);
+        console.log("Dance Finished", this.a);
+        clearInterval(this.a);
+      }
+    }, 1000);
+  };
+
   render() {
     const imageScaleFactor = 0.7;
     const outputStride = 16;
-    let savePose = false;
     const recordedPoses = [];
-    let indexCorrectP = 0;
-    if (this.props.userIsReady) {
-      setInterval(() => {
-        savePose = true;
-        indexCorrectP++;
-      }, 500);
+    if (this.props.userReady) {
+      console.log("the user is ready ", this.a);
     }
 
     function recordPose(pose) {
@@ -42,6 +75,7 @@ export class VideoWindow extends Component {
         correctPose[part].score = pose.keypoints[index].score;
       }
       recordedPoses.push(correctPose);
+      console.log(recordedPoses);
     }
 
     async function bindPage() {
@@ -70,7 +104,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = stream;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -90,8 +124,8 @@ export class VideoWindow extends Component {
     };
 
     const detectPoseInRealTime = (video, net) => {
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
+      // const canvas = document.getElementById("canvas");
+      // const ctx = canvas.getContext("2d");
       const flipHorizontal = true;
 
       const contentWidth = 800;
@@ -105,22 +139,20 @@ export class VideoWindow extends Component {
           outputStride
         );
 
-        ctx.clearRect(0, 0, contentWidth, contentHeight);
-        ctx.save();
-        ctx.scale(-1, 1);
-        ctx.translate(-contentWidth, 0);
-        ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
-        ctx.restore();
+        this.ctx.clearRect(0, 0, contentWidth, contentHeight);
+        this.ctx.save();
+        this.ctx.scale(-1, 1);
+        this.ctx.translate(-contentWidth, 0);
+        this.ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
+        this.ctx.restore();
 
-        if (savePose) {
+        if (this.savePose) {
           recordPose(pose);
-          savePose = false;
+          this.savePose = false;
         }
 
-        drawPoint(correctPoses[indexCorrectP].rightWrist, ctx);
-        drawPoint(correctPoses[indexCorrectP].leftWrist, ctx);
-
         if (!this.props.userReady) {
+          this.drawPoint(this.matchingPosition[0].nose, this.ctx);
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
             const part = pose.keypoints[index].part;
@@ -133,7 +165,7 @@ export class VideoWindow extends Component {
           isMatched(latestCatch);
 
           for (const part in latestCatch) {
-            // drawPoint(latestCatch[part], ctx);
+            // this.drawPoint(latestCatch[part], this.ctx);
           }
         }
 
@@ -143,33 +175,19 @@ export class VideoWindow extends Component {
       poseDetectionFrame();
     };
 
-    const drawPoint = (keypoint, ctx) => {
-      ctx.beginPath();
-      ctx.arc(keypoint.x, keypoint.y, 20, 0, 2 * Math.PI);
-      ctx.arc(
-        this.matchingPosition[0].nose.x,
-        this.matchingPosition[0].nose.y,
-        20,
-        0,
-        2 * Math.PI
-      );
-
-      ctx.fillStyle = "red"; // TODO not hardcode color
-      ctx.fill();
-    };
-
-    const isMatched = (currentPosition) => {
+    const isMatched = currentPosition => {
       if (
-        correctPoses[indexCorrectP].rightWrist.x <=
-          Math.round(currentPosition.rightWrist.x) + 30 &&
-        correctPoses[indexCorrectP].rightWrist.x >=
-          Math.round(currentPosition.rightWrist.x) - 30 &&
-        correctPoses[indexCorrectP].rightWrist.y <=
-          Math.round(currentPosition.rightWrist.y) + 30 &&
-        correctPoses[indexCorrectP].rightWrist.y >=
-          Math.round(currentPosition.rightWrist.y) - 30
+        this.matchingPosition[0].nose.x <=
+          Math.round(currentPosition.nose.x) + 30 &&
+        this.matchingPosition[0].nose.x >=
+          Math.round(currentPosition.nose.x) - 30 &&
+        this.matchingPosition[0].nose.y <=
+          Math.round(currentPosition.nose.y) + 30 &&
+        this.matchingPosition[0].nose.y >=
+          Math.round(currentPosition.nose.y) - 30
       ) {
         console.log("Matched!!");
+        this.a = this.displayCorrectPoses();
         this.props.userIsReady();
       }
     };
@@ -186,13 +204,13 @@ export class VideoWindow extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     userReady: state.userReady
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     userIsReady: () => {
       dispatch({

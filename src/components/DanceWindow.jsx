@@ -1,4 +1,4 @@
-import { VideoWindow } from "./VideoWindow";
+import VideoWindow from "./VideoWindow";
 import React, { Component } from "react";
 import Counter from "./Counter";
 import "../styles/dancewindow.css";
@@ -20,7 +20,7 @@ class DanceWindow extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished,
     songURL: state.songList[state.songSelected].url
