@@ -12,7 +12,7 @@ class App extends Component {
       <div className="App">
         <Navbar />
         {!this.props.isSongSelected ? <SongMenu /> : <DanceWindow />}
-        <Score />
+        {this.props.isDanceFinished && <Score />}
       </div>
     );
   }
@@ -20,7 +20,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isSongSelected: state.isSongSelected
+    isSongSelected: state.isSongSelected,
+    isDanceFinished: state.isDanceFinished
   };
 };
 
