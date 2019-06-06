@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import ScoreCard from "./ScoreCard";
 
 class Score extends Component {
   render() {
     return (
       <div>
-        <h1>Your Score is: {this.props.currentScore} p</h1>
+        <ScoreCard />
       </div>
     );
   }
