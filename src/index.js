@@ -9,7 +9,7 @@ import { createStore } from "redux";
 const initialState = {
   currentScore: 0,
   isSongSelected: false,
-  songSelected: -1,
+  songSelected: 0, //Change to -1
   songList: [
     {
       artist: "NHK",
