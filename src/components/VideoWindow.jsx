@@ -35,6 +35,7 @@ export class VideoWindow extends Component {
       "rightShoulder",
       "rightWrist"
     ];
+    this.state = { danceStart: false };
     // to check user's standing at right position before dancing
     this.matchingPosition = [
       {
@@ -45,6 +46,30 @@ export class VideoWindow extends Component {
       }
     ];
   }
+
+  displayCorrectPoses = () => {
+    return setInterval(() => {
+      this.savePose = true;
+      this.increment();
+      if (this.indexCorrectP >= correctPoses.length - 1) {
+        this.props.danceIsFinished();
+        this.calculateScore();
+        this.props.updateTotalScore(this.score);
+        clearInterval(this.a);
+      }
+    }, 500);
+  };
+
+  componentDidUpdate = () => {
+    // this.setState({ danceStart: props.isCountdownFinished });
+    console.log("@state@");
+    if (this.props.isCountdownFinished) {
+      console.log("@The countdown finished@");
+      this.a = this.displayCorrectPoses();
+    }
+
+    return null;
+  };
 
   componentDidMount() {
     this.canvas = document.getElementById("canvas");
@@ -63,19 +88,6 @@ export class VideoWindow extends Component {
     this.indexCorrectP++;
     this.drawPoint(correctPoses[this.indexCorrectP].rightWrist, this.ctx);
     this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
-  };
-
-  displayCorrectPoses = () => {
-    return setInterval(() => {
-      this.savePose = true;
-      this.increment();
-      if (this.indexCorrectP >= correctPoses.length - 1) {
-        this.props.danceIsFinished();
-        this.calculateScore();
-        this.props.updateTotalScore(this.score);
-        clearInterval(this.a);
-      }
-    }, 500);
   };
 
   calculateScore = () => {
@@ -119,7 +131,6 @@ export class VideoWindow extends Component {
         Math.round(currentPosition.nose.y) + 30 &&
       this.matchingPosition[0].nose.y >= Math.round(currentPosition.nose.y) - 30
     ) {
-      this.a = this.displayCorrectPoses();
       this.props.userIsReady();
     }
   };
@@ -234,7 +245,8 @@ const mapStateToProps = (state) => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
-    totalScore: state.totalScore
+    totalScore: state.totalScore,
+    isCountdownFinished: state.isCountdownFinished
   };
 };
 
