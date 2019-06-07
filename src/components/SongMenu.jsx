@@ -14,6 +14,7 @@ import MusicNote from "@material-ui/icons/MusicNote";
 import List from "@material-ui/core/List";
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
+import banana from "../images/dancing_banana.gif";
 
 const MyPaper = styled(Paper)({
   display: "flex",
@@ -37,7 +38,11 @@ class SongMenu extends Component {
     return (
       <Grid container component="main">
         <CssBaseline />
-        <Grid item xs={false} sm={4} md={8} />
+        <Grid item xs={false} sm={4} md={8}>
+          <MyPaper>
+            <img alt="Dancing Banana" src={banana} />
+          </MyPaper>
+        </Grid>
         <Grid
           item
           xs={12}
