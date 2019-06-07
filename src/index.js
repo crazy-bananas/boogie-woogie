@@ -9,6 +9,7 @@ import { createStore } from "redux";
 const initialState = {
   isSongSelected: false,
   songSelected: -1,
+  totalScore: 0,
   songList: [
     {
       artist: "NHK",
@@ -24,7 +25,8 @@ const initialState = {
     }
   ],
   isCountdownFinished: false,
-  userReady: false
+  isUserReady: false,
+  isDanceFinished: false
 };
 
 const appReducer = (state = initialState, action) => {
@@ -42,10 +44,23 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
     case "USER_READY": {
-      const newStateUserReady = { ...state };
-      newStateUserReady.userReady = true;
-      return newStateUserReady;
+      const newState = { ...state };
+      newState.isUserReady = true;
+      return newState;
     }
+
+    case "DANCE_FINISHED": {
+      const newState = { ...state };
+      newState.isDanceFinished = true;
+      return newState;
+    }
+
+    case "UPDATE_TOTALSCORE": {
+      const newState = { ...state };
+      newState.totalScore = action.payload;
+      return newState;
+    }
+
     default:
       return state;
   }

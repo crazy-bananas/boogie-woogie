@@ -1,37 +1,29 @@
-import { VideoWindow } from "./VideoWindow";
+import VideoWindow from "./VideoWindow";
 import React, { Component } from "react";
 import Counter from "./Counter";
-import AudioPlayer from "./Audio";
-import "../styles/counter.css";
+import "../styles/dancewindow.css";
 import { connect } from "react-redux";
 
 class DanceWindow extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.playButtonRef = React.createRef();
-  // }
-
-  // playAudio = () => {
-  //   this.playButtonRef.current.play();
-  // };
-  //
+  startLevel = () => {
+    const audioPlayer = document.getElementById("audio_player");
+    audioPlayer.play();
+  };
   render() {
     return (
       <div>
         <VideoWindow />
-        <Counter style={{ position: "absolute" }} />
-        {this.props.isCountdownFinished && (
-          <AudioPlayer />
-          // <AudioPlayer ref={this.playButtonRef} />
-        )}
+        <Counter />
+        <audio id="audio_player" src={this.props.songURL} controls />
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    isCountdownFinished: state.isCountdownFinished
+    isCountdownFinished: state.isCountdownFinished,
+    songURL: state.songList[state.songSelected].url
   };
 };
 export default connect(mapStateToProps)(DanceWindow);
