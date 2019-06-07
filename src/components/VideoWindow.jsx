@@ -96,7 +96,8 @@ export class VideoWindow extends Component {
   };
 
   calculateScore = () => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 2; i++) {
+      // TODO: Make it check for all poses
       for (let body of this.bodyParts) {
         if (
           correctPoses[i][body].x <=
