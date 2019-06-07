@@ -9,13 +9,13 @@ export class VideoWindow extends Component {
     super(props);
     this.canvas = "";
     this.ctx = "";
-    this.a = 0;
+    this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
     this.savePose = false;
-    //   this.userReady = false;
     this.danceFinished = false;
     this.score = 0;
     this.recordedPoses = [];
+    this.stream = null; // Video stream
     this.bodyParts = [
       "leftAnkle",
       "leftEar",
@@ -35,6 +35,7 @@ export class VideoWindow extends Component {
       "rightShoulder",
       "rightWrist"
     ];
+    this.state = { danceStart: false };
     // to check user's standing at right position before dancing
     this.matchingPosition = {
       nose: {
@@ -60,9 +61,38 @@ export class VideoWindow extends Component {
     };
   }
 
+  displayCorrectPoses = () => {
+    return setInterval(() => {
+      this.savePose = true;
+      this.increment();
+      if (this.indexCorrectP >= correctPoses.length - 1) {
+        this.props.danceIsFinished();
+        this.calculateScore();
+        this.props.updateTotalScore(this.score);
+        clearInterval(this.danceIntervalStopValue);
+      }
+    }, 500);
+  };
+
+  componentDidUpdate = () => {
+    if (this.props.isCountdownFinished) {
+      this.danceIntervalStopValue = this.displayCorrectPoses();
+    }
+
+    return null;
+  };
+
   componentDidMount() {
     this.canvas = document.getElementById("canvas");
     this.ctx = this.canvas.getContext("2d");
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.danceIntervalStopValue);
+    const tracks = this.stream.getTracks();
+    tracks.forEach((track) => {
+      track.stop();
+    });
   }
 
   drawPoint = (keypoint, ctx) => {
@@ -79,21 +109,9 @@ export class VideoWindow extends Component {
     this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
   };
 
-  displayCorrectPoses = () => {
-    return setInterval(() => {
-      this.savePose = true;
-      this.increment();
-      if (this.indexCorrectP >= correctPoses.length - 1) {
-        this.props.danceIsFinished();
-        this.calculateScore();
-        this.props.updateTotalScore(this.score);
-        clearInterval(this.a);
-      }
-    }, 500);
-  };
-
   calculateScore = () => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 2; i++) {
+      // TODO: Make it check for all poses
       for (let body of this.bodyParts) {
         if (
           correctPoses[i][body].x <=
@@ -159,7 +177,6 @@ export class VideoWindow extends Component {
       mp.leftKnee.y <= lKneeY + margin &&
       mp.leftKnee.y >= lKneeY - margin
     ) {
-      this.a = this.displayCorrectPoses();
       this.props.userIsReady();
     }
   };
@@ -183,16 +200,16 @@ export class VideoWindow extends Component {
 
     bindPage();
 
-    async function setupCamera() {
+    const setupCamera = async () => {
       const video = document.getElementById("video");
 
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({
+        this.stream = await navigator.mediaDevices.getUserMedia({
           audio: false,
           video: true
         });
 
-        video.srcObject = stream;
+        video.srcObject = this.stream;
 
         return new Promise(resolve => {
           video.onloadedmetadata = () => {
@@ -205,7 +222,7 @@ export class VideoWindow extends Component {
         alert(ErrorMessage);
         return Promise.reject(ErrorMessage);
       }
-    }
+    };
 
     const loadVideo = async () => {
       const video = await setupCamera();
@@ -277,7 +294,8 @@ const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
-    totalScore: state.totalScore
+    totalScore: state.totalScore,
+    isCountdownFinished: state.isCountdownFinished
   };
 };
 
