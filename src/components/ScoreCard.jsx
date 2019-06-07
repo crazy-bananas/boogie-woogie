@@ -27,28 +27,19 @@ const useStyles = makeStyles((theme) => ({
     height: 0,
     paddingTop: "56.25%" // 16:9
   },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest
-    })
-  },
-  expandOpen: {
-    transform: "rotate(180deg)"
-  },
+
   avatar: {
     backgroundColor: red[500]
+  },
+  scoreText: {
+    fontSize: 30,
+    fontWeight: 800,
+    color: "orange"
   }
 }));
 
 function ScoreCard(props) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-
-  function handleExpandClick() {
-    setExpanded(!expanded);
-  }
 
   return (
     <div id="card">
@@ -59,13 +50,8 @@ function ScoreCard(props) {
               BW
             </Avatar>
           }
-          action={
-            <IconButton aria-label="Settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
           title={props.title}
-          subheader={props.score}
+          subheader={props.artist}
         />
         <div id="trophy">
           <CardMedia
@@ -75,10 +61,13 @@ function ScoreCard(props) {
           />
         </div>
         <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.scoreText}
+          >
+            Your Score: {props.score}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
@@ -88,26 +77,7 @@ function ScoreCard(props) {
           <IconButton aria-label="Share">
             <ShareIcon />
           </IconButton>
-          <IconButton
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded
-            })}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="Show more"
-          >
-            <ExpandMoreIcon />
-          </IconButton>
         </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            <Typography paragraph>Method:</Typography>
-            <Typography paragraph>
-              Heat 1/2 cup of the broth in a pot until simmering, add saffron
-              and set aside for 10 minutes.
-            </Typography>
-          </CardContent>
-        </Collapse>
       </Card>
     </div>
   );
