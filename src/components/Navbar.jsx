@@ -4,9 +4,11 @@ import { styled } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import { connect } from "react-redux";
 
 const MyAppBar = styled(AppBar)({
-  background: "linear-gradient(45deg, #087EE1 30%, #05E8BA 90%)"
+  background: "linear-gradient(45deg, #ffc414 20%, #fa7f2d 50%, #ffc414 90%)"
+  //  backgroundColor: "#0a1747"
 });
 
 const MyTypography = styled(Typography)({
@@ -24,7 +26,11 @@ export class Navbar extends Component {
             <IconButton edge="start" color="inherit" aria-label="Menu">
               <MenuIcon />
             </IconButton> */}
-            <MyTypography variant="h6" className="heading">
+            <MyTypography
+              variant="h6"
+              className="heading"
+              onClick={this.props.resetState}
+            >
               Boogie Woogie
             </MyTypography>
             {/* After MVP 
@@ -35,3 +41,25 @@ export class Navbar extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    songList: state.songList,
+    indexOfSelectedSong: state.songSelected
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resetState: () => {
+      dispatch({
+        type: "RESET_STATE"
+      });
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Navbar);

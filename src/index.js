@@ -8,7 +8,7 @@ import { createStore } from "redux";
 
 const initialState = {
   isSongSelected: false,
-  songSelected: 0,
+  songSelected: -1,
   totalScore: 0,
   songList: [
     {
@@ -59,6 +59,10 @@ const appReducer = (state = initialState, action) => {
       const newState = { ...state };
       newState.totalScore = action.payload;
       return newState;
+    }
+
+    case "RESET_STATE": {
+      return { ...initialState };
     }
 
     default:
