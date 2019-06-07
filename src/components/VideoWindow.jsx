@@ -36,14 +36,28 @@ export class VideoWindow extends Component {
       "rightWrist"
     ];
     // to check user's standing at right position before dancing
-    this.matchingPosition = [
-      {
-        nose: {
-          x: 350,
-          y: 300
-        }
+    this.matchingPosition = {
+      nose: {
+        x: 404,
+        y: 165
+      },
+      leftWrist: {
+        x: 615,
+        y: 218
+      },
+      rightWrist: {
+        x: 203,
+        y: 217
+      },
+      leftKnee: {
+        x: 471,
+        y: 519
+      },
+      rightKnee: {
+        x: 355,
+        y: 519
       }
-    ];
+    };
   }
 
   componentDidMount() {
@@ -97,7 +111,7 @@ export class VideoWindow extends Component {
     }
   };
 
-  recordPose = (pose) => {
+  recordPose = pose => {
     const correctPose = {};
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
@@ -109,15 +123,41 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isMatched = (currentPosition) => {
+  isMatched = cp => {
+    const mp = this.matchingPosition;
+    const noseX = Math.round(cp.nose.x);
+    const noseY = Math.round(cp.nose.y);
+    const rWristX = Math.round(cp.rightWrist.x);
+    const rWristY = Math.round(cp.rightWrist.y);
+    const lWristX = Math.round(cp.leftWrist.x);
+    const lWristY = Math.round(cp.leftWrist.y);
+    const rKneeX = Math.round(cp.rightKnee.x);
+    const rKneeY = Math.round(cp.rightKnee.y);
+    const lKneeX = Math.round(cp.leftKnee.x);
+    const lKneeY = Math.round(cp.leftKnee.y);
+    const margin = 30;
+
     if (
-      this.matchingPosition[0].nose.x <=
-        Math.round(currentPosition.nose.x) + 30 &&
-      this.matchingPosition[0].nose.x >=
-        Math.round(currentPosition.nose.x) - 30 &&
-      this.matchingPosition[0].nose.y <=
-        Math.round(currentPosition.nose.y) + 30 &&
-      this.matchingPosition[0].nose.y >= Math.round(currentPosition.nose.y) - 30
+      mp.nose.x <= noseX + margin &&
+      mp.nose.x >= noseX - margin &&
+      mp.nose.y <= noseY + margin &&
+      mp.nose.y >= noseY - margin &&
+      mp.rightWrist.x <= rWristX + margin &&
+      mp.rightWrist.x >= rWristX - margin &&
+      mp.rightWrist.y <= rWristY + margin &&
+      mp.rightWrist.y >= rWristY - margin &&
+      mp.leftWrist.x <= lWristX + margin &&
+      mp.leftWrist.x >= lWristX - margin &&
+      mp.leftWrist.y <= lWristY + margin &&
+      mp.leftWrist.y >= lWristY - margin &&
+      mp.rightKnee.x <= rKneeX + margin &&
+      mp.rightKnee.x >= rKneeX - margin &&
+      mp.rightKnee.y <= rKneeY + margin &&
+      mp.rightKnee.y >= rKneeY - margin &&
+      mp.leftKnee.x <= lKneeX + margin &&
+      mp.leftKnee.x >= lKneeX - margin &&
+      mp.leftKnee.y <= lKneeY + margin &&
+      mp.leftKnee.y >= lKneeY - margin
     ) {
       this.a = this.displayCorrectPoses();
       this.props.userIsReady();
@@ -154,7 +194,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = stream;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -199,7 +239,11 @@ export class VideoWindow extends Component {
         }
 
         if (!this.props.isUserReady) {
-          this.drawPoint(this.matchingPosition[0].nose, this.ctx);
+          this.drawPoint(this.matchingPosition.nose, this.ctx);
+          this.drawPoint(this.matchingPosition.leftWrist, this.ctx);
+          this.drawPoint(this.matchingPosition.rightWrist, this.ctx);
+          this.drawPoint(this.matchingPosition.leftKnee, this.ctx);
+          this.drawPoint(this.matchingPosition.rightKnee, this.ctx);
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
             const part = pose.keypoints[index].part;
@@ -208,7 +252,6 @@ export class VideoWindow extends Component {
             latestCatch[part].y = pose.keypoints[index].position.y;
             latestCatch[part].score = pose.keypoints[index].score;
           }
-
           this.isMatched(latestCatch);
         }
 
@@ -230,7 +273,7 @@ export class VideoWindow extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
@@ -238,7 +281,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     userIsReady: () => {
       dispatch({
@@ -250,7 +293,7 @@ const mapDispatchToProps = (dispatch) => {
         type: "DANCE_FINISHED"
       });
     },
-    updateTotalScore: (score) => {
+    updateTotalScore: score => {
       dispatch({
         type: "UPDATE_TOTALSCORE",
         payload: score
