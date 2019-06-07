@@ -6,30 +6,35 @@ import "../styles/counter.css";
 import { connect } from "react-redux";
 
 class DanceWindow extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.playButtonRef = React.createRef();
-  // }
+  constructor(props) {
+    super(props);
+    this.playButtonRef = React.createRef();
+  }
 
-  // playAudio = () => {
-  //   this.playButtonRef.current.play();
-  // };
-  //
+  playAudio = () => {
+    console.log("playing");
+    this.playButtonRef.current.play();
+  };
+
   render() {
     return (
       <div>
         <VideoWindow />
         <Counter style={{ position: "absolute" }} />
         {this.props.isCountdownFinished && (
-          <AudioPlayer />
-          // <AudioPlayer ref={this.playButtonRef} />
+          // <AudioPlayer />
+          <AudioPlayer ref={this.playButtonRef}/>
+         
         )}
+        <button onClick={this.playAudio} style={{ margin: "100px" }}>
+          Submoit
+        </button>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished
   };

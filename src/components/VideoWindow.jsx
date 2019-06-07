@@ -70,7 +70,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = stream;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -158,7 +158,7 @@ export class VideoWindow extends Component {
       ctx.fill();
     };
 
-    const isMatched = (currentPosition) => {
+    const isMatched = currentPosition => {
       if (
         correctPoses[indexCorrectP].rightWrist.x <=
           Math.round(currentPosition.rightWrist.x) + 30 &&
@@ -197,13 +197,13 @@ export class VideoWindow extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     userReady: state.userReady
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     userIsReady: () => {
       dispatch({
