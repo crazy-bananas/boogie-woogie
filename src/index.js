@@ -8,14 +8,14 @@ import { createStore } from "redux";
 
 const initialState = {
   isSongSelected: false,
-  songSelected: 0,
+  songSelected: -1,
   totalScore: 0,
   songList: [
     {
       artist: "NHK",
       title: "Radio Taiso",
       url:
-        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio_taiso.mp3"
+        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio-taiso-33s.mov"
     },
     {
       artist: "CC",
@@ -26,7 +26,8 @@ const initialState = {
   ],
   isCountdownFinished: false,
   isUserReady: false,
-  isDanceFinished: false
+  isDanceFinished: false,
+  isAudioFinished: false
 };
 
 const appReducer = (state = initialState, action) => {
@@ -58,6 +59,11 @@ const appReducer = (state = initialState, action) => {
     case "UPDATE_TOTALSCORE": {
       const newState = { ...state };
       newState.totalScore = action.payload;
+      return newState;
+    }
+    case "AUDIO_FINISHED": {
+      const newState = { ...state };
+      newState.isAudioFinished = true;
       return newState;
     }
 

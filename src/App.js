@@ -11,24 +11,24 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar />
-        {/* {!this.props.isSongSelected && <SongMenu />}
+        {!this.props.isSongSelected && <SongMenu />}
         {this.props.isSongSelected && !this.props.isDanceFinished && (
           <DanceWindow />
-        )} */}
-        {!this.props.isDanceFinished && <Score />}
+        )}
+        {this.props.isDanceFinished && <Score />}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isSongSelected: state.isSongSelected,
     isDanceFinished: state.isDanceFinished
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 

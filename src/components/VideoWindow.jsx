@@ -3,7 +3,6 @@ import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import { connect } from "react-redux";
 import correctPoses from "./correctPose";
-
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -16,21 +15,22 @@ export class VideoWindow extends Component {
     this.score = 0;
     this.recordedPoses = [];
     this.stream = null; // Video stream
+    this.called = true;
     this.bodyParts = [
       "leftAnkle",
-      "leftEar",
+      // "leftEar",
       "leftElbow",
-      "leftEye",
-      "leftHip",
+      // "leftEye",
+      // "leftHip",
       "leftKnee",
       "leftShoulder",
       "leftWrist",
       "nose",
       "rightAnkle",
-      "rightEar",
+      // "rightEar",
       "rightElbow",
-      "rightEye",
-      "rightHip",
+      // "rightEye",
+      // "rightHip",
       "rightKnee",
       "rightShoulder",
       "rightWrist"
@@ -64,15 +64,41 @@ export class VideoWindow extends Component {
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
-      this.increment();
-      if (this.indexCorrectP >= correctPoses.length - 1) {
+      // Commented out to record user's movement
+      // this.increment();
+      if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
-        this.calculateScore();
+        // Commented out to record user's movement
+        // this.calculateScore();
         this.props.updateTotalScore(this.score);
         clearInterval(this.danceIntervalStopValue);
       }
-    }, 500);
+    }, 100);
   };
+
+  exportToJson(objectData) {
+    let filename = "export.json";
+    let contentType = "application/json;charset=utf-8;";
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      var blob = new Blob(
+        [decodeURIComponent(encodeURI(JSON.stringify(objectData)))],
+        { type: contentType }
+      );
+      navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
+      var a = document.createElement("a");
+      a.download = filename;
+      a.href =
+        "data:" +
+        contentType +
+        "," +
+        encodeURIComponent(JSON.stringify(objectData));
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }
 
   componentDidUpdate = () => {
     if (this.props.isCountdownFinished) {
@@ -89,8 +115,9 @@ export class VideoWindow extends Component {
 
   componentWillUnmount() {
     clearInterval(this.danceIntervalStopValue);
+    this.exportToJson(this.recordedPoses);
     const tracks = this.stream.getTracks();
-    tracks.forEach((track) => {
+    tracks.forEach(track => {
       track.stop();
     });
   }
@@ -109,8 +136,9 @@ export class VideoWindow extends Component {
     this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
   };
 
+  // TODO: Update not to crush even if number of object does not match
   calculateScore = () => {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < this.recordedPoses.length; i++) {
       // TODO: Make it check for all poses
       for (let body of this.bodyParts) {
         if (
@@ -269,6 +297,7 @@ export class VideoWindow extends Component {
             latestCatch[part].y = pose.keypoints[index].position.y;
             latestCatch[part].score = pose.keypoints[index].score;
           }
+
           this.isMatched(latestCatch);
         }
 
@@ -295,7 +324,8 @@ const mapStateToProps = state => {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
     totalScore: state.totalScore,
-    isCountdownFinished: state.isCountdownFinished
+    isCountdownFinished: state.isCountdownFinished,
+    isAudioFinished: state.isAudioFinished
   };
 };
 
