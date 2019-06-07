@@ -67,6 +67,10 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
+    case "RESET_STATE": {
+      return { ...initialState };
+    }
+
     default:
       return state;
   }
