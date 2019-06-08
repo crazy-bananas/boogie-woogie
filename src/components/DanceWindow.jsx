@@ -1,34 +1,40 @@
-import { VideoWindow } from "./VideoWindow";
+import VideoWindow from "./VideoWindow";
 import React, { Component } from "react";
 import Counter from "./Counter";
-import AudioPlayer from "./Audio";
-import "../styles/counter.css";
+import "../styles/dancewindow.css";
 import { connect } from "react-redux";
 
 class DanceWindow extends Component {
   constructor(props) {
     super(props);
-    this.playButtonRef = React.createRef();
+    this.audioPlayerRef = new React.createRef();
   }
 
-  playAudio = () => {
-    console.log("playing");
-    this.playButtonRef.current.play();
+  startLevel = () => {
+    this.audioPlayerRef.current.play();
   };
+
+  componentDidUpdate() {
+    if (this.props.isCountdownFinished) {
+      this.startLevel();
+    }
+    // if (this.props.isAudioFinished) {
+    //   this.audioPlayerRef.current.pause();
+    // }
+  }
 
   render() {
     return (
       <div>
         <VideoWindow />
-        <Counter style={{ position: "absolute" }} />
-        {this.props.isCountdownFinished && (
-          // <AudioPlayer />
-          <AudioPlayer ref={this.playButtonRef}/>
-         
-        )}
-        <button onClick={this.playAudio} style={{ margin: "100px" }}>
-          Submoit
-        </button>
+        <Counter />
+        <audio
+          id="audio_player"
+          ref={this.audioPlayerRef}
+          src={this.props.songURL}
+          controls
+          onEnded={this.props.audioFinished}
+        />
       </div>
     );
   }
@@ -36,7 +42,23 @@ class DanceWindow extends Component {
 
 const mapStateToProps = state => {
   return {
-    isCountdownFinished: state.isCountdownFinished
+    isCountdownFinished: state.isCountdownFinished,
+    songURL: state.songList[state.songSelected].url,
+    isAudioFinished: state.isAudioFinished
   };
 };
-export default connect(mapStateToProps)(DanceWindow);
+
+const mapDispatchToProps = dispatch => {
+  return {
+    audioFinished: () => {
+      dispatch({
+        type: "AUDIO_FINISHED"
+      });
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DanceWindow);

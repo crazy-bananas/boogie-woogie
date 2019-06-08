@@ -1,6 +1,7 @@
 .counterImg {
   width: 25%;
   position: absolute;
+  left: 38%;
   top: 200px;
-  left: 400px;
+  /* left: 400px; */
 }

@@ -9,12 +9,13 @@ import { createStore } from "redux";
 const initialState = {
   isSongSelected: false,
   songSelected: -1,
+  totalScore: 0,
   songList: [
     {
       artist: "NHK",
       title: "Radio Taiso",
       url:
-        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio_taiso.mp3"
+        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio-taiso-33s.mov"
     },
     {
       artist: "CC",
@@ -24,7 +25,9 @@ const initialState = {
     }
   ],
   isCountdownFinished: false,
-  userReady: false
+  isUserReady: true,
+  isDanceFinished: false,
+  isAudioFinished: false
 };
 
 const appReducer = (state = initialState, action) => {
@@ -42,10 +45,32 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
     case "USER_READY": {
-      const newStateUserReady = { ...state };
-      newStateUserReady.userReady = true;
-      return newStateUserReady;
+      const newState = { ...state };
+      newState.isUserReady = true;
+      return newState;
     }
+
+    case "DANCE_FINISHED": {
+      const newState = { ...state };
+      newState.isDanceFinished = true;
+      return newState;
+    }
+
+    case "UPDATE_TOTALSCORE": {
+      const newState = { ...state };
+      newState.totalScore = action.payload;
+      return newState;
+    }
+    case "AUDIO_FINISHED": {
+      const newState = { ...state };
+      newState.isAudioFinished = true;
+      return newState;
+    }
+
+    case "RESET_STATE": {
+      return { ...initialState };
+    }
+
     default:
       return state;
   }

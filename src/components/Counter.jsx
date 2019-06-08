@@ -25,7 +25,7 @@ class Counter extends Component {
   };
 
   render() {
-    if (this.state.countdown === 4) {
+    if (this.state.countdown === 4 && this.props.isUserReady) {
       this.startCountdown();
     }
     return (
@@ -40,7 +40,8 @@ class Counter extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isSongSelected: state.isSongSelected
+    isSongSelected: state.isSongSelected,
+    isUserReady: state.isUserReady
   };
 };
 
