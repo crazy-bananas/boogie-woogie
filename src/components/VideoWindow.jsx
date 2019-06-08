@@ -12,7 +12,6 @@ export class VideoWindow extends Component {
     this.flipPosenetHorizontal = true;
     this.outputStride = 16;
 
-    // Other
     this.canvasRef = new React.createRef();
     this.videoRef = new React.createRef();
     this.ctx = "";
@@ -23,7 +22,7 @@ export class VideoWindow extends Component {
     this.score = 0;
     this.recordedPoses = [];
     this.stream = null; // Video stream
-    this.called = true;
+    this.called = true; // TODO: What is this?
     this.bodyParts = [
       "leftAnkle",
       // "leftEar",
