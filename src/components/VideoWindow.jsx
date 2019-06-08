@@ -6,6 +6,11 @@ import correctPoses from "./correctPose";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
+    // Posenet settings
+    this.imageScaleFactor = 0.7;
+    this.flipPosenetHorizontal = true;
+    this.outputStride = 16;
+    // Other
     this.canvasRef = new React.createRef();
     this.videoRef = new React.createRef();
     this.ctx = "";
@@ -89,11 +94,7 @@ export class VideoWindow extends Component {
     } else {
       const link = document.createElement("a");
       link.download = filename;
-      link.href =
-        "data:" +
-        contentType +
-        "," +
-        encodeURIComponent(JSON.stringify(objectData));
+      link.href = "data:" + contentType + "," + encodeURIComponent(JSON.stringify(objectData));
       link.target = "_blank";
       document.body.appendChild(link);
       link.click();
@@ -111,107 +112,6 @@ export class VideoWindow extends Component {
 
   componentDidMount() {
     this.ctx = this.canvasRef.current.getContext("2d");
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.danceIntervalStopValue);
-    this.exportToJson(this.recordedPoses);
-    const tracks = this.stream.getTracks();
-    tracks.forEach(track => {
-      track.stop();
-    });
-  }
-
-  drawPoint = (keypoint, ctx, pointColor = "red") => {
-    ctx.beginPath();
-    ctx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI);
-
-    ctx.fillStyle = pointColor;
-    ctx.fill();
-  };
-
-  increment = () => {
-    this.indexCorrectP++;
-    this.drawPoint(correctPoses[this.indexCorrectP].rightWrist, this.ctx);
-    this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
-  };
-
-  // TODO: Update not to crush even if number of object does not match
-  calculateScore = () => {
-    for (let i = 0; i < this.recordedPoses.length; i++) {
-      // TODO: Make it check for all poses
-      for (let body of this.bodyParts) {
-        if (
-          correctPoses[i][body].x <=
-            Math.round(this.recordedPoses[i][body].x) + 30 &&
-          correctPoses[i][body].x >=
-            Math.round(this.recordedPoses[i][body].x) - 30 &&
-          correctPoses[i][body].y <=
-            Math.round(this.recordedPoses[i][body].y) + 30 &&
-          correctPoses[i][body].y >=
-            Math.round(this.recordedPoses[i][body].y) - 30
-        ) {
-          this.score++;
-        }
-      }
-    }
-  };
-
-  recordPose = pose => {
-    const correctPose = {};
-    for (let index = 0; index < pose.keypoints.length; index++) {
-      const part = pose.keypoints[index].part;
-      correctPose[part] = {};
-      correctPose[part].x = pose.keypoints[index].position.x;
-      correctPose[part].y = pose.keypoints[index].position.y;
-      correctPose[part].score = pose.keypoints[index].score;
-    }
-    this.recordedPoses.push(correctPose);
-  };
-
-  isMatched = cp => {
-    const mp = this.matchingPosition;
-    const noseX = Math.round(cp.nose.x);
-    const noseY = Math.round(cp.nose.y);
-    const rWristX = Math.round(cp.rightWrist.x);
-    const rWristY = Math.round(cp.rightWrist.y);
-    const lWristX = Math.round(cp.leftWrist.x);
-    const lWristY = Math.round(cp.leftWrist.y);
-    const rKneeX = Math.round(cp.rightKnee.x);
-    const rKneeY = Math.round(cp.rightKnee.y);
-    const lKneeX = Math.round(cp.leftKnee.x);
-    const lKneeY = Math.round(cp.leftKnee.y);
-    const margin = 30;
-
-    if (
-      mp.nose.x <= noseX + margin &&
-      mp.nose.x >= noseX - margin &&
-      mp.nose.y <= noseY + margin &&
-      mp.nose.y >= noseY - margin &&
-      mp.rightWrist.x <= rWristX + margin &&
-      mp.rightWrist.x >= rWristX - margin &&
-      mp.rightWrist.y <= rWristY + margin &&
-      mp.rightWrist.y >= rWristY - margin &&
-      mp.leftWrist.x <= lWristX + margin &&
-      mp.leftWrist.x >= lWristX - margin &&
-      mp.leftWrist.y <= lWristY + margin &&
-      mp.leftWrist.y >= lWristY - margin &&
-      mp.rightKnee.x <= rKneeX + margin &&
-      mp.rightKnee.x >= rKneeX - margin &&
-      mp.rightKnee.y <= rKneeY + margin &&
-      mp.rightKnee.y >= rKneeY - margin &&
-      mp.leftKnee.x <= lKneeX + margin &&
-      mp.leftKnee.x >= lKneeX - margin &&
-      mp.leftKnee.y <= lKneeY + margin &&
-      mp.leftKnee.y >= lKneeY - margin
-    ) {
-      this.props.userIsReady();
-    }
-  };
-
-  render() {
-    const imageScaleFactor = 0.7;
-    const outputStride = 16;
 
     async function bindPage() {
       const net = await posenet.load();
@@ -259,16 +159,15 @@ export class VideoWindow extends Component {
     };
 
     const detectPoseInRealTime = (video, net) => {
-      const flipHorizontal = true;
       const contentWidth = 800;
       const contentHeight = 600;
 
       const poseDetectionFrame = async () => {
         const pose = await net.estimateSinglePose(
           video,
-          imageScaleFactor,
-          flipHorizontal,
-          outputStride
+          this.imageScaleFactor,
+          this.flipPosenetHorizontal,
+          this.outputStride
         );
 
         this.ctx.clearRect(0, 0, contentWidth, contentHeight);
@@ -313,7 +212,105 @@ export class VideoWindow extends Component {
 
       poseDetectionFrame();
     };
+  }
 
+  componentWillUnmount() {
+    clearInterval(this.danceIntervalStopValue);
+    this.exportToJson(this.recordedPoses);
+    const tracks = this.stream.getTracks();
+    tracks.forEach(track => {
+      track.stop();
+    });
+  }
+
+  drawPoint = (keypoint, ctx, pointColor = "red") => {
+    ctx.beginPath();
+    ctx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI);
+
+    ctx.fillStyle = pointColor;
+    ctx.fill();
+  };
+
+  increment = () => {
+    this.indexCorrectP++;
+    this.drawPoint(correctPoses[this.indexCorrectP].rightWrist, this.ctx);
+    this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
+  };
+
+  // TODO: Update not to crash even if number of object does not match
+  calculateScore = () => {
+    for (let i = 0; i < this.recordedPoses.length; i++) {
+      // TODO: Make it check for all poses
+      for (let body of this.bodyParts) {
+        if (
+          correctPoses[i][body].x <=
+            Math.round(this.recordedPoses[i][body].x) + 30 &&
+          correctPoses[i][body].x >=
+            Math.round(this.recordedPoses[i][body].x) - 30 &&
+          correctPoses[i][body].y <=
+            Math.round(this.recordedPoses[i][body].y) + 30 &&
+          correctPoses[i][body].y >=
+            Math.round(this.recordedPoses[i][body].y) - 30
+        ) {
+          this.score++;
+        }
+      }
+    }
+  };
+
+  recordPose = pose => {
+    const correctPose = {};
+    for (let index = 0; index < pose.keypoints.length; index++) {
+      const part = pose.keypoints[index].part;
+      correctPose[part] = {};
+      correctPose[part].x = pose.keypoints[index].position.x;
+      correctPose[part].y = pose.keypoints[index].position.y;
+      correctPose[part].score = pose.keypoints[index].score;
+    }
+    this.recordedPoses.push(correctPose);
+  };
+
+  isMatched = cp => {
+    const mp = this.matchingPosition;
+    const noseX = Math.round(cp.nose.x);
+    const noseY = Math.round(cp.nose.y);
+    // const rWristX = Math.round(cp.rightWrist.x);
+    // const rWristY = Math.round(cp.rightWrist.y);
+    // const lWristX = Math.round(cp.leftWrist.x);
+    // const lWristY = Math.round(cp.leftWrist.y);
+    // const rKneeX = Math.round(cp.rightKnee.x);
+    // const rKneeY = Math.round(cp.rightKnee.y);
+    // const lKneeX = Math.round(cp.leftKnee.x);
+    // const lKneeY = Math.round(cp.leftKnee.y);
+    const margin = 30;
+
+    if (
+      mp.nose.x <= noseX + margin &&
+      mp.nose.x >= noseX - margin &&
+      mp.nose.y <= noseY + margin &&
+      mp.nose.y >= noseY - margin
+      // mp.rightWrist.x <= rWristX + margin &&
+      // mp.rightWrist.x >= rWristX - margin &&
+      // mp.rightWrist.y <= rWristY + margin &&
+      // mp.rightWrist.y >= rWristY - margin &&
+      // mp.leftWrist.x <= lWristX + margin &&
+      // mp.leftWrist.x >= lWristX - margin &&
+      // mp.leftWrist.y <= lWristY + margin &&
+      // mp.leftWrist.y >= lWristY - margin &&
+      // mp.rightKnee.x <= rKneeX + margin &&
+      // mp.rightKnee.x >= rKneeX - margin &&
+      // mp.rightKnee.y <= rKneeY + margin &&
+      // mp.rightKnee.y >= rKneeY - margin &&
+      // mp.leftKnee.x <= lKneeX + margin &&
+      // mp.leftKnee.x >= lKneeX - margin &&
+      // mp.leftKnee.y <= lKneeY + margin &&
+      // mp.leftKnee.y >= lKneeY - margin
+    ) {
+      this.props.userIsReady();
+    }
+  };
+
+  render() {
     return (
       <div>
         {this.props.isUserReady && <div>Dance Starting</div>}
