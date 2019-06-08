@@ -149,6 +149,7 @@ export class VideoWindow extends Component {
           for (let bodyPart in this.startPosition) {
             this.drawPoint(this.startPosition[bodyPart], this.ctx)
           }
+          
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
             const part = pose.keypoints[index].part;
@@ -269,41 +270,31 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isMatched = cp => {
-    const mp = this.startPosition;
-    const noseX = Math.round(cp.nose.x);
-    const noseY = Math.round(cp.nose.y);
-    // const rWristX = Math.round(cp.rightWrist.x);
-    // const rWristY = Math.round(cp.rightWrist.y);
-    // const lWristX = Math.round(cp.leftWrist.x);
-    // const lWristY = Math.round(cp.leftWrist.y);
-    // const rKneeX = Math.round(cp.rightKnee.x);
-    // const rKneeY = Math.round(cp.rightKnee.y);
-    // const lKneeX = Math.round(cp.leftKnee.x);
-    // const lKneeY = Math.round(cp.leftKnee.y);
+  isMatched = playersPosition => {
+    const startPosition = this.startPosition;
     const margin = 30;
 
+    const isPositionWithinMargin = (playersBodyPartsPosition, correctPositionsBodyPart) => {
+      const correctX = playersBodyPartsPosition.x <= correctPositionsBodyPart.x + margin &&
+      playersBodyPartsPosition.x >= correctPositionsBodyPart.x - margin;
+
+      const correctY = playersBodyPartsPosition.y <= correctPositionsBodyPart.y + margin &&
+      playersBodyPartsPosition.y >= correctPositionsBodyPart.y - margin;
+
+      return correctX && correctY;
+    }
+
+    for(let bodyPart in playersPosition) {
+      playersPosition[bodyPart].x = Math.round(playersPosition[bodyPart].x)
+      playersPosition[bodyPart].y = Math.round(playersPosition[bodyPart].y)
+    }
+
     if (
-      mp.nose.x <= noseX + margin &&
-      mp.nose.x >= noseX - margin &&
-      mp.nose.y <= noseY + margin &&
-      mp.nose.y >= noseY - margin
-      // mp.rightWrist.x <= rWristX + margin &&
-      // mp.rightWrist.x >= rWristX - margin &&
-      // mp.rightWrist.y <= rWristY + margin &&
-      // mp.rightWrist.y >= rWristY - margin &&
-      // mp.leftWrist.x <= lWristX + margin &&
-      // mp.leftWrist.x >= lWristX - margin &&
-      // mp.leftWrist.y <= lWristY + margin &&
-      // mp.leftWrist.y >= lWristY - margin &&
-      // mp.rightKnee.x <= rKneeX + margin &&
-      // mp.rightKnee.x >= rKneeX - margin &&
-      // mp.rightKnee.y <= rKneeY + margin &&
-      // mp.rightKnee.y >= rKneeY - margin &&
-      // mp.leftKnee.x <= lKneeX + margin &&
-      // mp.leftKnee.x >= lKneeX - margin &&
-      // mp.leftKnee.y <= lKneeY + margin &&
-      // mp.leftKnee.y >= lKneeY - margin
+      isPositionWithinMargin(playersPosition.nose, startPosition.nose)
+      && isPositionWithinMargin(playersPosition.rightWrist, startPosition.rightWrist)
+      && isPositionWithinMargin(playersPosition.leftWrist, startPosition.leftWrist)
+      && isPositionWithinMargin(playersPosition.rightKnee, startPosition.rightKnee)
+      && isPositionWithinMargin(playersPosition.leftKnee, startPosition.leftKnee)
     ) {
       this.props.userIsReady();
     }
