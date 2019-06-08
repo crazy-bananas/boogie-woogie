@@ -56,7 +56,7 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
-    case "UPDATE_TOTALSCORE": {
+    case "UPDATE_TOTAL_SCORE": {
       const newState = { ...state };
       newState.totalScore = action.payload;
       return newState;

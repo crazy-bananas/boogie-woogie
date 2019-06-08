@@ -331,7 +331,7 @@ const mapDispatchToProps = dispatch => {
     },
     updateTotalScore: score => {
       dispatch({
-        type: "UPDATE_TOTALSCORE",
+        type: "UPDATE_TOTAL_SCORE",
         payload: score
       });
     }
