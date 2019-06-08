@@ -6,7 +6,7 @@ import correctPoses from "./correctPose";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
-    this.canvas = "";
+    this.canvasRef = new React.createRef();
     this.ctx = "";
     this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
@@ -109,8 +109,7 @@ export class VideoWindow extends Component {
   };
 
   componentDidMount() {
-    this.canvas = document.getElementById("canvas");
-    this.ctx = this.canvas.getContext("2d");
+    this.ctx = this.canvasRef.current.getContext("2d");
   }
 
   componentWillUnmount() {
@@ -122,11 +121,11 @@ export class VideoWindow extends Component {
     });
   }
 
-  drawPoint = (keypoint, ctx) => {
+  drawPoint = (keypoint, ctx, pointColor = "red") => {
     ctx.beginPath();
     ctx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI);
 
-    ctx.fillStyle = "red"; // TODO not hardcode color
+    ctx.fillStyle = pointColor;
     ctx.fill();
   };
 
@@ -283,6 +282,13 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
+        console.log(pose)
+        this.drawPoint(pose.keypoints["0"].position, this.ctx, "blue");
+        this.drawPoint(pose.keypoints["9"].position, this.ctx, "blue");
+        this.drawPoint(pose.keypoints["10"].position, this.ctx, "blue");
+        this.drawPoint(pose.keypoints["13"].position, this.ctx, "blue");
+        this.drawPoint(pose.keypoints["14"].position, this.ctx, "blue");
+
         if (!this.props.isUserReady) {
           this.drawPoint(this.matchingPosition.nose, this.ctx);
           this.drawPoint(this.matchingPosition.leftWrist, this.ctx);
@@ -314,7 +320,7 @@ export class VideoWindow extends Component {
           <div>Match your position to indicated position</div>
         )}
         <video id="video" width="800px" height="600px" autoPlay="1" />
-        <canvas id="canvas" width="800px" height="600px" />
+        <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px" />
       </div>
     );
   }
