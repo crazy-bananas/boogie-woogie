@@ -139,12 +139,6 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
-        this.drawPoint(pose.keypoints["0"].position, this.ctx, "blue");
-        this.drawPoint(pose.keypoints["9"].position, this.ctx, "blue");
-        this.drawPoint(pose.keypoints["10"].position, this.ctx, "blue");
-        this.drawPoint(pose.keypoints["13"].position, this.ctx, "blue");
-        this.drawPoint(pose.keypoints["14"].position, this.ctx, "blue");
-
         if (!this.props.isUserReady) {
           for (let bodyPart in this.startPosition) {
             this.drawPoint(this.startPosition[bodyPart], this.ctx)
