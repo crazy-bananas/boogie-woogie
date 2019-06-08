@@ -113,6 +113,60 @@ export class VideoWindow extends Component {
   componentDidMount() {
     this.ctx = this.canvasRef.current.getContext("2d");
 
+    const detectPoseInRealTime = (video, net) => {
+      const contentWidth = 800;
+      const contentHeight = 600;
+
+      const poseDetectionFrame = async () => {
+        const pose = await net.estimateSinglePose(
+          video,
+          this.imageScaleFactor,
+          this.flipPosenetHorizontal,
+          this.outputStride
+        );
+
+        this.ctx.clearRect(0, 0, contentWidth, contentHeight);
+        this.ctx.save();
+        this.ctx.scale(-1, 1);
+        this.ctx.translate(-contentWidth, 0);
+        this.ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
+        this.ctx.restore();
+
+        if (this.savePose) {
+          this.recordPose(pose);
+          this.savePose = false;
+        }
+
+        this.drawPoint(pose.keypoints["0"].position, this.ctx, "blue");
+        this.drawPoint(pose.keypoints["9"].position, this.ctx, "blue");
+        this.drawPoint(pose.keypoints["10"].position, this.ctx, "blue");
+        this.drawPoint(pose.keypoints["13"].position, this.ctx, "blue");
+        this.drawPoint(pose.keypoints["14"].position, this.ctx, "blue");
+
+        if (!this.props.isUserReady) {
+          this.drawPoint(this.matchingPosition.nose, this.ctx);
+          this.drawPoint(this.matchingPosition.leftWrist, this.ctx);
+          this.drawPoint(this.matchingPosition.rightWrist, this.ctx);
+          this.drawPoint(this.matchingPosition.leftKnee, this.ctx);
+          this.drawPoint(this.matchingPosition.rightKnee, this.ctx);
+          const latestCatch = {};
+          for (let index = 0; index < pose.keypoints.length; index++) {
+            const part = pose.keypoints[index].part;
+            latestCatch[part] = {};
+            latestCatch[part].x = pose.keypoints[index].position.x;
+            latestCatch[part].y = pose.keypoints[index].position.y;
+            latestCatch[part].score = pose.keypoints[index].score;
+          }
+
+          this.isMatched(latestCatch);
+        }
+
+        requestAnimationFrame(poseDetectionFrame);
+      };
+
+      poseDetectionFrame();
+    }
+
     async function bindPage() {
       const net = await posenet.load();
       let video;
@@ -156,61 +210,6 @@ export class VideoWindow extends Component {
       const video = await setupCamera();
       video.play();
       return video;
-    };
-
-    const detectPoseInRealTime = (video, net) => {
-      const contentWidth = 800;
-      const contentHeight = 600;
-
-      const poseDetectionFrame = async () => {
-        const pose = await net.estimateSinglePose(
-          video,
-          this.imageScaleFactor,
-          this.flipPosenetHorizontal,
-          this.outputStride
-        );
-
-        this.ctx.clearRect(0, 0, contentWidth, contentHeight);
-        this.ctx.save();
-        this.ctx.scale(-1, 1);
-        this.ctx.translate(-contentWidth, 0);
-        this.ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
-        this.ctx.restore();
-
-        if (this.savePose) {
-          this.recordPose(pose);
-          this.savePose = false;
-        }
-
-        console.log(pose)
-        this.drawPoint(pose.keypoints["0"].position, this.ctx, "blue");
-        this.drawPoint(pose.keypoints["9"].position, this.ctx, "blue");
-        this.drawPoint(pose.keypoints["10"].position, this.ctx, "blue");
-        this.drawPoint(pose.keypoints["13"].position, this.ctx, "blue");
-        this.drawPoint(pose.keypoints["14"].position, this.ctx, "blue");
-
-        if (!this.props.isUserReady) {
-          this.drawPoint(this.matchingPosition.nose, this.ctx);
-          this.drawPoint(this.matchingPosition.leftWrist, this.ctx);
-          this.drawPoint(this.matchingPosition.rightWrist, this.ctx);
-          this.drawPoint(this.matchingPosition.leftKnee, this.ctx);
-          this.drawPoint(this.matchingPosition.rightKnee, this.ctx);
-          const latestCatch = {};
-          for (let index = 0; index < pose.keypoints.length; index++) {
-            const part = pose.keypoints[index].part;
-            latestCatch[part] = {};
-            latestCatch[part].x = pose.keypoints[index].position.x;
-            latestCatch[part].y = pose.keypoints[index].position.y;
-            latestCatch[part].score = pose.keypoints[index].score;
-          }
-
-          this.isMatched(latestCatch);
-        }
-
-        requestAnimationFrame(poseDetectionFrame);
-      };
-
-      poseDetectionFrame();
     };
   }
 
@@ -323,6 +322,7 @@ export class VideoWindow extends Component {
     );
   }
 }
+
 const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
