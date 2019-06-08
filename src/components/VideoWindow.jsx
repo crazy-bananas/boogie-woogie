@@ -81,23 +81,23 @@ export class VideoWindow extends Component {
     let filename = "export.json";
     let contentType = "application/json;charset=utf-8;";
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      var blob = new Blob(
+      const blob = new Blob(
         [decodeURIComponent(encodeURI(JSON.stringify(objectData)))],
         { type: contentType }
       );
       navigator.msSaveOrOpenBlob(blob, filename);
     } else {
-      var a = document.createElement("a");
-      a.download = filename;
-      a.href =
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href =
         "data:" +
         contentType +
         "," +
         encodeURIComponent(JSON.stringify(objectData));
-      a.target = "_blank";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   }
 
