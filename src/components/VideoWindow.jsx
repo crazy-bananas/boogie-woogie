@@ -6,10 +6,12 @@ import correctPoses from "./correctPose";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
+
     // Posenet settings
     this.imageScaleFactor = 0.7;
     this.flipPosenetHorizontal = true;
     this.outputStride = 16;
+
     // Other
     this.canvasRef = new React.createRef();
     this.videoRef = new React.createRef();
@@ -43,7 +45,7 @@ export class VideoWindow extends Component {
     ];
     this.state = { danceStart: false };
     // to check user's standing at right position before dancing
-    this.matchingPosition = {
+    this.startPosition = {
       nose: {
         x: 404,
         y: 165
@@ -144,11 +146,9 @@ export class VideoWindow extends Component {
         this.drawPoint(pose.keypoints["14"].position, this.ctx, "blue");
 
         if (!this.props.isUserReady) {
-          this.drawPoint(this.matchingPosition.nose, this.ctx);
-          this.drawPoint(this.matchingPosition.leftWrist, this.ctx);
-          this.drawPoint(this.matchingPosition.rightWrist, this.ctx);
-          this.drawPoint(this.matchingPosition.leftKnee, this.ctx);
-          this.drawPoint(this.matchingPosition.rightKnee, this.ctx);
+          for (let bodyPart in this.startPosition) {
+            this.drawPoint(this.startPosition[bodyPart], this.ctx)
+          }
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
             const part = pose.keypoints[index].part;
@@ -270,7 +270,7 @@ export class VideoWindow extends Component {
   };
 
   isMatched = cp => {
-    const mp = this.matchingPosition;
+    const mp = this.startPosition;
     const noseX = Math.round(cp.nose.x);
     const noseY = Math.round(cp.nose.y);
     // const rWristX = Math.round(cp.rightWrist.x);
