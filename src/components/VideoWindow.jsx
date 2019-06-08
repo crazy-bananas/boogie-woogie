@@ -7,6 +7,7 @@ export class VideoWindow extends Component {
   constructor(props) {
     super(props);
     this.canvasRef = new React.createRef();
+    this.videoRef = new React.createRef();
     this.ctx = "";
     this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
@@ -228,7 +229,7 @@ export class VideoWindow extends Component {
     bindPage();
 
     const setupCamera = async () => {
-      const video = document.getElementById("video");
+      const video = this.videoRef.current;
 
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         this.stream = await navigator.mediaDevices.getUserMedia({
@@ -319,7 +320,7 @@ export class VideoWindow extends Component {
         {!this.props.isUserReady && (
           <div>Match your position to indicated position</div>
         )}
-        <video id="video" width="800px" height="600px" autoPlay="1" />
+        <video id="video" ref={this.videoRef} width="800px" height="600px" autoPlay="1" />
         <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px" />
       </div>
     );
