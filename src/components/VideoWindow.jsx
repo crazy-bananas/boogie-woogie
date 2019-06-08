@@ -159,7 +159,7 @@ export class VideoWindow extends Component {
             latestCatch[part].score = pose.keypoints[index].score;
           }
 
-          this.isMatched(latestCatch);
+          this.isPlayerInStartPosition(latestCatch);
         }
 
         requestAnimationFrame(poseDetectionFrame);
@@ -270,7 +270,7 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isMatched = playersPosition => {
+  isPlayerInStartPosition = playersPosition => {
     const startPosition = this.startPosition;
     const margin = 30;
 
