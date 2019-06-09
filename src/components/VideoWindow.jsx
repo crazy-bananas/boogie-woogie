@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import { connect } from "react-redux";
-import correctPoses from "./correctPose";
+import correctPoses from "./radioTaisoCorrectPose.json";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -71,12 +71,10 @@ export class VideoWindow extends Component {
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
-      // Commented out to record user's movement
-      // this.increment();
+      this.increment();
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
-        // Commented out to record user's movement
-        // this.calculateScore();
+        this.calculateScore();
         this.props.updateTotalScore(this.score);
         clearInterval(this.danceIntervalStopValue);
       }
@@ -95,7 +93,11 @@ export class VideoWindow extends Component {
     } else {
       const link = document.createElement("a");
       link.download = filename;
-      link.href = "data:" + contentType + "," + encodeURIComponent(JSON.stringify(objectData));
+      link.href =
+        "data:" +
+        contentType +
+        "," +
+        encodeURIComponent(JSON.stringify(objectData));
       link.target = "_blank";
       document.body.appendChild(link);
       link.click();
@@ -104,7 +106,8 @@ export class VideoWindow extends Component {
   }
 
   componentDidUpdate = () => {
-    if (this.props.isCountdownFinished) {
+    // Added new condition "=== 0" bacause DidUpdate is called twice and was causing two interval calls.
+    if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
       this.danceIntervalStopValue = this.displayCorrectPoses();
     }
 
@@ -113,7 +116,6 @@ export class VideoWindow extends Component {
 
   componentDidMount() {
     this.ctx = this.canvasRef.current.getContext("2d");
-
     const detectPoseInRealTime = (video, net) => {
       const contentWidth = 800;
       const contentHeight = 600;
@@ -140,9 +142,9 @@ export class VideoWindow extends Component {
 
         if (!this.props.isUserReady) {
           for (let bodyPart in this.startPosition) {
-            this.drawPoint(this.startPosition[bodyPart], this.ctx)
+            this.drawPoint(this.startPosition[bodyPart], this.ctx);
           }
-          
+
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
             const part = pose.keypoints[index].part;
@@ -159,7 +161,7 @@ export class VideoWindow extends Component {
       };
 
       poseDetectionFrame();
-    }
+    };
 
     async function bindPage() {
       const net = await posenet.load();
@@ -208,7 +210,7 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.danceIntervalStopValue);
+    // clearInterval(this.danceIntervalStopValue); TODO: Not Necessary. Need confirmation.
     this.exportToJson(this.recordedPoses);
     const tracks = this.stream.getTracks();
     tracks.forEach(track => {
@@ -225,14 +227,21 @@ export class VideoWindow extends Component {
   };
 
   increment = () => {
-    this.indexCorrectP++;
-    this.drawPoint(correctPoses[this.indexCorrectP].rightWrist, this.ctx);
-    this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
+    if (correctPoses.length - 1 > this.indexCorrectP) {
+      this.indexCorrectP++;
+    }
+    for (let body of this.bodyParts) {
+      this.drawPoint(correctPoses[this.indexCorrectP][body], this.ctx);
+    }
   };
 
   // TODO: Update not to crash even if number of object does not match
   calculateScore = () => {
-    for (let i = 0; i < this.recordedPoses.length; i++) {
+    const count =
+      this.recordedPoses.length > correctPoses.length
+        ? correctPoses.length - 1
+        : this.recordedPoses.length - 1;
+    for (let i = 0; i < count; i++) {
       // TODO: Make it check for all poses
       for (let body of this.bodyParts) {
         if (
@@ -267,27 +276,41 @@ export class VideoWindow extends Component {
     const startPosition = this.startPosition;
     const margin = 30;
 
-    const isPositionWithinMargin = (playersBodyPartsPosition, correctPositionsBodyPart) => {
-      const correctX = playersBodyPartsPosition.x <= correctPositionsBodyPart.x + margin &&
-      playersBodyPartsPosition.x >= correctPositionsBodyPart.x - margin;
+    const isPositionWithinMargin = (
+      playersBodyPartsPosition,
+      correctPositionsBodyPart
+    ) => {
+      const correctX =
+        playersBodyPartsPosition.x <= correctPositionsBodyPart.x + margin &&
+        playersBodyPartsPosition.x >= correctPositionsBodyPart.x - margin;
 
-      const correctY = playersBodyPartsPosition.y <= correctPositionsBodyPart.y + margin &&
-      playersBodyPartsPosition.y >= correctPositionsBodyPart.y - margin;
+      const correctY =
+        playersBodyPartsPosition.y <= correctPositionsBodyPart.y + margin &&
+        playersBodyPartsPosition.y >= correctPositionsBodyPart.y - margin;
 
       return correctX && correctY;
-    }
+    };
 
-    for(let bodyPart in playersPosition) {
-      playersPosition[bodyPart].x = Math.round(playersPosition[bodyPart].x)
-      playersPosition[bodyPart].y = Math.round(playersPosition[bodyPart].y)
+    for (let bodyPart in playersPosition) {
+      playersPosition[bodyPart].x = Math.round(playersPosition[bodyPart].x);
+      playersPosition[bodyPart].y = Math.round(playersPosition[bodyPart].y);
     }
 
     if (
-      isPositionWithinMargin(playersPosition.nose, startPosition.nose)
-      && isPositionWithinMargin(playersPosition.rightWrist, startPosition.rightWrist)
-      && isPositionWithinMargin(playersPosition.leftWrist, startPosition.leftWrist)
-      && isPositionWithinMargin(playersPosition.rightKnee, startPosition.rightKnee)
-      && isPositionWithinMargin(playersPosition.leftKnee, startPosition.leftKnee)
+      isPositionWithinMargin(playersPosition.nose, startPosition.nose) &&
+      isPositionWithinMargin(
+        playersPosition.rightWrist,
+        startPosition.rightWrist
+      ) &&
+      isPositionWithinMargin(
+        playersPosition.leftWrist,
+        startPosition.leftWrist
+      ) &&
+      isPositionWithinMargin(
+        playersPosition.rightKnee,
+        startPosition.rightKnee
+      ) &&
+      isPositionWithinMargin(playersPosition.leftKnee, startPosition.leftKnee)
     ) {
       this.props.userIsReady();
     }
@@ -300,7 +323,13 @@ export class VideoWindow extends Component {
         {!this.props.isUserReady && (
           <div>Match your position to indicated position</div>
         )}
-        <video id="video" ref={this.videoRef} width="800px" height="600px" autoPlay="1" />
+        <video
+          id="video"
+          ref={this.videoRef}
+          width="800px"
+          height="600px"
+          autoPlay="1"
+        />
         <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px" />
       </div>
     );
