@@ -42,6 +42,7 @@ export class VideoWindow extends Component {
       "rightShoulder",
       "rightWrist"
     ];
+    this.maxScore = correctPoses.length * this.bodyParts.length;
     this.state = { danceStart: false };
     // to check user's standing at right position before dancing
     this.startPosition = {
@@ -75,7 +76,7 @@ export class VideoWindow extends Component {
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
         this.calculateScore();
-        this.props.updateTotalScore(this.score);
+        this.props.updateTotalScore(this.score, this.maxScore);
         clearInterval(this.danceIntervalStopValue);
       }
     }, 100);
@@ -189,7 +190,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = this.stream;
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -213,7 +214,7 @@ export class VideoWindow extends Component {
     // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
     // this.exportToJson(this.recordedPoses);
     const tracks = this.stream.getTracks();
-    tracks.forEach(track => {
+    tracks.forEach((track) => {
       track.stop();
     });
   }
@@ -260,7 +261,7 @@ export class VideoWindow extends Component {
     }
   };
 
-  recordPose = pose => {
+  recordPose = (pose) => {
     const correctPose = {};
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
@@ -272,7 +273,7 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isPlayerInStartPosition = playersPosition => {
+  isPlayerInStartPosition = (playersPosition) => {
     const startPosition = this.startPosition;
     const margin = 30;
 
@@ -336,7 +337,7 @@ export class VideoWindow extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
@@ -346,7 +347,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     userIsReady: () => {
       dispatch({
@@ -358,10 +359,10 @@ const mapDispatchToProps = dispatch => {
         type: "DANCE_FINISHED"
       });
     },
-    updateTotalScore: score => {
+    updateTotalScore: (score, maxScore) => {
       dispatch({
         type: "UPDATE_TOTAL_SCORE",
-        payload: score
+        payload: { userScore: score, maxScore: maxScore }
       });
     }
   };
