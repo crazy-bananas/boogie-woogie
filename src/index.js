@@ -10,6 +10,7 @@ const initialState = {
   isSongSelected: false,
   songSelected: -1,
   totalScore: 0,
+  maxScore: 0,
   songList: [
     {
       artist: "NHK",
@@ -58,7 +59,8 @@ const appReducer = (state = initialState, action) => {
 
     case "UPDATE_TOTAL_SCORE": {
       const newState = { ...state };
-      newState.totalScore = action.payload;
+      newState.totalScore = action.payload.userScore;
+      newState.maxScore = action.payload.maxScore;
       return newState;
     }
     case "AUDIO_FINISHED": {
@@ -69,6 +71,12 @@ const appReducer = (state = initialState, action) => {
 
     case "RESET_STATE": {
       return { ...initialState };
+    }
+    case "RETRY_DANCE": {
+      const newState = { ...initialState };
+      newState.isSongSelected = true;
+      newState.songSelected = state.songSelected;
+      return newState;
     }
 
     default:
