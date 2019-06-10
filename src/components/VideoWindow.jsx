@@ -322,10 +322,10 @@ export class VideoWindow extends Component {
         startPosition.leftWrist
       ) &&
       isPositionWithinMargin(
-        playersPosition.rightKnee,
-        startPosition.rightKnee
+        playersPosition.rightAnkle,
+        startPosition.rightAnkle
       ) &&
-      isPositionWithinMargin(playersPosition.leftKnee, startPosition.leftKnee)
+      isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
     ) {
       this.props.userIsReady();
     }
