@@ -15,7 +15,7 @@ const initialState = {
       artist: "NHK",
       title: "Radio Taiso",
       url:
-        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio_taiso.mp3"
+        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio-taiso-33s.mov"
     },
     {
       artist: "CC",
@@ -26,7 +26,8 @@ const initialState = {
   ],
   isCountdownFinished: false,
   isUserReady: false,
-  isDanceFinished: false
+  isDanceFinished: false,
+  isAudioFinished: false
 };
 
 const appReducer = (state = initialState, action) => {
@@ -55,10 +56,19 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
-    case "UPDATE_TOTALSCORE": {
+    case "UPDATE_TOTAL_SCORE": {
       const newState = { ...state };
       newState.totalScore = action.payload;
       return newState;
+    }
+    case "AUDIO_FINISHED": {
+      const newState = { ...state };
+      newState.isAudioFinished = true;
+      return newState;
+    }
+
+    case "RESET_STATE": {
+      return { ...initialState };
     }
 
     default:

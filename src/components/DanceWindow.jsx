@@ -5,16 +5,36 @@ import "../styles/dancewindow.css";
 import { connect } from "react-redux";
 
 class DanceWindow extends Component {
+  constructor(props) {
+    super(props);
+    this.audioPlayerRef = new React.createRef();
+  }
+
   startLevel = () => {
-    const audioPlayer = document.getElementById("audio_player");
-    audioPlayer.play();
+    this.audioPlayerRef.current.play();
   };
+
+  componentDidUpdate() {
+    if (this.props.isCountdownFinished) {
+      this.startLevel();
+    }
+    // if (this.props.isAudioFinished) {
+    //   this.audioPlayerRef.current.pause();
+    // }
+  }
+
   render() {
     return (
       <div>
         <VideoWindow />
         <Counter />
-        <audio id="audio_player" src={this.props.songURL} controls />
+        <audio
+          id="audio_player"
+          ref={this.audioPlayerRef}
+          src={this.props.songURL}
+          controls
+          onEnded={this.props.audioFinished}
+        />
       </div>
     );
   }
@@ -23,7 +43,22 @@ class DanceWindow extends Component {
 const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished,
-    songURL: state.songList[state.songSelected].url
+    songURL: state.songList[state.songSelected].url,
+    isAudioFinished: state.isAudioFinished
   };
 };
-export default connect(mapStateToProps)(DanceWindow);
+
+const mapDispatchToProps = dispatch => {
+  return {
+    audioFinished: () => {
+      dispatch({
+        type: "AUDIO_FINISHED"
+      });
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DanceWindow);

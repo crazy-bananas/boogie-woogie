@@ -2,84 +2,247 @@ import React, { Component } from "react";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import { connect } from "react-redux";
-import correctPoses from "./correctPose";
-
+import correctPoses from "./radioTaisoCorrectPose.json";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
-    this.canvas = "";
+
+    // Posenet settings
+    this.imageScaleFactor = 0.7;
+    this.flipPosenetHorizontal = true;
+    this.outputStride = 16;
+
+    this.canvasRef = new React.createRef();
+    this.videoRef = new React.createRef();
     this.ctx = "";
-    this.a = 0;
+    this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
     this.savePose = false;
-    //   this.userReady = false;
     this.danceFinished = false;
     this.score = 0;
     this.recordedPoses = [];
+    this.stream = null; // Video stream
+    this.called = true; // TODO: What is this?
     this.bodyParts = [
       "leftAnkle",
-      "leftEar",
+      // "leftEar",
       "leftElbow",
-      "leftEye",
-      "leftHip",
+      // "leftEye",
+      // "leftHip",
       "leftKnee",
       "leftShoulder",
       "leftWrist",
       "nose",
       "rightAnkle",
-      "rightEar",
+      // "rightEar",
       "rightElbow",
-      "rightEye",
-      "rightHip",
+      // "rightEye",
+      // "rightHip",
       "rightKnee",
       "rightShoulder",
       "rightWrist"
     ];
+    this.state = { danceStart: false };
     // to check user's standing at right position before dancing
-    this.matchingPosition = [
-      {
-        nose: {
-          x: 350,
-          y: 300
-        }
+    this.startPosition = {
+      nose: {
+        x: 404,
+        y: 165
+      },
+      leftWrist: {
+        x: 615,
+        y: 218
+      },
+      rightWrist: {
+        x: 203,
+        y: 217
+      },
+      leftKnee: {
+        x: 471,
+        y: 519
+      },
+      rightKnee: {
+        x: 355,
+        y: 519
       }
-    ];
+    };
   }
-
-  componentDidMount() {
-    this.canvas = document.getElementById("canvas");
-    this.ctx = this.canvas.getContext("2d");
-  }
-
-  drawPoint = (keypoint, ctx) => {
-    ctx.beginPath();
-    ctx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI);
-
-    ctx.fillStyle = "red"; // TODO not hardcode color
-    ctx.fill();
-  };
-
-  increment = () => {
-    this.indexCorrectP++;
-    this.drawPoint(correctPoses[this.indexCorrectP].rightWrist, this.ctx);
-    this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
-  };
 
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
       this.increment();
-      if (this.indexCorrectP >= correctPoses.length - 1) {
+      if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
         this.calculateScore();
         this.props.updateTotalScore(this.score);
-        clearInterval(this.a);
+        clearInterval(this.danceIntervalStopValue);
       }
-    }, 500);
+    }, 100);
   };
 
+  exportToJson(objectData) {
+    let filename = "export.json";
+    let contentType = "application/json;charset=utf-8;";
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      const blob = new Blob(
+        [decodeURIComponent(encodeURI(JSON.stringify(objectData)))],
+        { type: contentType }
+      );
+      navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href =
+        "data:" +
+        contentType +
+        "," +
+        encodeURIComponent(JSON.stringify(objectData));
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+  componentDidUpdate = () => {
+    // Added new condition "=== 0" bacause DidUpdate is called twice and was causing two interval calls.
+    if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
+      this.danceIntervalStopValue = this.displayCorrectPoses();
+    }
+
+    return null;
+  };
+
+  componentDidMount() {
+    this.ctx = this.canvasRef.current.getContext("2d");
+    const detectPoseInRealTime = (video, net) => {
+      const contentWidth = 800;
+      const contentHeight = 600;
+
+      const poseDetectionFrame = async () => {
+        const pose = await net.estimateSinglePose(
+          video,
+          this.imageScaleFactor,
+          this.flipPosenetHorizontal,
+          this.outputStride
+        );
+
+        this.ctx.clearRect(0, 0, contentWidth, contentHeight);
+        this.ctx.save();
+        this.ctx.scale(-1, 1);
+        this.ctx.translate(-contentWidth, 0);
+        this.ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
+        this.ctx.restore();
+
+        if (this.savePose) {
+          this.recordPose(pose);
+          this.savePose = false;
+        }
+
+        if (!this.props.isUserReady) {
+          for (let bodyPart in this.startPosition) {
+            this.drawPoint(this.startPosition[bodyPart], this.ctx);
+          }
+
+          const latestCatch = {};
+          for (let index = 0; index < pose.keypoints.length; index++) {
+            const part = pose.keypoints[index].part;
+            latestCatch[part] = {};
+            latestCatch[part].x = pose.keypoints[index].position.x;
+            latestCatch[part].y = pose.keypoints[index].position.y;
+            latestCatch[part].score = pose.keypoints[index].score;
+          }
+
+          this.isPlayerInStartPosition(latestCatch);
+        }
+
+        requestAnimationFrame(poseDetectionFrame);
+      };
+
+      poseDetectionFrame();
+    };
+
+    async function bindPage() {
+      const net = await posenet.load();
+      let video;
+      try {
+        video = await loadVideo();
+      } catch (e) {
+        alert(e);
+        return;
+      }
+
+      detectPoseInRealTime(video, net);
+    }
+
+    bindPage();
+
+    const setupCamera = async () => {
+      const video = this.videoRef.current;
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        this.stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: true
+        });
+
+        video.srcObject = this.stream;
+
+        return new Promise(resolve => {
+          video.onloadedmetadata = () => {
+            resolve(video);
+          };
+        });
+      } else {
+        const ErrorMessage =
+          "This Browser Does Not Support Video Capture, Or This Device Does Not Have A Camera";
+        alert(ErrorMessage);
+        return Promise.reject(ErrorMessage);
+      }
+    };
+
+    const loadVideo = async () => {
+      const video = await setupCamera();
+      video.play();
+      return video;
+    };
+  }
+
+  componentWillUnmount() {
+    // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
+    // this.exportToJson(this.recordedPoses);
+    const tracks = this.stream.getTracks();
+    tracks.forEach(track => {
+      track.stop();
+    });
+  }
+
+  drawPoint = (keypoint, ctx, pointColor = "red") => {
+    ctx.beginPath();
+    ctx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI);
+
+    ctx.fillStyle = pointColor;
+    ctx.fill();
+  };
+
+  increment = () => {
+    if (correctPoses.length - 1 > this.indexCorrectP) {
+      this.indexCorrectP++;
+    }
+    for (let body of this.bodyParts) {
+      this.drawPoint(correctPoses[this.indexCorrectP][body], this.ctx);
+    }
+  };
+
+  // TODO: Update not to crash even if number of object does not match
   calculateScore = () => {
-    for (let i = 0; i < 10; i++) {
+    const count =
+      this.recordedPoses.length > correctPoses.length
+        ? correctPoses.length - 1
+        : this.recordedPoses.length - 1;
+    for (let i = 0; i < count; i++) {
+      // TODO: Make it check for all poses
       for (let body of this.bodyParts) {
         if (
           correctPoses[i][body].x <=
@@ -97,7 +260,7 @@ export class VideoWindow extends Component {
     }
   };
 
-  recordPose = (pose) => {
+  recordPose = pose => {
     const correctPose = {};
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
@@ -109,136 +272,81 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isMatched = (currentPosition) => {
+  isPlayerInStartPosition = playersPosition => {
+    const startPosition = this.startPosition;
+    const margin = 30;
+
+    const isPositionWithinMargin = (
+      playersBodyPartsPosition,
+      correctPositionsBodyPart
+    ) => {
+      const correctX =
+        playersBodyPartsPosition.x <= correctPositionsBodyPart.x + margin &&
+        playersBodyPartsPosition.x >= correctPositionsBodyPart.x - margin;
+
+      const correctY =
+        playersBodyPartsPosition.y <= correctPositionsBodyPart.y + margin &&
+        playersBodyPartsPosition.y >= correctPositionsBodyPart.y - margin;
+
+      return correctX && correctY;
+    };
+
+    for (let bodyPart in playersPosition) {
+      playersPosition[bodyPart].x = Math.round(playersPosition[bodyPart].x);
+      playersPosition[bodyPart].y = Math.round(playersPosition[bodyPart].y);
+    }
+
     if (
-      this.matchingPosition[0].nose.x <=
-        Math.round(currentPosition.nose.x) + 30 &&
-      this.matchingPosition[0].nose.x >=
-        Math.round(currentPosition.nose.x) - 30 &&
-      this.matchingPosition[0].nose.y <=
-        Math.round(currentPosition.nose.y) + 30 &&
-      this.matchingPosition[0].nose.y >= Math.round(currentPosition.nose.y) - 30
+      isPositionWithinMargin(playersPosition.nose, startPosition.nose) &&
+      isPositionWithinMargin(
+        playersPosition.rightWrist,
+        startPosition.rightWrist
+      ) &&
+      isPositionWithinMargin(
+        playersPosition.leftWrist,
+        startPosition.leftWrist
+      ) &&
+      isPositionWithinMargin(
+        playersPosition.rightKnee,
+        startPosition.rightKnee
+      ) &&
+      isPositionWithinMargin(playersPosition.leftKnee, startPosition.leftKnee)
     ) {
-      this.a = this.displayCorrectPoses();
       this.props.userIsReady();
     }
   };
 
   render() {
-    const imageScaleFactor = 0.7;
-    const outputStride = 16;
-
-    async function bindPage() {
-      const net = await posenet.load();
-      let video;
-      try {
-        video = await loadVideo();
-      } catch (e) {
-        alert(e);
-        return;
-      }
-
-      detectPoseInRealTime(video, net);
-    }
-
-    bindPage();
-
-    async function setupCamera() {
-      const video = document.getElementById("video");
-
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: false,
-          video: true
-        });
-
-        video.srcObject = stream;
-
-        return new Promise((resolve) => {
-          video.onloadedmetadata = () => {
-            resolve(video);
-          };
-        });
-      } else {
-        const ErrorMessage =
-          "This Browser Does Not Support Video Capture, Or This Device Does Not Have A Camera";
-        alert(ErrorMessage);
-        return Promise.reject(ErrorMessage);
-      }
-    }
-
-    const loadVideo = async () => {
-      const video = await setupCamera();
-      video.play();
-      return video;
-    };
-
-    const detectPoseInRealTime = (video, net) => {
-      const flipHorizontal = true;
-      const contentWidth = 800;
-      const contentHeight = 600;
-
-      const poseDetectionFrame = async () => {
-        const pose = await net.estimateSinglePose(
-          video,
-          imageScaleFactor,
-          flipHorizontal,
-          outputStride
-        );
-
-        this.ctx.clearRect(0, 0, contentWidth, contentHeight);
-        this.ctx.save();
-        this.ctx.scale(-1, 1);
-        this.ctx.translate(-contentWidth, 0);
-        this.ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
-        this.ctx.restore();
-
-        if (this.savePose) {
-          this.recordPose(pose);
-          this.savePose = false;
-        }
-
-        if (!this.props.isUserReady) {
-          this.drawPoint(this.matchingPosition[0].nose, this.ctx);
-          const latestCatch = {};
-          for (let index = 0; index < pose.keypoints.length; index++) {
-            const part = pose.keypoints[index].part;
-            latestCatch[part] = {};
-            latestCatch[part].x = pose.keypoints[index].position.x;
-            latestCatch[part].y = pose.keypoints[index].position.y;
-            latestCatch[part].score = pose.keypoints[index].score;
-          }
-
-          this.isMatched(latestCatch);
-        }
-
-        requestAnimationFrame(poseDetectionFrame);
-      };
-
-      poseDetectionFrame();
-    };
-
     return (
       <div>
         {this.props.isUserReady && <div>Dance Starting</div>}
         {!this.props.isUserReady && (
           <div>Match your position to indicated position</div>
         )}
-        <video id="video" width="800px" height="600px" autoPlay="1" />
-        <canvas id="canvas" width="800px" height="600px" />
+        <video
+          id="video"
+          ref={this.videoRef}
+          width="800px"
+          height="600px"
+          autoPlay="1"
+        />
+        <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px" />
       </div>
     );
   }
 }
-const mapStateToProps = (state) => {
+
+const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
-    totalScore: state.totalScore
+    totalScore: state.totalScore,
+    isCountdownFinished: state.isCountdownFinished,
+    isAudioFinished: state.isAudioFinished
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     userIsReady: () => {
       dispatch({
@@ -250,9 +358,9 @@ const mapDispatchToProps = (dispatch) => {
         type: "DANCE_FINISHED"
       });
     },
-    updateTotalScore: (score) => {
+    updateTotalScore: score => {
       dispatch({
-        type: "UPDATE_TOTALSCORE",
+        type: "UPDATE_TOTAL_SCORE",
         payload: score
       });
     }
