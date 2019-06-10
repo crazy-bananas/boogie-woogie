@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ScoreCard(props) {
   const classes = useStyles();
-
+  const userScore = Math.floor((props.score / props.maxScore) * 100);
   return (
     <div id="card">
       <Card className={classes.card}>
@@ -54,7 +54,8 @@ function ScoreCard(props) {
             component="p"
             className={classes.scoreText}
           >
-            Your Score: {props.score}
+            Your Score: {`${userScore}%`}
+            {`(${props.score}/${props.maxScore})`}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
@@ -74,7 +75,8 @@ const mapStateToProps = (state) => {
   return {
     title: state.songList[state.songSelected].title,
     artist: state.songList[state.songSelected].artist,
-    score: state.totalScore
+    score: state.totalScore,
+    maxScore: state.maxScore
   };
 };
 
