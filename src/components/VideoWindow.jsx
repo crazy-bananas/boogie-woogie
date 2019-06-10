@@ -3,6 +3,11 @@ import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import { connect } from "react-redux";
 import correctPoses from "./radioTaisoCorrectPose.json";
+
+import hand from "../images/hold.svg";
+import nose from "../images/glasses.svg";
+import rightShoe from "../images/leftShoe.png";
+import leftShoe from "../images/rightShoe.png";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -58,13 +63,13 @@ export class VideoWindow extends Component {
         x: 203,
         y: 217
       },
-      leftKnee: {
-        x: 471,
-        y: 519
+      leftAnkle: {
+        x: 415,
+        y: 535
       },
-      rightKnee: {
-        x: 355,
-        y: 519
+      rightAnkle: {
+        x: 394,
+        y: 535
       }
     };
   }
@@ -142,9 +147,18 @@ export class VideoWindow extends Component {
         }
 
         if (!this.props.isUserReady) {
-          for (let bodyPart in this.startPosition) {
-            this.drawPoint(this.startPosition[bodyPart], this.ctx);
-          }
+          this.drawHand(
+            this.startPosition.leftWrist,
+            this.startPosition.rightWrist
+          );
+          this.drawNose(this.startPosition.nose);
+          this.drawShoes(
+            this.startPosition.leftAnkle,
+            this.startPosition.rightAnkle
+          );
+          // for (let bodyPart in this.startPosition) {
+          //   this.drawPoint(this.startPosition[bodyPart], this.ctx);
+          // }
 
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
@@ -317,6 +331,51 @@ export class VideoWindow extends Component {
     }
   };
 
+  drawHand = (leftWrist, rightWrist) => {
+    const image = document.getElementById("hand");
+
+    const height = 50;
+    const width = 50;
+    const lX = leftWrist.x;
+    const lY = leftWrist.y;
+    const rX = rightWrist.x;
+    const rY = rightWrist.y;
+    this.ctx.save();
+    this.ctx.translate(lX, lY); // change origin
+    this.ctx.rotate((90 * Math.PI) / 180);
+    this.ctx.translate(-lX - 25, -lY - 50);
+    this.ctx.drawImage(image, lX, lY, height, width);
+    this.ctx.restore();
+    this.ctx.save();
+    this.ctx.translate(rX, rY); // change origin
+    this.ctx.rotate((270 * Math.PI) / 180);
+    this.ctx.translate(-rX - 25, -rY - 50);
+    this.ctx.drawImage(image, rX, rY, height, width);
+    this.ctx.restore();
+  };
+  drawShoes = (leftAnkle, rightAnkle) => {
+    const lShoe = document.getElementById("lShoe");
+    const rShoe = document.getElementById("rShoe");
+
+    const height = 50;
+    const width = 75;
+    const lX = leftAnkle.x;
+    const lY = leftAnkle.y - 20;
+    const rX = rightAnkle.x - 50;
+    const rY = rightAnkle.y - 20;
+    this.ctx.drawImage(lShoe, lX, lY, height, width);
+    this.ctx.drawImage(rShoe, rX, rY, height, width);
+  };
+  drawNose = (nose) => {
+    const image = document.getElementById("nose");
+    const height = 70;
+    const width = 70;
+    const x = nose.x - 30;
+    const y = nose.y - 50;
+
+    this.ctx.drawImage(image, x, y, height, width);
+  };
+
   render() {
     return (
       <div>
@@ -324,6 +383,13 @@ export class VideoWindow extends Component {
         {!this.props.isUserReady && (
           <div>Match your position to indicated position</div>
         )}
+        <div style={{ display: "none" }}>
+          <img id="hand" src={hand} alt="hand" />
+          <img id="nose" src={nose} alt="nose" />
+          <img id="lShoe" src={leftShoe} alt="lshoe" />
+          <img id="rShoe" src={rightShoe} alt="rshoe" />
+        </div>
+
         <video
           id="video"
           ref={this.videoRef}
