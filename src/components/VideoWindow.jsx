@@ -210,8 +210,8 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
-    // clearInterval(this.danceIntervalStopValue); TODO: Not Necessary. Need confirmation.
-    this.exportToJson(this.recordedPoses);
+    // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
+    // this.exportToJson(this.recordedPoses);
     const tracks = this.stream.getTracks();
     tracks.forEach(track => {
       track.stop();
