@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ScoreCard from "./ScoreCard";
+import Retry from "./Retry";
 
 class Score extends Component {
   render() {
     return (
       <div>
         <ScoreCard />
+        <Retry />
       </div>
     );
   }
