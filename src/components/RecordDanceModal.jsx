@@ -43,19 +43,19 @@ class SimpleModal extends Component {
     this.fileInputRef.current.click();
   };
 
-  setTitle = (event) => {
+  setTitle = event => {
     this.setState({ title: event.target.value });
   };
 
-  setArtist = (event) => {
+  setArtist = event => {
     this.setState({ artist: event.target.value });
   };
 
-  setSongUrl = (event) => {
+  setSongUrl = event => {
     this.setState({ songUrl: event.target.value });
   };
 
-  setFile = (event) => {
+  setFile = event => {
     this.setState({ file: event.target.files[0] });
     // Upload to S3
     saveObject(event.target.files[0]);
@@ -166,13 +166,13 @@ class SimpleModal extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    addSong: (song) => {
+    addSong: song => {
       dispatch({
         type: "ADD_SONG",
         payload: song
