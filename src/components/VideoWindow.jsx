@@ -4,7 +4,8 @@ import "../styles/videowindow.css";
 import { connect } from "react-redux";
 import correctPoses from "./radioTaisoCorrectPose.json";
 
-import hand from "../images/hold.svg";
+import leftHandImg from "../images/leftHand.png";
+import rightHandImg from "../images/rightHand.svg";
 import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
@@ -25,11 +26,6 @@ export class VideoWindow extends Component {
     this.noseRef = new React.createRef();
     this.leftShoeRef = new React.createRef();
     this.rightShoeRef = new React.createRef();
-
-    this.leftHand0Ref = new React.createRef();
-    this.leftHand45Ref = new React.createRef();
-    this.leftHand135Ref = new React.createRef();
-    this.leftHand180Ref = new React.createRef();
 
     this.ctx = "";
     this.danceIntervalStopValue = 0;
@@ -103,8 +99,12 @@ export class VideoWindow extends Component {
       this.drawHand(
         correctPoses[this.indexCorrectP]["leftWrist"],
         correctPoses[this.indexCorrectP]["leftElbow"],
+        this.leftHandRef.current
+      );
+      this.drawHand(
         correctPoses[this.indexCorrectP]["rightWrist"],
-        correctPoses[this.indexCorrectP]["rightElbow"]
+        correctPoses[this.indexCorrectP]["rightElbow"],
+        this.rightHandRef.current
       );
 
       if (this.props.isAudioFinished) {
@@ -179,8 +179,12 @@ export class VideoWindow extends Component {
           this.drawHand(
             this.startPosition.leftWrist,
             this.startPosition.leftElbow,
+            this.leftHandRef.current
+          );
+          this.drawHand(
             this.startPosition.rightWrist,
-            this.startPosition.rightElbow
+            this.startPosition.rightElbow,
+            this.rightHandRef.current
           );
           this.drawNose(this.startPosition.nose);
           this.drawShoes(
@@ -377,29 +381,20 @@ export class VideoWindow extends Component {
     return angle;
   }
 
-  drawHand = (leftWrist, leftElbow, rightWrist, rightElbow) => {
-    // const leftHand = this.leftHandRef.current;
-    const rightHand = this.rightHandRef.current;
+  drawHand = (wrist, elbow, hand) => {
+    const spacingX = 50;
+    const spacingY = 50;
+    const wristX = wrist.x;
+    const wristY = wrist.y;
 
-    const height = 50;
-    const width = 50;
-
-    const drawHands = (wrist, elbow, hand) => {
-      const wristX = wrist.x;
-      const wristY = wrist.y;
-
-      this.ctx.save();
-      this.ctx.translate(wristX, wristY); // change origin
-      let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
-      this.ctx.rotate(rotationAngle);
-      this.ctx.translate(-wristX - 25, -wristY - 50);
-      this.ctx.drawImage(hand, wristX, wristY, height, width);
-      this.ctx.restore();
-      this.ctx.save();
-    };
-
-    drawHands(leftWrist, leftElbow, this.leftHandRef.current);
-    drawHands(rightWrist, rightElbow, this.rightHandRef.current);
+    this.ctx.save();
+    this.ctx.translate(wristX, wristY); // change origin
+    let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
+    this.ctx.rotate(rotationAngle);
+    this.ctx.translate(-wristX - 25, -wristY - 50);
+    this.ctx.drawImage(hand, wristX, wristY, spacingX, spacingY);
+    this.ctx.restore();
+    this.ctx.save();
   };
 
   drawShoes = (leftAnkle, rightAnkle) => {
@@ -437,37 +432,13 @@ export class VideoWindow extends Component {
           <img
             id="rightHand"
             ref={this.rightHandRef}
-            src={hand}
+            src={rightHandImg}
             alt="right hand"
-          />
-          <img
-            id="leftHand0"
-            ref={this.leftHand0Ref}
-            src={hand}
-            alt="left hand"
-          />
-          <img
-            id="leftHand45"
-            ref={this.leftHand45Ref}
-            src={hand}
-            alt="left hand"
           />
           <img
             id="leftHand"
             ref={this.leftHandRef}
-            src={hand}
-            alt="left hand"
-          />
-          <img
-            id="leftHand135"
-            ref={this.leftHand135Ref}
-            src={hand}
-            alt="left hand"
-          />
-          <img
-            id="leftHand180"
-            ref={this.leftHand180Ref}
-            src={hand}
+            src={leftHandImg}
             alt="left hand"
           />
           <img id="nose" ref={this.noseRef} src={nose} alt="nose" />
