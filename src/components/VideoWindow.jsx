@@ -77,7 +77,9 @@ export class VideoWindow extends Component {
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
-      this.increment();
+      if (!this.props.isRecording) {
+        this.increment();
+      }
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
         this.calculateScore();
@@ -113,11 +115,7 @@ export class VideoWindow extends Component {
 
   componentDidUpdate = () => {
     // Added new condition "=== 0" bacause DidUpdate is called twice and was causing two interval calls.
-    if (
-      this.props.isCountdownFinished &&
-      this.danceIntervalStopValue === 0 &&
-      !this.props.isRecording
-    ) {
+    if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
       this.danceIntervalStopValue = this.displayCorrectPoses();
     }
 
@@ -208,7 +206,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = this.stream;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -234,7 +232,7 @@ export class VideoWindow extends Component {
       this.exportToJson(this.recordedPoses);
     }
     const tracks = this.stream.getTracks();
-    tracks.forEach((track) => {
+    tracks.forEach(track => {
       track.stop();
     });
   }
@@ -281,7 +279,7 @@ export class VideoWindow extends Component {
     }
   };
 
-  recordPose = (pose) => {
+  recordPose = pose => {
     const correctPose = {};
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
@@ -293,7 +291,7 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isPlayerInStartPosition = (playersPosition) => {
+  isPlayerInStartPosition = playersPosition => {
     const startPosition = this.startPosition;
     const margin = 30;
 
@@ -372,7 +370,7 @@ export class VideoWindow extends Component {
     this.ctx.drawImage(lShoe, lX, lY, height, width);
     this.ctx.drawImage(rShoe, rX, rY, height, width);
   };
-  drawNose = (nose) => {
+  drawNose = nose => {
     const image = document.getElementById("nose");
     const height = 70;
     const width = 70;
@@ -409,7 +407,7 @@ export class VideoWindow extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
@@ -420,7 +418,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     userIsReady: () => {
       dispatch({
