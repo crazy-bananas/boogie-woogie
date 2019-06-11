@@ -87,9 +87,10 @@ const appReducer = (state = initialState, action) => {
       const newState = { ...state };
       newState.newSong.artist = action.payload.artist;
       newState.newSong.title = action.payload.title;
-      newState.newSong.url = action.payload.url;
+      newState.newSong.url = action.payload.songUrl;
       newState.songList.push(action.payload);
       newState.songSelected = newState.songList.length - 1;
+      newState.isRecording = !state.isRecording;
       return newState;
     }
 
