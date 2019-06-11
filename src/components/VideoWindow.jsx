@@ -113,7 +113,11 @@ export class VideoWindow extends Component {
 
   componentDidUpdate = () => {
     // Added new condition "=== 0" bacause DidUpdate is called twice and was causing two interval calls.
-    if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
+    if (
+      this.props.isCountdownFinished &&
+      this.danceIntervalStopValue === 0 &&
+      !this.props.isRecording
+    ) {
       this.danceIntervalStopValue = this.displayCorrectPoses();
     }
 
@@ -226,7 +230,9 @@ export class VideoWindow extends Component {
 
   componentWillUnmount() {
     // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
-    // this.exportToJson(this.recordedPoses);
+    if (this.props.isRecording) {
+      this.exportToJson(this.recordedPoses);
+    }
     const tracks = this.stream.getTracks();
     tracks.forEach((track) => {
       track.stop();
@@ -409,7 +415,8 @@ const mapStateToProps = (state) => {
     isDanceFinished: state.isDanceFinished,
     totalScore: state.totalScore,
     isCountdownFinished: state.isCountdownFinished,
-    isAudioFinished: state.isAudioFinished
+    isAudioFinished: state.isAudioFinished,
+    isRecording: state.isRecording
   };
 };
 
