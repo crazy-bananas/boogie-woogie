@@ -8,32 +8,39 @@ import RecordWindow from "./components/RecordWindow";
 import Score from "./components/Score";
 
 class App extends Component {
+  showMenu = () => {
+    if (this.props.isSongSelected || this.props.isRecording) {
+      return false;
+    }
+    return true;
+  };
   render() {
     return (
       <div className="App">
         <Navbar />
-        {(!this.props.isSongSelected || !this.props.isRecording) && (
-          <SongMenu />
-        )}
+        {this.showMenu() && <SongMenu />}
         {this.props.isSongSelected && !this.props.isDanceFinished && (
           <DanceWindow />
         )}
-        {this.props.isRecording && <RecordWindow />}
-        {this.props.isDanceFinished && <Score />}
+        {this.props.isRecording && !this.props.isAudioFinished && (
+          <RecordWindow />
+        )}
+        {this.props.isAudioFinished && <Score />}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isSongSelected: state.isSongSelected,
     isDanceFinished: state.isDanceFinished,
-    isRecording: state.isRecording
+    isRecording: state.isRecording,
+    isAudioFinished: state.isAudioFinished
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 
