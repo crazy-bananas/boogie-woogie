@@ -3,17 +3,30 @@ import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import { connect } from "react-redux";
 import correctPoses from "./radioTaisoCorrectPose.json";
+
+import leftHandImg from "../images/leftHand.png";
+import rightHandImg from "../images/rightHand.svg";
+import nose from "../images/glasses.svg";
+import rightShoe from "../images/leftShoe.png";
+import leftShoe from "../images/rightShoe.png";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
 
     // Posenet settings
-    this.imageScaleFactor = 0.7;
+    this.imageScaleFactor = 0.5;
     this.flipPosenetHorizontal = true;
     this.outputStride = 16;
 
+    // Unique Refrences
     this.canvasRef = new React.createRef();
     this.videoRef = new React.createRef();
+    this.leftHandRef = new React.createRef();
+    this.rightHandRef = new React.createRef();
+    this.noseRef = new React.createRef();
+    this.leftShoeRef = new React.createRef();
+    this.rightShoeRef = new React.createRef();
+
     this.ctx = "";
     this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
@@ -42,6 +55,7 @@ export class VideoWindow extends Component {
       "rightShoulder",
       "rightWrist"
     ];
+    this.maxScore = correctPoses.length * this.bodyParts.length;
     this.state = { danceStart: false };
     // to check user's standing at right position before dancing
     this.startPosition = {
@@ -50,20 +64,30 @@ export class VideoWindow extends Component {
         y: 165
       },
       leftWrist: {
-        x: 615,
-        y: 218
+        x: 460,
+        // x: 618,
+        y: 350
+        // y: 418
       },
       rightWrist: {
-        x: 203,
-        y: 217
+        x: 356,
+        y: 357
       },
-      leftKnee: {
-        x: 471,
-        y: 519
+      leftElbow: {
+        x: 459,
+        y: 303
       },
-      rightKnee: {
-        x: 355,
-        y: 519
+      rightElbow: {
+        x: 364,
+        y: 300
+      },
+      leftAnkle: {
+        x: 415,
+        y: 535
+      },
+      rightAnkle: {
+        x: 394,
+        y: 535
       }
     };
   }
@@ -72,10 +96,26 @@ export class VideoWindow extends Component {
     return setInterval(() => {
       this.savePose = true;
       this.increment();
+      this.drawHand(
+        correctPoses[this.indexCorrectP]["leftWrist"],
+        correctPoses[this.indexCorrectP]["leftElbow"],
+        this.leftHandRef.current
+      );
+      this.drawHand(
+        correctPoses[this.indexCorrectP]["rightWrist"],
+        correctPoses[this.indexCorrectP]["rightElbow"],
+        this.rightHandRef.current
+      );
+      this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
+      this.drawShoes(
+        correctPoses[this.indexCorrectP]["leftAnkle"],
+        correctPoses[this.indexCorrectP]["rightAnkle"]
+      );
+
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
         this.calculateScore();
-        this.props.updateTotalScore(this.score);
+        this.props.updateTotalScore(this.score, this.maxScore);
         clearInterval(this.danceIntervalStopValue);
       }
     }, 100);
@@ -141,9 +181,26 @@ export class VideoWindow extends Component {
         }
 
         if (!this.props.isUserReady) {
-          for (let bodyPart in this.startPosition) {
-            this.drawPoint(this.startPosition[bodyPart], this.ctx);
-          }
+          this.drawHand(
+            this.startPosition.leftWrist,
+            this.startPosition.leftElbow,
+            this.leftHandRef.current
+          );
+          this.drawHand(
+            this.startPosition.rightWrist,
+            this.startPosition.rightElbow,
+            this.rightHandRef.current
+          );
+          this.drawNose(this.startPosition.nose);
+          this.drawShoes(
+            this.startPosition.leftAnkle,
+            this.startPosition.rightAnkle
+          );
+          // for (let bodyPart in this.startPosition) {
+          //   this.drawPoint(this.startPosition[bodyPart], this.ctx);
+          // }
+          this.drawPoint(this.startPosition.leftElbow, this.ctx);
+          this.drawPoint(this.startPosition.rightElbow, this.ctx);
 
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
@@ -189,7 +246,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = this.stream;
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -213,7 +270,7 @@ export class VideoWindow extends Component {
     // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
     // this.exportToJson(this.recordedPoses);
     const tracks = this.stream.getTracks();
-    tracks.forEach(track => {
+    tracks.forEach((track) => {
       track.stop();
     });
   }
@@ -230,9 +287,9 @@ export class VideoWindow extends Component {
     if (correctPoses.length - 1 > this.indexCorrectP) {
       this.indexCorrectP++;
     }
-    for (let body of this.bodyParts) {
-      this.drawPoint(correctPoses[this.indexCorrectP][body], this.ctx);
-    }
+    // for (let body of this.bodyParts) {
+    //   this.drawPoint(correctPoses[this.indexCorrectP][body], this.ctx);
+    // }
   };
 
   // TODO: Update not to crash even if number of object does not match
@@ -260,7 +317,7 @@ export class VideoWindow extends Component {
     }
   };
 
-  recordPose = pose => {
+  recordPose = (pose) => {
     const correctPose = {};
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
@@ -272,7 +329,7 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isPlayerInStartPosition = playersPosition => {
+  isPlayerInStartPosition = (playersPosition) => {
     const startPosition = this.startPosition;
     const margin = 30;
 
@@ -307,13 +364,66 @@ export class VideoWindow extends Component {
         startPosition.leftWrist
       ) &&
       isPositionWithinMargin(
-        playersPosition.rightKnee,
-        startPosition.rightKnee
+        playersPosition.rightAnkle,
+        startPosition.rightAnkle
       ) &&
-      isPositionWithinMargin(playersPosition.leftKnee, startPosition.leftKnee)
+      isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
     ) {
       this.props.userIsReady();
     }
+  };
+
+  calculateHandRotationAngle(wristPosition, elbowPosition) {
+    let diffX = wristPosition.x - elbowPosition.x;
+    let diffY = wristPosition.y - elbowPosition.y;
+    let angleCorrection = Math.PI / 2;
+
+    if (wristPosition.x < elbowPosition.x) {
+      angleCorrection += Math.PI;
+    }
+
+    const angle = Math.atan(diffY / diffX) + angleCorrection;
+    return angle;
+  }
+
+  drawHand = (wrist, elbow, hand) => {
+    const spacingX = 50;
+    const spacingY = 50;
+    const wristX = wrist.x;
+    const wristY = wrist.y;
+
+    this.ctx.save();
+    this.ctx.translate(wristX, wristY); // change origin
+    let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
+    this.ctx.rotate(rotationAngle);
+    this.ctx.translate(-wristX - 25, -wristY - 50);
+    this.ctx.drawImage(hand, wristX, wristY, spacingX, spacingY);
+    this.ctx.restore();
+    this.ctx.save();
+  };
+  drawLine() {}
+  drawShoes = (leftAnkle, rightAnkle) => {
+    const lShoe = this.leftShoeRef.current;
+    const rShoe = this.rightShoeRef.current;
+
+    const height = 50;
+    const width = 75;
+    const lX = leftAnkle.x;
+    const lY = leftAnkle.y - 20;
+    const rX = rightAnkle.x - 50;
+    const rY = rightAnkle.y - 20;
+    this.ctx.drawImage(lShoe, lX, lY, height, width);
+    this.ctx.drawImage(rShoe, rX, rY, height, width);
+  };
+
+  drawNose = (noseCoordinates) => {
+    const nose = this.noseRef.current;
+    const height = 70;
+    const width = 70;
+    const x = noseCoordinates.x - 30;
+    const y = noseCoordinates.y - 50;
+
+    this.ctx.drawImage(nose, x, y, height, width);
   };
 
   render() {
@@ -323,6 +433,24 @@ export class VideoWindow extends Component {
         {!this.props.isUserReady && (
           <div>Match your position to indicated position</div>
         )}
+        <div style={{ display: "none" }}>
+          <img
+            id="rightHand"
+            ref={this.rightHandRef}
+            src={rightHandImg}
+            alt="right hand"
+          />
+          <img
+            id="leftHand"
+            ref={this.leftHandRef}
+            src={leftHandImg}
+            alt="left hand"
+          />
+          <img id="nose" ref={this.noseRef} src={nose} alt="nose" />
+          <img id="lShoe" ref={this.leftShoeRef} src={leftShoe} alt="lshoe" />
+          <img id="rShoe" ref={this.rightShoeRef} src={rightShoe} alt="rshoe" />
+        </div>
+
         <video
           id="video"
           ref={this.videoRef}
@@ -336,7 +464,7 @@ export class VideoWindow extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
@@ -346,7 +474,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     userIsReady: () => {
       dispatch({
@@ -358,10 +486,10 @@ const mapDispatchToProps = dispatch => {
         type: "DANCE_FINISHED"
       });
     },
-    updateTotalScore: score => {
+    updateTotalScore: (score, maxScore) => {
       dispatch({
         type: "UPDATE_TOTAL_SCORE",
-        payload: score
+        payload: { userScore: score, maxScore: maxScore }
       });
     }
   };
