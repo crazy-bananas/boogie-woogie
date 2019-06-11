@@ -31,7 +31,7 @@ class RecordWindow extends Component {
         <audio
           id="audio_player"
           ref={this.audioPlayerRef}
-          src={this.props.songURL}
+          src={this.props.newSong.url}
           controls
           onEnded={this.props.audioFinished}
         />
@@ -40,15 +40,16 @@ class RecordWindow extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished,
     songURL: state.songList[state.songSelected].url,
-    isAudioFinished: state.isAudioFinished
+    isAudioFinished: state.isAudioFinished,
+    newSong: state.newSong
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     audioFinished: () => {
       dispatch({
