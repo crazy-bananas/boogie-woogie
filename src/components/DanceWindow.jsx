@@ -18,9 +18,6 @@ class DanceWindow extends Component {
     if (this.props.isCountdownFinished) {
       this.startLevel();
     }
-    // if (this.props.isAudioFinished) {
-    //   this.audioPlayerRef.current.pause();
-    // }
   }
 
   render() {
@@ -28,30 +25,19 @@ class DanceWindow extends Component {
       <div>
         <VideoWindow />
         <Counter />
-        {!this.props.isRecording && (
-          <audio
-            id="audio_player"
-            ref={this.audioPlayerRef}
-            src={this.props.songURL}
-            controls
-            onEnded={this.props.audioFinished}
-          />
-        )}
-        {this.props.isRecording && (
-          <audio
-            id="audio_player"
-            ref={this.audioPlayerRef}
-            src={this.props.newSong.url}
-            controls
-            onEnded={this.props.audioFinished}
-          />
-        )}
+        <audio
+          id="audio_player"
+          ref={this.audioPlayerRef}
+          src={this.props.songURL}
+          controls
+          onEnded={this.props.audioFinished}
+        />
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished,
     songURL: state.songList[state.songSelected].url,
@@ -60,7 +46,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     audioFinished: () => {
       dispatch({
