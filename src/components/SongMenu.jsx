@@ -41,7 +41,6 @@ class SongMenu extends Component {
   };
 
   switchModal = () => {
-    console.log("clicked");
     this.setState({ showModal: !this.state.showModal });
   };
 
