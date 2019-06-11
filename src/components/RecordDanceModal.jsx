@@ -1,59 +1,26 @@
 import React, { Component } from "react";
 import { saveObject } from "../utils/index";
-import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Modal from "@material-ui/core/Modal";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/styles";
 import "../styles/recorddancemodal.css";
+import { connect } from "react-redux";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
-  };
 }
 
 const MyButton = styled(Button)({
   marginTop: "20px"
 });
 
-const MyModal = styled(Button)({
-  backgroundColor: "#fff",
-  top: "50px",
-  left: "50px"
-  // transform: "translate(-50%, -50%)"
+const MyDialog = styled(Dialog)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center"
 });
-// const useStyles = makeStyles((theme) => ({
-//   paper: {},
-//   "@global": {
-//     body: {
-//       backgroundColor: theme.palette.common.white
-//     }
-//   },
-
-//   avatar: {
-//     margin: theme.spacing(1),
-//     backgroundColor: theme.palette.secondary.main
-//   },
-//   form: {
-//     // width: "20%" // Fix IE 11 issue.
-//     //  marginTop: theme.spacing(1)
-//   },
-//   submit: {
-//     margin: theme.spacing(3, 0, 2)
-//   }
-// }));
 
 class SimpleModal extends Component {
   constructor(props) {
@@ -63,7 +30,8 @@ class SimpleModal extends Component {
       setOpen: true,
       title: "",
       artist: "",
-      file: {}
+      file: {},
+      songUrl: ""
       //modalStyle: getModalStyle
     };
   }
@@ -83,6 +51,10 @@ class SimpleModal extends Component {
     this.setState({ artist: event.target.value });
   };
 
+  setSongUrl = (event) => {
+    this.setState({ songUrl: event.target.value });
+  };
+
   setFile = (event) => {
     this.setState({ file: event.target.files[0] });
     // Upload to S3
@@ -92,13 +64,16 @@ class SimpleModal extends Component {
   render() {
     return (
       <div>
-        <Dialog onClose={this.handleClose} open={this.state.setOpen}>
+        <MyDialog onClose={this.handleClose} open={this.state.setOpen}>
           <div id="dialog">
             <Typography variant="h6" id="modal-title">
               Text in a modal
             </Typography>
 
-            <form noValidate style={{ width: "20%", marginTop: "20px" }}>
+            <form
+              noValidate
+              style={{ width: "50%", marginTop: "20px", alignItems: "center" }}
+            >
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -123,7 +98,19 @@ class SimpleModal extends Component {
                 onChange={this.setArtist}
               />
 
-              <input
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="soundcloud"
+                label="SoundCloud URL"
+                type="soundcloud"
+                id="soundcloud"
+                onChange={this.setSongUrl}
+              />
+
+              {/* <input
                 id="selectfile"
                 type="file"
                 ref={this.fileInputRef}
@@ -137,13 +124,20 @@ class SimpleModal extends Component {
                 onClick={this.clickInputRef}
               >
                 Select Song
-              </MyButton>
+              </MyButton> */}
 
               <MyButton
                 fullWidth
                 variant="contained"
                 color="primary"
-                // onClick={clickInputRef}
+                onClick={() => {
+                  this.props.addSong({
+                    artist: this.state.artist,
+                    title: this.state.title,
+                    songUrl: this.state.songUrl
+                  });
+                  this.handleClose();
+                }}
               >
                 Start Recording
               </MyButton>
@@ -157,10 +151,28 @@ class SimpleModal extends Component {
               </MyButton>
             </form>
           </div>
-        </Dialog>
+        </MyDialog>
       </div>
     );
   }
 }
 
-export default SimpleModal;
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addSong: (song) => {
+      dispatch({
+        type: "ADD_SONG",
+        payload: song
+      });
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SimpleModal);
