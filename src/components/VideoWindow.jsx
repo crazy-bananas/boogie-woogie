@@ -106,6 +106,11 @@ export class VideoWindow extends Component {
         correctPoses[this.indexCorrectP]["rightElbow"],
         this.rightHandRef.current
       );
+      this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
+      this.drawShoes(
+        correctPoses[this.indexCorrectP]["leftAnkle"],
+        correctPoses[this.indexCorrectP]["rightAnkle"]
+      );
 
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
@@ -396,7 +401,7 @@ export class VideoWindow extends Component {
     this.ctx.restore();
     this.ctx.save();
   };
-
+  drawLine() {}
   drawShoes = (leftAnkle, rightAnkle) => {
     const lShoe = this.leftShoeRef.current;
     const rShoe = this.rightShoeRef.current;
