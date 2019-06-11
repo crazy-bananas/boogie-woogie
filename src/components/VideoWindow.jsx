@@ -13,12 +13,24 @@ export class VideoWindow extends Component {
     super(props);
 
     // Posenet settings
-    this.imageScaleFactor = 0.7;
+    this.imageScaleFactor = 0.5;
     this.flipPosenetHorizontal = true;
     this.outputStride = 16;
 
+    // Unique Refrences
     this.canvasRef = new React.createRef();
     this.videoRef = new React.createRef();
+    this.leftHandRef = new React.createRef();
+    this.rightHandRef = new React.createRef();
+    this.noseRef = new React.createRef();
+    this.leftShoeRef = new React.createRef();
+    this.rightShoeRef = new React.createRef();
+
+    this.leftHand0Ref = new React.createRef();
+    this.leftHand45Ref = new React.createRef();
+    this.leftHand135Ref = new React.createRef();
+    this.leftHand180Ref = new React.createRef();
+
     this.ctx = "";
     this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
@@ -56,12 +68,22 @@ export class VideoWindow extends Component {
         y: 165
       },
       leftWrist: {
-        x: 615,
-        y: 218
+        x: 460,
+        // x: 618,
+        y: 350
+        // y: 418
       },
       rightWrist: {
-        x: 203,
-        y: 217
+        x: 356,
+        y: 357
+      },
+      leftElbow: {
+        x: 459,
+        y: 303
+      },
+      rightElbow: {
+        x: 364,
+        y: 300
       },
       leftAnkle: {
         x: 415,
@@ -78,6 +100,13 @@ export class VideoWindow extends Component {
     return setInterval(() => {
       this.savePose = true;
       this.increment();
+      this.drawHand(
+        correctPoses[this.indexCorrectP]["leftWrist"],
+        correctPoses[this.indexCorrectP]["leftElbow"],
+        correctPoses[this.indexCorrectP]["rightWrist"],
+        correctPoses[this.indexCorrectP]["rightElbow"]
+      );
+
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
         this.calculateScore();
@@ -149,7 +178,9 @@ export class VideoWindow extends Component {
         if (!this.props.isUserReady) {
           this.drawHand(
             this.startPosition.leftWrist,
-            this.startPosition.rightWrist
+            this.startPosition.leftElbow,
+            this.startPosition.rightWrist,
+            this.startPosition.rightElbow
           );
           this.drawNose(this.startPosition.nose);
           this.drawShoes(
@@ -159,6 +190,8 @@ export class VideoWindow extends Component {
           // for (let bodyPart in this.startPosition) {
           //   this.drawPoint(this.startPosition[bodyPart], this.ctx);
           // }
+          this.drawPoint(this.startPosition.leftElbow, this.ctx);
+          this.drawPoint(this.startPosition.rightElbow, this.ctx);
 
           const latestCatch = {};
           for (let index = 0; index < pose.keypoints.length; index++) {
@@ -245,9 +278,9 @@ export class VideoWindow extends Component {
     if (correctPoses.length - 1 > this.indexCorrectP) {
       this.indexCorrectP++;
     }
-    for (let body of this.bodyParts) {
-      this.drawPoint(correctPoses[this.indexCorrectP][body], this.ctx);
-    }
+    // for (let body of this.bodyParts) {
+    //   this.drawPoint(correctPoses[this.indexCorrectP][body], this.ctx);
+    // }
   };
 
   // TODO: Update not to crash even if number of object does not match
@@ -331,31 +364,47 @@ export class VideoWindow extends Component {
     }
   };
 
-  drawHand = (leftWrist, rightWrist) => {
-    const image = document.getElementById("hand");
+  calculateHandRotationAngle(wristPosition, elbowPosition) {
+    let diffX = wristPosition.x - elbowPosition.x;
+    let diffY = wristPosition.y - elbowPosition.y;
+    let angleCorrection = Math.PI / 2;
+
+    if (wristPosition.x < elbowPosition.x) {
+      angleCorrection += Math.PI;
+    }
+
+    const angle = Math.atan(diffY / diffX) + angleCorrection;
+    return angle;
+  }
+
+  drawHand = (leftWrist, leftElbow, rightWrist, rightElbow) => {
+    // const leftHand = this.leftHandRef.current;
+    const rightHand = this.rightHandRef.current;
 
     const height = 50;
     const width = 50;
-    const lX = leftWrist.x;
-    const lY = leftWrist.y;
-    const rX = rightWrist.x;
-    const rY = rightWrist.y;
-    this.ctx.save();
-    this.ctx.translate(lX, lY); // change origin
-    this.ctx.rotate((90 * Math.PI) / 180);
-    this.ctx.translate(-lX - 25, -lY - 50);
-    this.ctx.drawImage(image, lX, lY, height, width);
-    this.ctx.restore();
-    this.ctx.save();
-    this.ctx.translate(rX, rY); // change origin
-    this.ctx.rotate((270 * Math.PI) / 180);
-    this.ctx.translate(-rX - 25, -rY - 50);
-    this.ctx.drawImage(image, rX, rY, height, width);
-    this.ctx.restore();
+
+    const drawHands = (wrist, elbow, hand) => {
+      const wristX = wrist.x;
+      const wristY = wrist.y;
+
+      this.ctx.save();
+      this.ctx.translate(wristX, wristY); // change origin
+      let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
+      this.ctx.rotate(rotationAngle);
+      this.ctx.translate(-wristX - 25, -wristY - 50);
+      this.ctx.drawImage(hand, wristX, wristY, height, width);
+      this.ctx.restore();
+      this.ctx.save();
+    };
+
+    drawHands(leftWrist, leftElbow, this.leftHandRef.current);
+    drawHands(rightWrist, rightElbow, this.rightHandRef.current);
   };
+
   drawShoes = (leftAnkle, rightAnkle) => {
-    const lShoe = document.getElementById("lShoe");
-    const rShoe = document.getElementById("rShoe");
+    const lShoe = this.leftShoeRef.current;
+    const rShoe = this.rightShoeRef.current;
 
     const height = 50;
     const width = 75;
@@ -366,14 +415,15 @@ export class VideoWindow extends Component {
     this.ctx.drawImage(lShoe, lX, lY, height, width);
     this.ctx.drawImage(rShoe, rX, rY, height, width);
   };
-  drawNose = (nose) => {
-    const image = document.getElementById("nose");
+
+  drawNose = (noseCoordinates) => {
+    const nose = this.noseRef.current;
     const height = 70;
     const width = 70;
-    const x = nose.x - 30;
-    const y = nose.y - 50;
+    const x = noseCoordinates.x - 30;
+    const y = noseCoordinates.y - 50;
 
-    this.ctx.drawImage(image, x, y, height, width);
+    this.ctx.drawImage(nose, x, y, height, width);
   };
 
   render() {
@@ -384,10 +434,45 @@ export class VideoWindow extends Component {
           <div>Match your position to indicated position</div>
         )}
         <div style={{ display: "none" }}>
-          <img id="hand" src={hand} alt="hand" />
-          <img id="nose" src={nose} alt="nose" />
-          <img id="lShoe" src={leftShoe} alt="lshoe" />
-          <img id="rShoe" src={rightShoe} alt="rshoe" />
+          <img
+            id="rightHand"
+            ref={this.rightHandRef}
+            src={hand}
+            alt="right hand"
+          />
+          <img
+            id="leftHand0"
+            ref={this.leftHand0Ref}
+            src={hand}
+            alt="left hand"
+          />
+          <img
+            id="leftHand45"
+            ref={this.leftHand45Ref}
+            src={hand}
+            alt="left hand"
+          />
+          <img
+            id="leftHand"
+            ref={this.leftHandRef}
+            src={hand}
+            alt="left hand"
+          />
+          <img
+            id="leftHand135"
+            ref={this.leftHand135Ref}
+            src={hand}
+            alt="left hand"
+          />
+          <img
+            id="leftHand180"
+            ref={this.leftHand180Ref}
+            src={hand}
+            alt="left hand"
+          />
+          <img id="nose" ref={this.noseRef} src={nose} alt="nose" />
+          <img id="lShoe" ref={this.leftShoeRef} src={leftShoe} alt="lshoe" />
+          <img id="rShoe" ref={this.rightShoeRef} src={rightShoe} alt="rshoe" />
         </div>
 
         <video
