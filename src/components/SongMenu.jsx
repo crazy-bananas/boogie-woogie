@@ -4,6 +4,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
@@ -15,6 +16,7 @@ import List from "@material-ui/core/List";
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
 import banana from "../images/dancing_banana.gif";
+import RecordDanceModal from "./RecordDanceModal";
 
 const MyPaper = styled(Paper)({
   display: "flex",
@@ -29,11 +31,19 @@ class SongMenu extends Component {
   constructor(props) {
     super(props);
     this.songRef = React.createRef();
+    this.state = {
+      showModal: false
+    };
   }
 
   playSong = (event) => {
     this.props.playSong(event);
   };
+
+  switchModal = () => {
+    this.setState({ showModal: !this.state.showModal });
+  };
+
   render() {
     return (
       <Grid container component="main">
@@ -77,9 +87,22 @@ class SongMenu extends Component {
                 );
               })}
             </List>
+            <Typography component="h1" variant="h5">
+              Record your dance
+            </Typography>
+            <Button
+              onClick={() => {
+                this.switchModal();
+              }}
+              variant="contained"
+              color="primary"
+            >
+              Record
+            </Button>
           </div>
         </Grid>
         <div />
+        {this.state.showModal && <RecordDanceModal />}
       </Grid>
     );
   }

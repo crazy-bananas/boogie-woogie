@@ -4,7 +4,7 @@ import Counter from "./Counter";
 import "../styles/dancewindow.css";
 import { connect } from "react-redux";
 
-class DanceWindow extends Component {
+class RecordWindow extends Component {
   constructor(props) {
     super(props);
     this.audioPlayerRef = new React.createRef();
@@ -18,6 +18,9 @@ class DanceWindow extends Component {
     if (this.props.isCountdownFinished) {
       this.startLevel();
     }
+    // if (this.props.isAudioFinished) {
+    //   this.audioPlayerRef.current.pause();
+    // }
   }
 
   render() {
@@ -28,7 +31,7 @@ class DanceWindow extends Component {
         <audio
           id="audio_player"
           ref={this.audioPlayerRef}
-          src={this.props.songURL}
+          src={this.props.newSong.url}
           controls
           onEnded={this.props.audioFinished}
         />
@@ -59,4 +62,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DanceWindow);
+)(RecordWindow);

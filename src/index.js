@@ -21,14 +21,19 @@ const initialState = {
     {
       artist: "CC",
       title: "EIGHT",
-      url:
-        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio_taiso.mp3"
+      url: "https://soundcloud.com/instanthellmurder/radio-taiso-workout"
     }
   ],
   isCountdownFinished: false,
   isUserReady: false,
   isDanceFinished: false,
-  isAudioFinished: false
+  isAudioFinished: false,
+  newSong: {
+    artist: "",
+    title: "",
+    url: ""
+  },
+  isRecording: false
 };
 
 const appReducer = (state = initialState, action) => {
@@ -76,6 +81,16 @@ const appReducer = (state = initialState, action) => {
       const newState = { ...initialState };
       newState.isSongSelected = true;
       newState.songSelected = state.songSelected;
+      return newState;
+    }
+    case "ADD_SONG": {
+      const newState = { ...state };
+      newState.newSong.artist = action.payload.artist;
+      newState.newSong.title = action.payload.title;
+      newState.newSong.url = action.payload.songUrl;
+      newState.songList.push(action.payload);
+      newState.songSelected = newState.songList.length - 1;
+      newState.isRecording = !state.isRecording;
       return newState;
     }
 

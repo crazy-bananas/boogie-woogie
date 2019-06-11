@@ -95,23 +95,24 @@ export class VideoWindow extends Component {
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
-      this.increment();
-      this.drawHand(
-        correctPoses[this.indexCorrectP]["leftWrist"],
-        correctPoses[this.indexCorrectP]["leftElbow"],
-        this.leftHandRef.current
-      );
-      this.drawHand(
-        correctPoses[this.indexCorrectP]["rightWrist"],
-        correctPoses[this.indexCorrectP]["rightElbow"],
-        this.rightHandRef.current
-      );
-      this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
-      this.drawShoes(
-        correctPoses[this.indexCorrectP]["leftAnkle"],
-        correctPoses[this.indexCorrectP]["rightAnkle"]
-      );
-
+      if (!this.props.isRecording) {
+        this.increment();
+        this.drawHand(
+          correctPoses[this.indexCorrectP]["leftWrist"],
+          correctPoses[this.indexCorrectP]["leftElbow"],
+          this.leftHandRef.current
+        );
+        this.drawHand(
+          correctPoses[this.indexCorrectP]["rightWrist"],
+          correctPoses[this.indexCorrectP]["rightElbow"],
+          this.rightHandRef.current
+        );
+        this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
+        this.drawShoes(
+          correctPoses[this.indexCorrectP]["leftAnkle"],
+          correctPoses[this.indexCorrectP]["rightAnkle"]
+        );
+      }
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
         this.calculateScore();
@@ -246,7 +247,7 @@ export class VideoWindow extends Component {
 
         video.srcObject = this.stream;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           video.onloadedmetadata = () => {
             resolve(video);
           };
@@ -268,9 +269,11 @@ export class VideoWindow extends Component {
 
   componentWillUnmount() {
     // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
-    // this.exportToJson(this.recordedPoses);
+    if (this.props.isRecording) {
+      this.exportToJson(this.recordedPoses);
+    }
     const tracks = this.stream.getTracks();
-    tracks.forEach((track) => {
+    tracks.forEach(track => {
       track.stop();
     });
   }
@@ -317,7 +320,7 @@ export class VideoWindow extends Component {
     }
   };
 
-  recordPose = (pose) => {
+  recordPose = pose => {
     const correctPose = {};
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
@@ -329,7 +332,7 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isPlayerInStartPosition = (playersPosition) => {
+  isPlayerInStartPosition = playersPosition => {
     const startPosition = this.startPosition;
     const margin = 30;
 
@@ -416,7 +419,7 @@ export class VideoWindow extends Component {
     this.ctx.drawImage(rShoe, rX, rY, height, width);
   };
 
-  drawNose = (noseCoordinates) => {
+  drawNose = noseCoordinates => {
     const nose = this.noseRef.current;
     const height = 70;
     const width = 70;
@@ -464,17 +467,18 @@ export class VideoWindow extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
     totalScore: state.totalScore,
     isCountdownFinished: state.isCountdownFinished,
-    isAudioFinished: state.isAudioFinished
+    isAudioFinished: state.isAudioFinished,
+    isRecording: state.isRecording
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     userIsReady: () => {
       dispatch({
