@@ -65,14 +65,23 @@ class SimpleModal extends Component {
     return (
       <div>
         <MyDialog onClose={this.handleClose} open={this.state.setOpen}>
-          <div id="dialog">
-            <Typography variant="h6" id="modal-title">
-              Text in a modal
-            </Typography>
-
+          <div
+            id="dialog"
+            style={{
+              display: "flex",
+              marginBottom: "20px",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
             <form
               noValidate
-              style={{ width: "50%", marginTop: "20px", alignItems: "center" }}
+              style={{
+                width: "70%",
+                marginTop: "20px",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
             >
               <TextField
                 variant="outlined"

@@ -8,7 +8,7 @@ import { createStore } from "redux";
 
 const initialState = {
   isSongSelected: false,
-  songSelected: 0,
+  songSelected: -1,
   totalScore: 0,
   maxScore: 0,
   songList: [
@@ -88,8 +88,8 @@ const appReducer = (state = initialState, action) => {
       newState.newSong.artist = action.payload.artist;
       newState.newSong.title = action.payload.title;
       newState.newSong.url = action.payload.url;
-      newState.isRecording = true;
-      console.log(newState);
+      newState.songList.push(action.payload);
+      newState.songSelected = newState.songList.length - 1;
       return newState;
     }
 

@@ -41,7 +41,7 @@ class DanceWindow extends Component {
           <audio
             id="audio_player"
             ref={this.audioPlayerRef}
-            src={this.props.newSong.songUrl}
+            src={this.props.newSong.url}
             controls
             onEnded={this.props.audioFinished}
           />
