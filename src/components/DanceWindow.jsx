@@ -28,27 +28,39 @@ class DanceWindow extends Component {
       <div>
         <VideoWindow />
         <Counter />
-        <audio
-          id="audio_player"
-          ref={this.audioPlayerRef}
-          src={this.props.songURL}
-          controls
-          onEnded={this.props.audioFinished}
-        />
+        {!this.props.isRecording && (
+          <audio
+            id="audio_player"
+            ref={this.audioPlayerRef}
+            src={this.props.songURL}
+            controls
+            onEnded={this.props.audioFinished}
+          />
+        )}
+        {this.props.isRecording && (
+          <audio
+            id="audio_player"
+            ref={this.audioPlayerRef}
+            src={this.props.newSong.songUrl}
+            controls
+            onEnded={this.props.audioFinished}
+          />
+        )}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isCountdownFinished: state.isCountdownFinished,
     songURL: state.songList[state.songSelected].url,
-    isAudioFinished: state.isAudioFinished
+    isAudioFinished: state.isAudioFinished,
+    newSong: state.newSong
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     audioFinished: () => {
       dispatch({
