@@ -55,12 +55,6 @@ class SimpleModal extends Component {
     this.setState({ songUrl: event.target.value });
   };
 
-  setFile = event => {
-    this.setState({ file: event.target.files[0] });
-    // Upload to S3
-    saveObject(event.target.files[0]);
-  };
-
   render() {
     return (
       <div>
@@ -118,22 +112,6 @@ class SimpleModal extends Component {
                 id="soundcloud"
                 onChange={this.setSongUrl}
               />
-
-              {/* <input
-                id="selectfile"
-                type="file"
-                ref={this.fileInputRef}
-                onChange={this.setFile}
-              />
-
-              <MyButton
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={this.clickInputRef}
-              >
-                Select Song
-              </MyButton> */}
 
               <MyButton
                 fullWidth
