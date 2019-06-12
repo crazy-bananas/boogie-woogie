@@ -325,8 +325,8 @@ export class VideoWindow extends Component {
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
       correctPose[part] = {};
-      correctPose[part].x = pose.keypoints[index].position.x;
-      correctPose[part].y = pose.keypoints[index].position.y;
+      correctPose[part].x = Math.round(pose.keypoints[index].position.x);
+      correctPose[part].y = Math.round(pose.keypoints[index].position.y);
       correctPose[part].score = pose.keypoints[index].score;
     }
     this.recordedPoses.push(correctPose);
