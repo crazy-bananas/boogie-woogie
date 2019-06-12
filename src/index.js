@@ -25,7 +25,7 @@ const initialState = {
     }
   ],
   isCountdownFinished: false,
-  isUserReady: false,
+  isUserReady: true,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
