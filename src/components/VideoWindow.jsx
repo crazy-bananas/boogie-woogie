@@ -63,7 +63,9 @@ export class VideoWindow extends Component {
       "rightShoulder",
       "rightWrist"
     ];
-    this.maxScore = correctPoses.length * this.bodyParts.length;
+    this.maxScore = Math.floor(
+      (correctPoses.length * this.bodyParts.length) / 10
+    );
     this.state = {
       danceStart: false,
       score: 0,
@@ -71,7 +73,8 @@ export class VideoWindow extends Component {
       leftWristMatched: false,
       rightWristMatched: false,
       leftAnkleMatched: false,
-      rightAnkleMatched: false
+      rightAnkleMatched: false,
+      combo: 0
     };
     // to check user's standing at right position before dancing
     this.startPosition = {
@@ -204,26 +207,32 @@ export class VideoWindow extends Component {
     }
   }
 
-  matchedPositions = body => {
+  matchedPositions = (body, boolean) => {
+    if (boolean) {
+      this.setState({ combo: this.state.combo + 1 });
+    } else {
+      this.setState({ combo: 0 });
+    }
+
     switch (body) {
       case "nose": {
-        this.setState({ noseMatched: true });
+        this.setState({ noseMatched: boolean });
         break;
       }
       case "leftWrist": {
-        this.setState({ leftWristMatched: true });
+        this.setState({ leftWristMatched: boolean });
         break;
       }
       case "rightWrist": {
-        this.setState({ rightWristMatched: true });
+        this.setState({ rightWristMatched: boolean });
         break;
       }
       case "leftAnkle": {
-        this.setState({ leftAnkleMatched: true });
+        this.setState({ leftAnkleMatched: boolean });
         break;
       }
       case "rightAnkle": {
-        this.setState({ rightAnkleMatched: true });
+        this.setState({ rightAnkleMatched: boolean });
         break;
       }
       default: {
@@ -233,7 +242,6 @@ export class VideoWindow extends Component {
   };
 
   componentDidUpdate = () => {
-    // Added new condition "=== 0" bacause DidUpdate is called twice and was causing two interval calls.
     if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
       this.danceIntervalStopValue = this.displayCorrectPoses();
     }
@@ -334,7 +342,6 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
-    // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
     if (this.props.isRecording) {
       this.exportToJson(this.recordedPoses);
     }
@@ -371,10 +378,11 @@ export class VideoWindow extends Component {
           correctPose[body].y <= Math.round(userPose[body].y) + 30 &&
           correctPose[body].y >= Math.round(userPose[body].y) - 30
         ) {
-          this.drawGame(userPose[body]);
           this.setState({ score: this.state.score + 1 });
           this.score++; // TODO: to be deleted
-          this.matchedPositions(body);
+          this.matchedPositions(body, true);
+        } else {
+          this.matchedPositions(body, false);
         }
       }
     }
@@ -390,7 +398,9 @@ export class VideoWindow extends Component {
       correctPose[part].score = pose.keypoints[index].score;
     }
     this.recordedPoses.push(correctPose);
-    this.realTimeScoring(correctPose);
+    if (this.recordedPoses.length % 10 === 0) {
+      this.realTimeScoring(correctPose);
+    }
   };
 
   isPlayerInStartPosition = playersPosition => {
@@ -485,13 +495,6 @@ export class VideoWindow extends Component {
     this.ctx.drawImage(nose, x, y, height, width);
   };
 
-  drawGame = position => {
-    const image1 = this.musicRef.current;
-    const x = position.x;
-    const y = position.y;
-    this.ctx.drawImage(image1, x, y);
-  };
-
   render() {
     return (
       <div id="root">
@@ -573,6 +576,9 @@ export class VideoWindow extends Component {
                     Right 👟
                   </span>
                 </li>
+                {this.state.combo > 1 && (
+                  <li className="matched">Combo: {this.state.combo}</li>
+                )}
               </ul>
             </Grid>
             <Grid item xs={8}>
@@ -588,6 +594,7 @@ export class VideoWindow extends Component {
                 ref={this.canvasRef}
                 width="800px"
                 height="600px"
+                className={`${this.state.combo > 1 ? "combo" : ""}`}
               >
                 Your browser do not support the HTML5 element canvas. Please try
                 to user another browswer
@@ -598,9 +605,7 @@ export class VideoWindow extends Component {
                 <div className="current_score">Score</div>
                 <div className="score_num">
                   {this.state.score}{" "}
-                  <span className="score_max">
-                    /{correctPoses.length * this.bodyParts.length}
-                  </span>
+                  <span className="score_max">/{this.maxScore}</span>
                 </div>
                 {this.props.isCountdownFinished && <Timer />}
               </div>
