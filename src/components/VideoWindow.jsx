@@ -562,19 +562,16 @@ export class VideoWindow extends Component {
               </ul>
             </Grid>
             <Grid item xs={8}>
-              <video
-                id="video"
-                ref={this.videoRef}
-                width="800px"
-                height="600px"
-                autoPlay="1"
-              />
-              <canvas
-                id="canvas"
-                ref={this.canvasRef}
-                width="800px"
-                height="600px"
-              />
+        <video
+          id="video"
+          ref={this.videoRef}
+          width="800px"
+          height="600px"
+          autoPlay="1"
+        />
+        <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px">
+          Your browser do not support the HTML5 element canvas. Please try to user another browswer
+        </canvas>
             </Grid>
             <Grid item xs={2}>
               <div>
