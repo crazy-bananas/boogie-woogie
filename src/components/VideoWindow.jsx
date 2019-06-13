@@ -282,7 +282,7 @@ export class VideoWindow extends Component {
           this.drawCurrentDancePose()
         }
 
-        if(!this.isAudioFinished){
+        if(!this.props.isAudioFinished){
           requestAnimationFrame(poseDetectionFrame);
         }
       };
