@@ -15,6 +15,8 @@ import leftShoe from "../images/rightShoe.png";
 import dancing from "../images/score/dancing.png";
 import music from "../images/score/music.png";
 
+import {drawHand, drawShoes} from "./canvasDrawings"
+
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -110,6 +112,14 @@ export class VideoWindow extends Component {
       }
     };
   }
+
+  drawHand = (...arg) =>{
+    drawHand(this.ctx, ...arg);
+  }
+
+  drawShoes = (leftAnkle, rightAnkle) => {
+    drawShoes(this.ctx, leftAnkle, this.leftShoeRef.current, rightAnkle, this.rightShoeRef.current)
+  };
 
   drawStartPosition = () => {
     this.drawHand(
@@ -437,48 +447,6 @@ export class VideoWindow extends Component {
     ) {
       this.props.userIsReady();
     }
-  };
-
-  calculateHandRotationAngle(wristPosition, elbowPosition) {
-    let diffX = wristPosition.x - elbowPosition.x;
-    let diffY = wristPosition.y - elbowPosition.y;
-    let angleCorrection = Math.PI / 2;
-
-    if (wristPosition.x < elbowPosition.x) {
-      angleCorrection += Math.PI;
-    }
-
-    const angle = Math.atan(diffY / diffX) + angleCorrection;
-    return angle;
-  }
-
-  drawHand = (wrist, elbow, hand) => {
-    const spacingX = 50;
-    const spacingY = 50;
-    const wristX = wrist.x;
-    const wristY = wrist.y;
-
-    this.ctx.save();
-    this.ctx.translate(wristX, wristY); // change origin
-    let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
-    this.ctx.rotate(rotationAngle);
-    this.ctx.translate(-wristX - 25, -wristY - 50);
-    this.ctx.drawImage(hand, wristX, wristY, spacingX, spacingY);
-    this.ctx.restore();
-  };
-  
-  drawShoes = (leftAnkle, rightAnkle) => {
-    const lShoe = this.leftShoeRef.current;
-    const rShoe = this.rightShoeRef.current;
-
-    const height = 50;
-    const width = 75;
-    const lX = leftAnkle.x;
-    const lY = leftAnkle.y - 20;
-    const rX = rightAnkle.x - 50;
-    const rY = rightAnkle.y - 20;
-    this.ctx.drawImage(lShoe, lX, lY, height, width);
-    this.ctx.drawImage(rShoe, rX, rY, height, width);
   };
 
   drawNose = noseCoordinates => {
