@@ -250,7 +250,7 @@ export class VideoWindow extends Component {
   };
 
   componentWillMount() {
-    document.body.style.background =
+    document.body.style.background = // TODO: Set this in the CSS file
       "linear-gradient(90deg, #ffc414 20%, #fa7f2d 50%, #ffc414 90%)";
   }
 
@@ -509,7 +509,6 @@ export class VideoWindow extends Component {
     this.ctx.translate(-wristX - 25, -wristY - 50);
     this.ctx.drawImage(hand, wristX, wristY, spacingX, spacingY);
     this.ctx.restore();
-    this.ctx.save();
   };
 
   drawShoes = (leftAnkle, rightAnkle) => {
