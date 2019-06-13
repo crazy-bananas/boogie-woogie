@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { Timer } from "./Timer.jsx";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
+import Grid from "@material-ui/core/Grid";
 import { connect } from "react-redux";
 import correctPoses from "./radioTaisoCorrectPose.json";
 
@@ -9,6 +11,10 @@ import rightHandImg from "../images/rightHand.svg";
 import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
+
+import dancing from "../images/score/dancing.png";
+import music from "../images/score/music.png";
+
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -26,6 +32,8 @@ export class VideoWindow extends Component {
     this.noseRef = new React.createRef();
     this.leftShoeRef = new React.createRef();
     this.rightShoeRef = new React.createRef();
+    this.dancingRef = new React.createRef();
+    this.musicRef = new React.createRef();
 
     this.ctx = "";
     this.danceIntervalStopValue = 0;
@@ -56,7 +64,15 @@ export class VideoWindow extends Component {
       "rightWrist"
     ];
     this.maxScore = correctPoses.length * this.bodyParts.length;
-    this.state = { danceStart: false };
+    this.state = {
+      danceStart: false,
+      score: 0,
+      noseMatched: false,
+      leftWristMatched: false,
+      rightWristMatched: false,
+      leftAnkleMatched: false,
+      rightAnkleMatched: false
+    };
     // to check user's standing at right position before dancing
     this.startPosition = {
       nose: {
@@ -115,7 +131,6 @@ export class VideoWindow extends Component {
       }
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
-        this.calculateScore();
         this.props.updateTotalScore(this.score, this.maxScore);
         clearInterval(this.danceIntervalStopValue);
       }
@@ -146,6 +161,31 @@ export class VideoWindow extends Component {
     }
   }
 
+  matchedPositions = body => {
+    switch (body) {
+      case "nose": {
+        this.setState({ noseMatched: true });
+        break;
+      }
+      case "leftWrist": {
+        this.setState({ leftWristMatched: true });
+        break;
+      }
+      case "rightWrist": {
+        this.setState({ rightWristMatched: true });
+        break;
+      }
+      case "leftAnkle": {
+        this.setState({ leftAnkleMatched: true });
+        break;
+      }
+      case "rightAnkle": {
+        this.setState({ rightAnkleMatched: true });
+        break;
+      }
+    }
+  };
+
   componentDidUpdate = () => {
     // Added new condition "=== 0" bacause DidUpdate is called twice and was causing two interval calls.
     if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
@@ -154,6 +194,11 @@ export class VideoWindow extends Component {
 
     return null;
   };
+
+  componentWillMount() {
+    document.body.style.background =
+      "linear-gradient(90deg, #ffc414 20%, #fa7f2d 50%, #ffc414 90%)";
+  }
 
   componentDidMount() {
     this.ctx = this.canvasRef.current.getContext("2d");
@@ -276,6 +321,7 @@ export class VideoWindow extends Component {
     tracks.forEach(track => {
       track.stop();
     });
+    document.body.style.background = null;
   }
 
   drawPoint = (keypoint, ctx, pointColor = "red") => {
@@ -290,31 +336,24 @@ export class VideoWindow extends Component {
     if (correctPoses.length - 1 > this.indexCorrectP) {
       this.indexCorrectP++;
     }
-    // for (let body of this.bodyParts) {
-    //   this.drawPoint(correctPoses[this.indexCorrectP][body], this.ctx);
-    // }
   };
 
-  // TODO: Update not to crash even if number of object does not match
-  calculateScore = () => {
-    const count =
-      this.recordedPoses.length > correctPoses.length
-        ? correctPoses.length - 1
-        : this.recordedPoses.length - 1;
-    for (let i = 0; i < count; i++) {
-      // TODO: Make it check for all poses
+  realTimeScoring = userPose => {
+    const recordIndex = this.recordedPoses.length - 1;
+    const correctPose = correctPoses[recordIndex];
+
+    if (correctPose) {
       for (let body of this.bodyParts) {
         if (
-          correctPoses[i][body].x <=
-            Math.round(this.recordedPoses[i][body].x) + 30 &&
-          correctPoses[i][body].x >=
-            Math.round(this.recordedPoses[i][body].x) - 30 &&
-          correctPoses[i][body].y <=
-            Math.round(this.recordedPoses[i][body].y) + 30 &&
-          correctPoses[i][body].y >=
-            Math.round(this.recordedPoses[i][body].y) - 30
+          correctPose[body].x <= Math.round(userPose[body].x) + 30 &&
+          correctPose[body].x >= Math.round(userPose[body].x) - 30 &&
+          correctPose[body].y <= Math.round(userPose[body].y) + 30 &&
+          correctPose[body].y >= Math.round(userPose[body].y) - 30
         ) {
-          this.score++;
+          this.drawGame(userPose[body]);
+          this.setState({ score: this.state.score + 1 });
+          this.score++; // TODO: to be deleted
+          this.matchedPositions(body);
         }
       }
     }
@@ -330,6 +369,8 @@ export class VideoWindow extends Component {
       correctPose[part].score = pose.keypoints[index].score;
     }
     this.recordedPoses.push(correctPose);
+
+    this.realTimeScoring(correctPose);
   };
 
   isPlayerInStartPosition = playersPosition => {
@@ -429,13 +470,17 @@ export class VideoWindow extends Component {
     this.ctx.drawImage(nose, x, y, height, width);
   };
 
+  drawGame = position => {
+    const image = this.dancingRef.current;
+    const image1 = this.musicRef.current;
+    const x = position.x;
+    const y = position.y;
+    this.ctx.drawImage(image1, x, y);
+  };
+
   render() {
     return (
-      <div>
-        {this.props.isUserReady && <div>Dance Starting</div>}
-        {!this.props.isUserReady && (
-          <div>Match your position to indicated position</div>
-        )}
+      <div id="root">
         <div style={{ display: "none" }}>
           <img
             id="rightHand"
@@ -452,8 +497,71 @@ export class VideoWindow extends Component {
           <img id="nose" ref={this.noseRef} src={nose} alt="nose" />
           <img id="lShoe" ref={this.leftShoeRef} src={leftShoe} alt="lshoe" />
           <img id="rShoe" ref={this.rightShoeRef} src={rightShoe} alt="rshoe" />
+          <img id="dancing" ref={this.dancingRef} src={dancing} alt="dancing" />
+          <img id="music" ref={this.musicRef} src={music} alt="music" />
         </div>
-
+        <div id="grid">
+          <Grid container>
+            <Grid item xs={2}>
+              {!this.props.isUserReady && (
+                <div className="message">Match your position!</div>
+              )}
+              {this.props.isUserReady && !this.props.isCountdownFinished && (
+                <div className="message">Ready for Dance!</div>
+              )}
+              {this.props.isUserReady && this.props.isCountdownFinished && (
+                <div className="message">Dance!</div>
+              )}
+              <ul className="emoji_list">
+                <li
+                  className={`${
+                    this.state.noseMatched ? "matched" : "unmatched"
+                  }`}
+                >
+                  Face
+                  <span role="img" aria-label="face">
+                    🦄
+                  </span>
+                </li>
+                <li
+                  className={`${
+                    this.state.leftWristMatched ? "matched" : "unmatched"
+                  }`}
+                >
+                  <span role="img" aria-label="lefthand">
+                    Left 🤚
+                  </span>
+                </li>
+                <li
+                  className={`${
+                    this.state.rightWristMatched ? "matched" : "unmatched"
+                  }`}
+                >
+                  <span role="img" aria-label="righthand">
+                    Right ✋
+                  </span>
+                </li>
+                <li
+                  className={`${
+                    this.state.leftAnkleMatched ? "matched" : "unmatched"
+                  }`}
+                >
+                  <span role="img" aria-label="leftankle">
+                    Left 👟
+                  </span>
+                </li>
+                <li
+                  className={`${
+                    this.state.rightAnkleMatched ? "matched" : "unmatched"
+                  }`}
+                >
+                  <span role="img" aria-label="rightankle">
+                    Right 👟
+                  </span>
+                </li>
+              </ul>
+            </Grid>
+            <Grid item xs={8}>
         <video
           id="video"
           ref={this.videoRef}
@@ -464,6 +572,21 @@ export class VideoWindow extends Component {
         <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px">
           Your browser do not support the HTML5 element canvas. Please try to user another browswer
         </canvas>
+            </Grid>
+            <Grid item xs={2}>
+              <div>
+                <div className="current_score">Score</div>
+                <div className="score_num">
+                  {this.state.score}{" "}
+                  <span className="score_max">
+                    /{correctPoses.length * this.bodyParts.length}
+                  </span>
+                </div>
+                {this.props.isCountdownFinished && <Timer />}
+              </div>
+            </Grid>
+          </Grid>
+        </div>
       </div>
     );
   }
