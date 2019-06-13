@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { saveObject } from "../utils/index";
-import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";

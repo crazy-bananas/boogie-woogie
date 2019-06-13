@@ -1,8 +1,64 @@
+body {
+}
+
 #video {
   display: none;
 }
 
 #canvas {
-  margin-top: 20px;
+  margin-top: 0px;
   position: inherit;
+  border-style: ridge;
+  border-width: 10px;
+  border-color: #2f4858;
+}
+
+.message {
+  font-size: 2em;
+  font-weight: bold;
+  color: #46557e;
+}
+
+#grid {
+  margin-top: 20px;
+  flex-grow: 1;
+}
+
+.current_score {
+  font-size: 2em;
+  font-weight: bold;
+  color: #46557e;
+}
+
+.score_num {
+  font-size: 3em;
+  font-weight: bold;
+  color: #46557e;
+}
+
+.score_max {
+  font-size: 0.3em;
+}
+
+.emoji_list {
+  list-style: none;
+  padding-left: 0px;
+  font-size: 2em;
+}
+
+.emoji_list li {
+  margin-top: 40px;
+}
+
+.unmatched {
+  color: #46557e;
+}
+
+.matched {
+  color: #fe61ee;
+  font-size: 1.2em;
+  font-weight: bold;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
