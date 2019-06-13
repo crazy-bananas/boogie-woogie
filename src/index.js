@@ -8,7 +8,7 @@ import { createStore } from "redux";
 
 const initialState = {
   isSongSelected: false,
-  songSelected: -1,
+  songSelected: "",
   totalScore: 0,
   maxScore: 0,
   songList: [
