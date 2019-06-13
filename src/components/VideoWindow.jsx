@@ -14,6 +14,7 @@ import leftShoe from "../images/rightShoe.png";
 
 import dancing from "../images/score/dancing.png";
 import music from "../images/score/music.png";
+import axios from "axios";
 
 export class VideoWindow extends Component {
   constructor(props) {
@@ -71,7 +72,8 @@ export class VideoWindow extends Component {
       leftWristMatched: false,
       rightWristMatched: false,
       leftAnkleMatched: false,
-      rightAnkleMatched: false
+      rightAnkleMatched: false,
+      correctPoses: []
     };
     // to check user's standing at right position before dancing
     this.startPosition = {
@@ -123,16 +125,13 @@ export class VideoWindow extends Component {
 
     this.drawNose(this.startPosition.nose);
 
-    this.drawShoes(
-      this.startPosition.leftAnkle,
-      this.startPosition.rightAnkle
-    );
+    this.drawShoes(this.startPosition.leftAnkle, this.startPosition.rightAnkle);
 
     this.drawPoint(this.startPosition.leftElbow, this.ctx);
     this.drawPoint(this.startPosition.rightElbow, this.ctx);
-  }
+  };
 
-  checkIfUserIsInStartPosition = (pose) => {
+  checkIfUserIsInStartPosition = pose => {
     const latestCatch = {};
 
     for (let index = 0; index < pose.keypoints.length; index++) {
@@ -144,13 +143,14 @@ export class VideoWindow extends Component {
     }
 
     this.isPlayerInStartPosition(latestCatch);
-  }
+  };
 
   drawCurrentDancePose = () => {
-    if(this.indexCorrectP >= correctPoses.length - 1){
-      console.log("drawCurrentDancePose was called to many times")
+    if (this.indexCorrectP >= correctPoses.length - 1) {
+      console.log("drawCurrentDancePose was called to many times");
       return;
     }
+    console.log("@@", correctPoses);
     this.drawHand(
       correctPoses[this.indexCorrectP]["leftWrist"],
       correctPoses[this.indexCorrectP]["leftElbow"],
@@ -162,12 +162,12 @@ export class VideoWindow extends Component {
       this.rightHandRef.current
     );
     this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
-    
+
     this.drawShoes(
       correctPoses[this.indexCorrectP]["leftAnkle"],
       correctPoses[this.indexCorrectP]["rightAnkle"]
     );
-  }
+  };
 
   displayCorrectPoses = () => {
     return setInterval(() => {
@@ -207,7 +207,8 @@ export class VideoWindow extends Component {
     }
   }
 
-  matchedPositions = body => {  // TODO: Check this, it does state changes
+  matchedPositions = body => {
+    // TODO: Check this, it does state changes
     switch (body) {
       case "nose": {
         this.setState({ noseMatched: true });
@@ -229,7 +230,7 @@ export class VideoWindow extends Component {
         this.setState({ rightAnkleMatched: true });
         break;
       }
-     default: {
+      default: {
         return;
       }
     }
@@ -250,6 +251,14 @@ export class VideoWindow extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.songSelected);
+    axios
+      .get(`http://localhost:4000/api/moves/${this.props.songSelected}`)
+      .then(poses => {
+        this.setState({ correctPose: poses.data });
+        console.log(this.state.correctPose);
+      });
+
     this.ctx = this.canvasRef.current.getContext("2d");
     const detectPoseInRealTime = (video, net) => {
       const contentWidth = 800;
@@ -275,11 +284,11 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
-        if (!this.props.isUserReady) {
-          this.drawStartPosition()
+        if (!this.props.isUserReady && !this.props.isRecording) {
+          this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
-        } else {
-          this.drawCurrentDancePose()
+        } else if (!this.props.isRecording) {
+          this.drawCurrentDancePose();
         }
 
         requestAnimationFrame(poseDetectionFrame);
@@ -391,8 +400,9 @@ export class VideoWindow extends Component {
       correctPose[part].score = pose.keypoints[index].score;
     }
     this.recordedPoses.push(correctPose);
-
-    this.realTimeScoring(correctPose);
+    if (!this.props.isRecording) {
+      this.realTimeScoring(correctPose);
+    }
   };
 
   isPlayerInStartPosition = playersPosition => {
@@ -467,7 +477,7 @@ export class VideoWindow extends Component {
     this.ctx.restore();
     this.ctx.save();
   };
-  
+
   drawShoes = (leftAnkle, rightAnkle) => {
     const lShoe = this.leftShoeRef.current;
     const rShoe = this.rightShoeRef.current;
@@ -583,16 +593,22 @@ export class VideoWindow extends Component {
               </ul>
             </Grid>
             <Grid item xs={8}>
-        <video
-          id="video"
-          ref={this.videoRef}
-          width="800px"
-          height="600px"
-          autoPlay="1"
-        />
-        <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px">
-          Your browser do not support the HTML5 element canvas. Please try to user another browswer
-        </canvas>
+              <video
+                id="video"
+                ref={this.videoRef}
+                width="800px"
+                height="600px"
+                autoPlay="1"
+              />
+              <canvas
+                id="canvas"
+                ref={this.canvasRef}
+                width="800px"
+                height="600px"
+              >
+                Your browser do not support the HTML5 element canvas. Please try
+                to user another browswer
+              </canvas>
             </Grid>
             <Grid item xs={2}>
               <div>
@@ -620,7 +636,8 @@ const mapStateToProps = state => {
     totalScore: state.totalScore,
     isCountdownFinished: state.isCountdownFinished,
     isAudioFinished: state.isAudioFinished,
-    isRecording: state.isRecording
+    isRecording: state.isRecording,
+    songSelected: state.songSelected
   };
 };
 
