@@ -48,7 +48,6 @@ class RecordWindow extends Component {
             ref={this.audioPlayerRef}
             opts={{
               playerVars: {
-                // https://developers.google.com/youtube/player_parameters
                 autoplay: 1
               }
             }}
