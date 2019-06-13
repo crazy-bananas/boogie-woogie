@@ -10,11 +10,26 @@ import red from "@material-ui/core/colors/red";
 import "../styles/scoreCard.css";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
+import axios from "axios";
 
 class ScoreCard extends Component {
   constructor(props) {
     super(props);
   }
+
+  save = () => {
+    axios.post("http://localhost:4000/api/moves", {
+      songcode: this.props.newSong.url,
+      moves: this.props.newSong.moves,
+      name: "test"
+    });
+    console.log(this.props.newSong);
+    axios.post("http://localhost:4000/api/songs", {
+      code: this.props.newSong.url,
+      title: this.props.newSong.title,
+      artist: this.props.newSong.artist
+    });
+  };
   render() {
     return (
       <div id="card">
@@ -26,7 +41,7 @@ class ScoreCard extends Component {
           variant="contained"
           color="primary"
         >
-          Retry
+          Save
         </Button>
       </div>
     );
@@ -35,10 +50,7 @@ class ScoreCard extends Component {
 
 const mapStateToProps = state => {
   return {
-    title: state.songList[state.songSelected].title,
-    artist: state.songList[state.songSelected].artist,
-    score: state.totalScore,
-    maxScore: state.maxScore
+    newSong: state.newSong
   };
 };
 
