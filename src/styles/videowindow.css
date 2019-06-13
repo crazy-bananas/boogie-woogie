@@ -20,6 +20,10 @@
   color: #46557e;
 }
 
+.matchposition {
+  color: #fe61ee;
+}
+
 #grid {
   margin-top: 20px;
   flex-grow: 1;

@@ -406,6 +406,7 @@ export class VideoWindow extends Component {
   isPlayerInStartPosition = playersPosition => {
     const startPosition = this.startPosition;
     const margin = 30;
+    let matchStatus = 0; // upto 4(nose, wrists, ankles)
 
     const isPositionWithinMargin = (
       playersBodyPartsPosition,
@@ -422,25 +423,65 @@ export class VideoWindow extends Component {
       return correctX && correctY;
     };
 
+    if (isPositionWithinMargin(playersPosition.nose, startPosition.nose)) {
+      this.setState({ noseMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ noseMatched: false });
+    }
     if (
-      isPositionWithinMargin(playersPosition.nose, startPosition.nose) &&
       isPositionWithinMargin(
         playersPosition.rightWrist,
         startPosition.rightWrist
-      ) &&
-      isPositionWithinMargin(
-        playersPosition.leftWrist,
-        startPosition.leftWrist
-      ) &&
+      )
+    ) {
+      this.setState({ rightWristMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ rightWristMatched: false });
+    }
+    if (
+      isPositionWithinMargin(playersPosition.leftWrist, startPosition.leftWrist)
+    ) {
+      this.setState({ leftWristMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ leftWristMatched: false });
+    }
+    if (
       isPositionWithinMargin(
         playersPosition.rightAnkle,
         startPosition.rightAnkle
-      ) &&
+      )
+    ) {
+      this.setState({ rightAnkleMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ rightAnkleMatched: false });
+    }
+    if (
       isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
     ) {
+      this.setState({ leftAnkleMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ leftAnkleMatched: false });
+    }
+    if (matchStatus === 4) {
       this.props.userIsReady();
+      this.clearPositionStatus();
     }
   };
+
+  clearPositionStatus() {
+    this.setState({
+      noseMatched: false,
+      leftWristMatched: false,
+      rightWristMatched: false,
+      leftAnkleMatched: false,
+      rightAnkleMatched: false
+    });
+  }
 
   calculateHandRotationAngle(wristPosition, elbowPosition) {
     let diffX = wristPosition.x - elbowPosition.x;
@@ -521,7 +562,9 @@ export class VideoWindow extends Component {
           <Grid container>
             <Grid item xs={2}>
               {!this.props.isUserReady && (
-                <div className="message">Match your position!</div>
+                <div className="message matchposition">
+                  Match your position!
+                </div>
               )}
               {this.props.isUserReady && !this.props.isCountdownFinished && (
                 <div className="message">Ready for Dance!</div>
