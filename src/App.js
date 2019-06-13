@@ -5,6 +5,7 @@ import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
 import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
+import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
 
 class App extends Component {
@@ -22,10 +23,15 @@ class App extends Component {
         {this.props.isSongSelected && !this.props.isDanceFinished && (
           <DanceWindow />
         )}
+
         {this.props.isRecording && !this.props.isAudioFinished && (
           <RecordWindow />
         )}
-        {this.props.isAudioFinished && <Score />}
+        {this.props.isRecording && this.props.isAudioFinished && (
+          <FinishRecording />
+        )}
+
+        {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
       </div>
     );
   }
