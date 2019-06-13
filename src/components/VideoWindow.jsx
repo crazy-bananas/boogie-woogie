@@ -89,6 +89,9 @@ export class VideoWindow extends Component {
         x: 356,
         y: 357
       },
+      // The elbows are only used to calculate
+      // the angle of the hands. They are not 
+      // used to see if player is in starting position.
       leftElbow: {
         x: 459,
         y: 303
