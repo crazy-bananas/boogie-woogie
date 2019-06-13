@@ -108,26 +108,72 @@ export class VideoWindow extends Component {
     };
   }
 
+  drawStartPosition = () => {
+    this.drawHand(
+      this.startPosition.leftWrist,
+      this.startPosition.leftElbow,
+      this.leftHandRef.current
+    );
+
+    this.drawHand(
+      this.startPosition.rightWrist,
+      this.startPosition.rightElbow,
+      this.rightHandRef.current
+    );
+
+    this.drawNose(this.startPosition.nose);
+
+    this.drawShoes(
+      this.startPosition.leftAnkle,
+      this.startPosition.rightAnkle
+    );
+
+    this.drawPoint(this.startPosition.leftElbow, this.ctx);
+    this.drawPoint(this.startPosition.rightElbow, this.ctx);
+  }
+
+  checkIfUserIsInStartPosition = (pose) => {
+    const latestCatch = {};
+
+    for (let index = 0; index < pose.keypoints.length; index++) {
+      const part = pose.keypoints[index].part;
+      latestCatch[part] = {};
+      latestCatch[part].x = Math.round(pose.keypoints[index].position.x);
+      latestCatch[part].y = Math.round(pose.keypoints[index].position.y);
+      latestCatch[part].score = pose.keypoints[index].score;
+    }
+
+    this.isPlayerInStartPosition(latestCatch);
+  }
+
+  drawCurrentDancePose = () => {
+    if(this.indexCorrectP >= correctPoses.length - 1){
+      console.log("drawCurrentDancePose was called to many times")
+      return;
+    }
+    this.drawHand(
+      correctPoses[this.indexCorrectP]["leftWrist"],
+      correctPoses[this.indexCorrectP]["leftElbow"],
+      this.leftHandRef.current
+    );
+    this.drawHand(
+      correctPoses[this.indexCorrectP]["rightWrist"],
+      correctPoses[this.indexCorrectP]["rightElbow"],
+      this.rightHandRef.current
+    );
+    this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
+    
+    this.drawShoes(
+      correctPoses[this.indexCorrectP]["leftAnkle"],
+      correctPoses[this.indexCorrectP]["rightAnkle"]
+    );
+  }
+
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
       if (!this.props.isRecording) {
         this.increment();
-        this.drawHand(
-          correctPoses[this.indexCorrectP]["leftWrist"],
-          correctPoses[this.indexCorrectP]["leftElbow"],
-          this.leftHandRef.current
-        );
-        this.drawHand(
-          correctPoses[this.indexCorrectP]["rightWrist"],
-          correctPoses[this.indexCorrectP]["rightElbow"],
-          this.rightHandRef.current
-        );
-        this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
-        this.drawShoes(
-          correctPoses[this.indexCorrectP]["leftAnkle"],
-          correctPoses[this.indexCorrectP]["rightAnkle"]
-        );
       }
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
@@ -161,7 +207,7 @@ export class VideoWindow extends Component {
     }
   }
 
-  matchedPositions = body => {
+  matchedPositions = body => {  // TODO: Check this, it does state changes
     switch (body) {
       case "nose": {
         this.setState({ noseMatched: true });
@@ -182,6 +228,9 @@ export class VideoWindow extends Component {
       case "rightAnkle": {
         this.setState({ rightAnkleMatched: true });
         break;
+      }
+     default: {
+        return;
       }
     }
   };
@@ -227,40 +276,15 @@ export class VideoWindow extends Component {
         }
 
         if (!this.props.isUserReady) {
-          this.drawHand(
-            this.startPosition.leftWrist,
-            this.startPosition.leftElbow,
-            this.leftHandRef.current
-          );
-          this.drawHand(
-            this.startPosition.rightWrist,
-            this.startPosition.rightElbow,
-            this.rightHandRef.current
-          );
-          this.drawNose(this.startPosition.nose);
-          this.drawShoes(
-            this.startPosition.leftAnkle,
-            this.startPosition.rightAnkle
-          );
-          // for (let bodyPart in this.startPosition) {
-          //   this.drawPoint(this.startPosition[bodyPart], this.ctx);
-          // }
-          this.drawPoint(this.startPosition.leftElbow, this.ctx);
-          this.drawPoint(this.startPosition.rightElbow, this.ctx);
-
-          const latestCatch = {};
-          for (let index = 0; index < pose.keypoints.length; index++) {
-            const part = pose.keypoints[index].part;
-            latestCatch[part] = {};
-            latestCatch[part].x = pose.keypoints[index].position.x;
-            latestCatch[part].y = pose.keypoints[index].position.y;
-            latestCatch[part].score = pose.keypoints[index].score;
-          }
-
-          this.isPlayerInStartPosition(latestCatch);
+          this.drawStartPosition()
+          this.checkIfUserIsInStartPosition(pose);
+        } else if(this.indexCorrectP < correctPoses.length){
+          this.drawCurrentDancePose()
         }
 
-        requestAnimationFrame(poseDetectionFrame);
+        if(!this.props.isAudioFinished){
+          requestAnimationFrame(poseDetectionFrame);
+        }
       };
 
       poseDetectionFrame();
@@ -364,8 +388,8 @@ export class VideoWindow extends Component {
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
       correctPose[part] = {};
-      correctPose[part].x = pose.keypoints[index].position.x;
-      correctPose[part].y = pose.keypoints[index].position.y;
+      correctPose[part].x = Math.round(pose.keypoints[index].position.x);
+      correctPose[part].y = Math.round(pose.keypoints[index].position.y);
       correctPose[part].score = pose.keypoints[index].score;
     }
     this.recordedPoses.push(correctPose);
@@ -391,11 +415,6 @@ export class VideoWindow extends Component {
 
       return correctX && correctY;
     };
-
-    for (let bodyPart in playersPosition) {
-      playersPosition[bodyPart].x = Math.round(playersPosition[bodyPart].x);
-      playersPosition[bodyPart].y = Math.round(playersPosition[bodyPart].y);
-    }
 
     if (
       isPositionWithinMargin(playersPosition.nose, startPosition.nose) &&
@@ -445,7 +464,7 @@ export class VideoWindow extends Component {
     this.ctx.restore();
     this.ctx.save();
   };
-  drawLine() {}
+  
   drawShoes = (leftAnkle, rightAnkle) => {
     const lShoe = this.leftShoeRef.current;
     const rShoe = this.rightShoeRef.current;
@@ -471,7 +490,6 @@ export class VideoWindow extends Component {
   };
 
   drawGame = position => {
-    const image = this.dancingRef.current;
     const image1 = this.musicRef.current;
     const x = position.x;
     const y = position.y;
