@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Counter from "./Counter";
 import "../styles/dancewindow.css";
 import { connect } from "react-redux";
+import YouTube from "react-youtube";
 
 class DanceWindow extends Component {
   constructor(props) {
@@ -25,13 +26,26 @@ class DanceWindow extends Component {
       <div>
         <VideoWindow />
         <Counter />
-        <audio
+
+        <YouTube
+          videoId={this.props.songSelected}
+          ref={this.audioPlayerRef}
+          opts={{
+            playerVars: {
+              autoplay: 1
+            }
+          }}
+          onEnd={this.props.audioFinished}
+          muted={false}
+        />
+
+        {/* <audio
           id="audio_player"
           ref={this.audioPlayerRef}
           src={this.props.songURL}
           controls
           onEnded={this.props.audioFinished}
-        />
+        /> */}
       </div>
     );
   }
@@ -40,7 +54,7 @@ class DanceWindow extends Component {
 const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished,
-    songURL: state.songList[state.songSelected].url,
+    songSelected: state.songSelected,
     isAudioFinished: state.isAudioFinished,
     newSong: state.newSong
   };
