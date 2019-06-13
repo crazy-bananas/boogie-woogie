@@ -9,6 +9,7 @@ import rightHandImg from "../images/rightHand.svg";
 import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
+
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -92,26 +93,72 @@ export class VideoWindow extends Component {
     };
   }
 
+  drawStartPosition = () => {
+    this.drawHand(
+      this.startPosition.leftWrist,
+      this.startPosition.leftElbow,
+      this.leftHandRef.current
+    );
+
+    this.drawHand(
+      this.startPosition.rightWrist,
+      this.startPosition.rightElbow,
+      this.rightHandRef.current
+    );
+
+    this.drawNose(this.startPosition.nose);
+
+    this.drawShoes(
+      this.startPosition.leftAnkle,
+      this.startPosition.rightAnkle
+    );
+
+    this.drawPoint(this.startPosition.leftElbow, this.ctx);
+    this.drawPoint(this.startPosition.rightElbow, this.ctx);
+  }
+
+  checkIfUserIsInStartPosition = (pose) => {
+    const latestCatch = {};
+
+    for (let index = 0; index < pose.keypoints.length; index++) {
+      const part = pose.keypoints[index].part;
+      latestCatch[part] = {};
+      latestCatch[part].x = pose.keypoints[index].position.x;
+      latestCatch[part].y = pose.keypoints[index].position.y;
+      latestCatch[part].score = pose.keypoints[index].score;
+    }
+
+    this.isPlayerInStartPosition(latestCatch);
+  }
+
+  drawCurrentDancePose = () => {
+    if(this.indexCorrectP >= correctPoses.length - 1){
+      console.log("drawCurrentDancePose was called to many times")
+      return;
+    }
+    this.drawHand(
+      correctPoses[this.indexCorrectP]["leftWrist"],
+      correctPoses[this.indexCorrectP]["leftElbow"],
+      this.leftHandRef.current
+    );
+    this.drawHand(
+      correctPoses[this.indexCorrectP]["rightWrist"],
+      correctPoses[this.indexCorrectP]["rightElbow"],
+      this.rightHandRef.current
+    );
+    this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
+    
+    this.drawShoes(
+      correctPoses[this.indexCorrectP]["leftAnkle"],
+      correctPoses[this.indexCorrectP]["rightAnkle"]
+    );
+  }
+
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
       if (!this.props.isRecording) {
         this.increment();
-        this.drawHand(
-          correctPoses[this.indexCorrectP]["leftWrist"],
-          correctPoses[this.indexCorrectP]["leftElbow"],
-          this.leftHandRef.current
-        );
-        this.drawHand(
-          correctPoses[this.indexCorrectP]["rightWrist"],
-          correctPoses[this.indexCorrectP]["rightElbow"],
-          this.rightHandRef.current
-        );
-        this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
-        this.drawShoes(
-          correctPoses[this.indexCorrectP]["leftAnkle"],
-          correctPoses[this.indexCorrectP]["rightAnkle"]
-        );
       }
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
@@ -182,37 +229,10 @@ export class VideoWindow extends Component {
         }
 
         if (!this.props.isUserReady) {
-          this.drawHand(
-            this.startPosition.leftWrist,
-            this.startPosition.leftElbow,
-            this.leftHandRef.current
-          );
-          this.drawHand(
-            this.startPosition.rightWrist,
-            this.startPosition.rightElbow,
-            this.rightHandRef.current
-          );
-          this.drawNose(this.startPosition.nose);
-          this.drawShoes(
-            this.startPosition.leftAnkle,
-            this.startPosition.rightAnkle
-          );
-          // for (let bodyPart in this.startPosition) {
-          //   this.drawPoint(this.startPosition[bodyPart], this.ctx);
-          // }
-          this.drawPoint(this.startPosition.leftElbow, this.ctx);
-          this.drawPoint(this.startPosition.rightElbow, this.ctx);
-
-          const latestCatch = {};
-          for (let index = 0; index < pose.keypoints.length; index++) {
-            const part = pose.keypoints[index].part;
-            latestCatch[part] = {};
-            latestCatch[part].x = pose.keypoints[index].position.x;
-            latestCatch[part].y = pose.keypoints[index].position.y;
-            latestCatch[part].score = pose.keypoints[index].score;
-          }
-
-          this.isPlayerInStartPosition(latestCatch);
+          this.drawStartPosition()
+          this.checkIfUserIsInStartPosition(pose);
+        } else {
+          this.drawCurrentDancePose()
         }
 
         requestAnimationFrame(poseDetectionFrame);
@@ -404,7 +424,7 @@ export class VideoWindow extends Component {
     this.ctx.restore();
     this.ctx.save();
   };
-  drawLine() {}
+  
   drawShoes = (leftAnkle, rightAnkle) => {
     const lShoe = this.leftShoeRef.current;
     const rShoe = this.rightShoeRef.current;
