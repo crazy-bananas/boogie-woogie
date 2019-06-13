@@ -18,9 +18,6 @@ class DanceWindow extends Component {
     if (this.props.isCountdownFinished) {
       this.startLevel();
     }
-    // if (this.props.isAudioFinished) {
-    //   this.audioPlayerRef.current.pause();
-    // }
   }
 
   render() {
@@ -44,7 +41,8 @@ const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished,
     songURL: state.songList[state.songSelected].url,
-    isAudioFinished: state.isAudioFinished
+    isAudioFinished: state.isAudioFinished,
+    newSong: state.newSong
   };
 };
 

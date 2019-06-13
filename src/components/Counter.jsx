@@ -21,7 +21,7 @@ class Counter extends Component {
         this.props.countdownFinished();
         clearInterval(endTimeout);
       }
-    }, 2000);
+    }, 1000);
   };
 
   render() {

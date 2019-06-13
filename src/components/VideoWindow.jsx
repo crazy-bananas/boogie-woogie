@@ -2,11 +2,31 @@ import React, { Component } from "react";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import { connect } from "react-redux";
-import correctPoses from "./correctPose";
+import correctPoses from "./radioTaisoCorrectPose.json";
+
+import leftHandImg from "../images/leftHand.png";
+import rightHandImg from "../images/rightHand.svg";
+import nose from "../images/glasses.svg";
+import rightShoe from "../images/leftShoe.png";
+import leftShoe from "../images/rightShoe.png";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
-    this.canvas = "";
+
+    // Posenet settings
+    this.imageScaleFactor = 0.5;
+    this.flipPosenetHorizontal = true;
+    this.outputStride = 16;
+
+    // Unique Refrences
+    this.canvasRef = new React.createRef();
+    this.videoRef = new React.createRef();
+    this.leftHandRef = new React.createRef();
+    this.rightHandRef = new React.createRef();
+    this.noseRef = new React.createRef();
+    this.leftShoeRef = new React.createRef();
+    this.rightShoeRef = new React.createRef();
+
     this.ctx = "";
     this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
@@ -15,7 +35,7 @@ export class VideoWindow extends Component {
     this.score = 0;
     this.recordedPoses = [];
     this.stream = null; // Video stream
-    this.called = true;
+    this.called = true; // TODO: What is this?
     this.bodyParts = [
       "leftAnkle",
       // "leftEar",
@@ -35,28 +55,39 @@ export class VideoWindow extends Component {
       "rightShoulder",
       "rightWrist"
     ];
+    this.maxScore = correctPoses.length * this.bodyParts.length;
     this.state = { danceStart: false };
     // to check user's standing at right position before dancing
-    this.matchingPosition = {
+    this.startPosition = {
       nose: {
         x: 404,
         y: 165
       },
       leftWrist: {
-        x: 615,
-        y: 218
+        x: 460,
+        // x: 618,
+        y: 350
+        // y: 418
       },
       rightWrist: {
-        x: 203,
-        y: 217
+        x: 356,
+        y: 357
       },
-      leftKnee: {
-        x: 471,
-        y: 519
+      leftElbow: {
+        x: 459,
+        y: 303
       },
-      rightKnee: {
-        x: 355,
-        y: 519
+      rightElbow: {
+        x: 364,
+        y: 300
+      },
+      leftAnkle: {
+        x: 415,
+        y: 535
+      },
+      rightAnkle: {
+        x: 394,
+        y: 535
       }
     };
   }
@@ -64,44 +95,60 @@ export class VideoWindow extends Component {
   displayCorrectPoses = () => {
     return setInterval(() => {
       this.savePose = true;
-      // Commented out to record user's movement
-      this.increment();
+      if (!this.props.isRecording) {
+        this.increment();
+        this.drawHand(
+          correctPoses[this.indexCorrectP]["leftWrist"],
+          correctPoses[this.indexCorrectP]["leftElbow"],
+          this.leftHandRef.current
+        );
+        this.drawHand(
+          correctPoses[this.indexCorrectP]["rightWrist"],
+          correctPoses[this.indexCorrectP]["rightElbow"],
+          this.rightHandRef.current
+        );
+        this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
+        this.drawShoes(
+          correctPoses[this.indexCorrectP]["leftAnkle"],
+          correctPoses[this.indexCorrectP]["rightAnkle"]
+        );
+      }
       if (this.props.isAudioFinished) {
         this.props.danceIsFinished();
-        // Commented out to record user's movement
         this.calculateScore();
-        this.props.updateTotalScore(this.score);
+        this.props.updateTotalScore(this.score, this.maxScore);
         clearInterval(this.danceIntervalStopValue);
       }
-    }, 0);
+    }, 100);
   };
 
   exportToJson(objectData) {
     let filename = "export.json";
     let contentType = "application/json;charset=utf-8;";
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      var blob = new Blob(
+      const blob = new Blob(
         [decodeURIComponent(encodeURI(JSON.stringify(objectData)))],
         { type: contentType }
       );
       navigator.msSaveOrOpenBlob(blob, filename);
     } else {
-      var a = document.createElement("a");
-      a.download = filename;
-      a.href =
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href =
         "data:" +
         contentType +
         "," +
         encodeURIComponent(JSON.stringify(objectData));
-      a.target = "_blank";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   }
 
   componentDidUpdate = () => {
-    if (this.props.isCountdownFinished) {
+    // Added new condition "=== 0" bacause DidUpdate is called twice and was causing two interval calls.
+    if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
       this.danceIntervalStopValue = this.displayCorrectPoses();
     }
 
@@ -109,84 +156,152 @@ export class VideoWindow extends Component {
   };
 
   componentDidMount() {
-    this.canvas = document.getElementById("canvas");
-    this.ctx = this.canvas.getContext("2d");
+    this.ctx = this.canvasRef.current.getContext("2d");
+    const detectPoseInRealTime = (video, net) => {
+      const contentWidth = 800;
+      const contentHeight = 600;
+
+      const poseDetectionFrame = async () => {
+        const pose = await net.estimateSinglePose(
+          video,
+          this.imageScaleFactor,
+          this.flipPosenetHorizontal,
+          this.outputStride
+        );
+
+        this.ctx.clearRect(0, 0, contentWidth, contentHeight);
+        this.ctx.save();
+        this.ctx.scale(-1, 1);
+        this.ctx.translate(-contentWidth, 0);
+        this.ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
+        this.ctx.restore();
+
+        if (this.savePose) {
+          this.recordPose(pose);
+          this.savePose = false;
+        }
+
+        if (!this.props.isUserReady) {
+          this.drawHand(
+            this.startPosition.leftWrist,
+            this.startPosition.leftElbow,
+            this.leftHandRef.current
+          );
+          this.drawHand(
+            this.startPosition.rightWrist,
+            this.startPosition.rightElbow,
+            this.rightHandRef.current
+          );
+          this.drawNose(this.startPosition.nose);
+          this.drawShoes(
+            this.startPosition.leftAnkle,
+            this.startPosition.rightAnkle
+          );
+          // for (let bodyPart in this.startPosition) {
+          //   this.drawPoint(this.startPosition[bodyPart], this.ctx);
+          // }
+          this.drawPoint(this.startPosition.leftElbow, this.ctx);
+          this.drawPoint(this.startPosition.rightElbow, this.ctx);
+
+          const latestCatch = {};
+          for (let index = 0; index < pose.keypoints.length; index++) {
+            const part = pose.keypoints[index].part;
+            latestCatch[part] = {};
+            latestCatch[part].x = pose.keypoints[index].position.x;
+            latestCatch[part].y = pose.keypoints[index].position.y;
+            latestCatch[part].score = pose.keypoints[index].score;
+          }
+
+          this.isPlayerInStartPosition(latestCatch);
+        }
+
+        requestAnimationFrame(poseDetectionFrame);
+      };
+
+      poseDetectionFrame();
+    };
+
+    async function bindPage() {
+      const net = await posenet.load();
+      let video;
+      try {
+        video = await loadVideo();
+      } catch (e) {
+        alert(e);
+        return;
+      }
+
+      detectPoseInRealTime(video, net);
+    }
+
+    bindPage();
+
+    const setupCamera = async () => {
+      const video = this.videoRef.current;
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        this.stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: true
+        });
+
+        video.srcObject = this.stream;
+
+        return new Promise(resolve => {
+          video.onloadedmetadata = () => {
+            resolve(video);
+          };
+        });
+      } else {
+        const ErrorMessage =
+          "This Browser Does Not Support Video Capture, Or This Device Does Not Have A Camera";
+        alert(ErrorMessage);
+        return Promise.reject(ErrorMessage);
+      }
+    };
+
+    const loadVideo = async () => {
+      const video = await setupCamera();
+      video.play();
+      return video;
+    };
   }
 
   componentWillUnmount() {
-    clearInterval(this.danceIntervalStopValue);
-    // this.exportToJson(this.recordedPoses);
+    // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
+    if (this.props.isRecording) {
+      this.props.addNewMoves(this.recordedPoses);
+    }
     const tracks = this.stream.getTracks();
     tracks.forEach(track => {
       track.stop();
     });
   }
 
-  drawPoint = (keypoint, ctx) => {
+  drawPoint = (keypoint, ctx, pointColor = "red") => {
     ctx.beginPath();
     ctx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI);
 
-    ctx.fillStyle = "red"; // TODO not hardcode color
+    ctx.fillStyle = pointColor;
     ctx.fill();
-  };
-
-  drawTriangle = (moveTo, lineToOne, lineToTwo, ctx) => {
-    ctx.beginPath();
-    ctx.moveTo(moveTo.x, moveTo.y);
-    ctx.lineTo(lineToOne.x, lineToOne.y);
-    ctx.lineTo(lineToTwo.x, lineToTwo.y);
-    ctx.fillStyle = "#000";
-    ctx.fill();
-  };
-
-  drawLine = (moveTo, lineTo, ctx) => {
-    console.log("drwaing line");
-    ctx.beginPath();
-    ctx.moveTo(moveTo.x, moveTo.y);
-    ctx.lineTo(lineTo.x, lineTo.y);
-    ctx.stroke();
   };
 
   increment = () => {
-    this.indexCorrectP++;
-    this.drawTriangle(
-      {
-        x: 413,
-        y: 250
-      },
-      {
-        x: 313,
-        y: 400
-      },
-      {
-        x: 513,
-        y: 400
-      },
-      this.ctx
-    );
-    this.drawLine(
-      {
-        x: correctPoses[0].rightWrist.x + 100,
-        y: correctPoses[0].rightWrist.y
-      },
-      correctPoses[this.indexCorrectP].rightWrist,
-      this.ctx
-    );
-    this.drawLine(
-      {
-        x: correctPoses[0].leftWrist.x - 100,
-        y: correctPoses[0].leftWrist.y
-      },
-      correctPoses[this.indexCorrectP].leftWrist,
-      this.ctx
-    );
-    this.drawPoint(correctPoses[this.indexCorrectP].rightWrist, this.ctx);
-    this.drawPoint(correctPoses[this.indexCorrectP].leftWrist, this.ctx);
+    if (correctPoses.length - 1 > this.indexCorrectP) {
+      this.indexCorrectP++;
+    }
+    // for (let body of this.bodyParts) {
+    //   this.drawPoint(correctPoses[this.indexCorrectP][body], this.ctx);
+    // }
   };
 
-  // TODO: Update not to crush even if number of object does not match
+  // TODO: Update not to crash even if number of object does not match
   calculateScore = () => {
-    for (let i = 0; i < this.recordedPoses.length; i++) {
+    const count =
+      this.recordedPoses.length > correctPoses.length
+        ? correctPoses.length - 1
+        : this.recordedPoses.length - 1;
+    for (let i = 0; i < count; i++) {
       // TODO: Make it check for all poses
       for (let body of this.bodyParts) {
         if (
@@ -217,210 +332,149 @@ export class VideoWindow extends Component {
     this.recordedPoses.push(correctPose);
   };
 
-  isMatched = cp => {
-    const mp = this.matchingPosition;
-    const noseX = Math.round(cp.nose.x);
-    const noseY = Math.round(cp.nose.y);
-    const rWristX = Math.round(cp.rightWrist.x);
-    const rWristY = Math.round(cp.rightWrist.y);
-    const lWristX = Math.round(cp.leftWrist.x);
-    const lWristY = Math.round(cp.leftWrist.y);
-    const rKneeX = Math.round(cp.rightKnee.x);
-    const rKneeY = Math.round(cp.rightKnee.y);
-    const lKneeX = Math.round(cp.leftKnee.x);
-    const lKneeY = Math.round(cp.leftKnee.y);
+  isPlayerInStartPosition = playersPosition => {
+    const startPosition = this.startPosition;
     const margin = 30;
 
+    const isPositionWithinMargin = (
+      playersBodyPartsPosition,
+      correctPositionsBodyPart
+    ) => {
+      const correctX =
+        playersBodyPartsPosition.x <= correctPositionsBodyPart.x + margin &&
+        playersBodyPartsPosition.x >= correctPositionsBodyPart.x - margin;
+
+      const correctY =
+        playersBodyPartsPosition.y <= correctPositionsBodyPart.y + margin &&
+        playersBodyPartsPosition.y >= correctPositionsBodyPart.y - margin;
+
+      return correctX && correctY;
+    };
+
+    for (let bodyPart in playersPosition) {
+      playersPosition[bodyPart].x = Math.round(playersPosition[bodyPart].x);
+      playersPosition[bodyPart].y = Math.round(playersPosition[bodyPart].y);
+    }
+
     if (
-      mp.nose.x <= noseX + margin &&
-      mp.nose.x >= noseX - margin &&
-      mp.nose.y <= noseY + margin &&
-      mp.nose.y >= noseY - margin &&
-      mp.rightWrist.x <= rWristX + margin &&
-      mp.rightWrist.x >= rWristX - margin &&
-      mp.rightWrist.y <= rWristY + margin &&
-      mp.rightWrist.y >= rWristY - margin &&
-      mp.leftWrist.x <= lWristX + margin &&
-      mp.leftWrist.x >= lWristX - margin &&
-      mp.leftWrist.y <= lWristY + margin &&
-      mp.leftWrist.y >= lWristY - margin &&
-      mp.rightKnee.x <= rKneeX + margin &&
-      mp.rightKnee.x >= rKneeX - margin &&
-      mp.rightKnee.y <= rKneeY + margin &&
-      mp.rightKnee.y >= rKneeY - margin &&
-      mp.leftKnee.x <= lKneeX + margin &&
-      mp.leftKnee.x >= lKneeX - margin &&
-      mp.leftKnee.y <= lKneeY + margin &&
-      mp.leftKnee.y >= lKneeY - margin
+      isPositionWithinMargin(playersPosition.nose, startPosition.nose) &&
+      isPositionWithinMargin(
+        playersPosition.rightWrist,
+        startPosition.rightWrist
+      ) &&
+      isPositionWithinMargin(
+        playersPosition.leftWrist,
+        startPosition.leftWrist
+      ) &&
+      isPositionWithinMargin(
+        playersPosition.rightAnkle,
+        startPosition.rightAnkle
+      ) &&
+      isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
     ) {
       this.props.userIsReady();
     }
   };
 
-  render() {
-    const imageScaleFactor = 0.7;
-    const outputStride = 16;
+  calculateHandRotationAngle(wristPosition, elbowPosition) {
+    let diffX = wristPosition.x - elbowPosition.x;
+    let diffY = wristPosition.y - elbowPosition.y;
+    let angleCorrection = Math.PI / 2;
 
-    async function bindPage() {
-      const net = await posenet.load();
-      let video;
-      try {
-        video = await loadVideo();
-      } catch (e) {
-        alert(e);
-        return;
-      }
-
-      detectPoseInRealTime(video, net);
+    if (wristPosition.x < elbowPosition.x) {
+      angleCorrection += Math.PI;
     }
 
-    bindPage();
+    const angle = Math.atan(diffY / diffX) + angleCorrection;
+    return angle;
+  }
 
-    const setupCamera = async () => {
-      const video = document.getElementById("video");
+  drawHand = (wrist, elbow, hand) => {
+    const spacingX = 50;
+    const spacingY = 50;
+    const wristX = wrist.x;
+    const wristY = wrist.y;
 
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        this.stream = await navigator.mediaDevices.getUserMedia({
-          audio: false,
-          video: true
-        });
+    this.ctx.save();
+    this.ctx.translate(wristX, wristY); // change origin
+    let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
+    this.ctx.rotate(rotationAngle);
+    this.ctx.translate(-wristX - 25, -wristY - 50);
+    this.ctx.drawImage(hand, wristX, wristY, spacingX, spacingY);
+    this.ctx.restore();
+    this.ctx.save();
+  };
+  drawLine() {}
+  drawShoes = (leftAnkle, rightAnkle) => {
+    const lShoe = this.leftShoeRef.current;
+    const rShoe = this.rightShoeRef.current;
 
-        video.srcObject = this.stream;
+    const height = 50;
+    const width = 75;
+    const lX = leftAnkle.x;
+    const lY = leftAnkle.y - 20;
+    const rX = rightAnkle.x - 50;
+    const rY = rightAnkle.y - 20;
+    this.ctx.drawImage(lShoe, lX, lY, height, width);
+    this.ctx.drawImage(rShoe, rX, rY, height, width);
+  };
 
-        return new Promise(resolve => {
-          video.onloadedmetadata = () => {
-            resolve(video);
-          };
-        });
-      } else {
-        const ErrorMessage =
-          "This Browser Does Not Support Video Capture, Or This Device Does Not Have A Camera";
-        alert(ErrorMessage);
-        return Promise.reject(ErrorMessage);
-      }
-    };
+  drawNose = noseCoordinates => {
+    const nose = this.noseRef.current;
+    const height = 70;
+    const width = 70;
+    const x = noseCoordinates.x - 30;
+    const y = noseCoordinates.y - 50;
 
-    const loadVideo = async () => {
-      const video = await setupCamera();
-      video.play();
-      return video;
-    };
+    this.ctx.drawImage(nose, x, y, height, width);
+  };
 
-    const detectPoseInRealTime = (video, net) => {
-      const flipHorizontal = true;
-      const contentWidth = 800;
-      const contentHeight = 600;
-
-      const poseDetectionFrame = async () => {
-        const pose = await net.estimateSinglePose(
-          video,
-          imageScaleFactor,
-          flipHorizontal,
-          outputStride
-        );
-
-        this.ctx.clearRect(0, 0, contentWidth, contentHeight);
-        this.ctx.save();
-        this.ctx.scale(-1, 1);
-        this.ctx.translate(-contentWidth, 0);
-        this.ctx.drawImage(video, 0, 0, contentWidth, contentHeight);
-        this.ctx.restore();
-
-        if (this.savePose) {
-          this.recordPose(pose);
-          this.savePose = false;
-        }
-
-        if (!this.props.isUserReady) {
-          this.drawPoint(this.matchingPosition.nose, this.ctx);
-          this.drawPoint(this.matchingPosition.leftWrist, this.ctx);
-          this.drawPoint(this.matchingPosition.rightWrist, this.ctx);
-          this.drawPoint(this.matchingPosition.leftKnee, this.ctx);
-          this.drawPoint(this.matchingPosition.rightKnee, this.ctx);
-          this.drawLine(
-            {
-              x: this.matchingPosition.leftWrist.x - 100,
-              y: this.matchingPosition.leftWrist.y
-            },
-            this.matchingPosition.leftWrist,
-            this.ctx
-          );
-          this.drawLine(
-            {
-              x: this.matchingPosition.rightWrist.x + 100,
-              y: this.matchingPosition.rightWrist.y
-            },
-            this.matchingPosition.rightWrist,
-            this.ctx
-          );
-          this.drawLine(
-            {
-              x: this.matchingPosition.leftKnee.x,
-              y: this.matchingPosition.leftKnee.y - 100
-            },
-            this.matchingPosition.leftKnee,
-            this.ctx
-          );
-          this.drawLine(
-            {
-              x: this.matchingPosition.rightKnee.x,
-              y: this.matchingPosition.rightKnee.y - 100
-            },
-            this.matchingPosition.rightKnee,
-            this.ctx
-          );
-          this.drawTriangle(
-            {
-              x: 413,
-              y: 250
-            },
-            {
-              x: 313,
-              y: 400
-            },
-            {
-              x: 513,
-              y: 400
-            },
-            this.ctx
-          );
-          const latestCatch = {};
-          for (let index = 0; index < pose.keypoints.length; index++) {
-            const part = pose.keypoints[index].part;
-            latestCatch[part] = {};
-            latestCatch[part].x = pose.keypoints[index].position.x;
-            latestCatch[part].y = pose.keypoints[index].position.y;
-            latestCatch[part].score = pose.keypoints[index].score;
-          }
-
-          this.isMatched(latestCatch);
-        }
-
-        requestAnimationFrame(poseDetectionFrame);
-      };
-
-      poseDetectionFrame();
-    };
-
+  render() {
     return (
       <div>
         {this.props.isUserReady && <div>Dance Starting</div>}
         {!this.props.isUserReady && (
           <div>Match your position to indicated position</div>
         )}
-        <video id="video" width="800px" height="600px" autoPlay="1" />
-        <canvas id="canvas" width="800px" height="600px" />
+        <div style={{ display: "none" }}>
+          <img
+            id="rightHand"
+            ref={this.rightHandRef}
+            src={rightHandImg}
+            alt="right hand"
+          />
+          <img
+            id="leftHand"
+            ref={this.leftHandRef}
+            src={leftHandImg}
+            alt="left hand"
+          />
+          <img id="nose" ref={this.noseRef} src={nose} alt="nose" />
+          <img id="lShoe" ref={this.leftShoeRef} src={leftShoe} alt="lshoe" />
+          <img id="rShoe" ref={this.rightShoeRef} src={rightShoe} alt="rshoe" />
+        </div>
+
+        <video
+          id="video"
+          ref={this.videoRef}
+          width="800px"
+          height="600px"
+          autoPlay="1"
+        />
+        <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px" />
       </div>
     );
   }
 }
+
 const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
     isDanceFinished: state.isDanceFinished,
     totalScore: state.totalScore,
     isCountdownFinished: state.isCountdownFinished,
-    isAudioFinished: state.isAudioFinished
+    isAudioFinished: state.isAudioFinished,
+    isRecording: state.isRecording
   };
 };
 
@@ -436,10 +490,16 @@ const mapDispatchToProps = dispatch => {
         type: "DANCE_FINISHED"
       });
     },
-    updateTotalScore: score => {
+    updateTotalScore: (score, maxScore) => {
       dispatch({
-        type: "UPDATE_TOTALSCORE",
-        payload: score
+        type: "UPDATE_TOTAL_SCORE",
+        payload: { userScore: score, maxScore: maxScore }
+      });
+    },
+    addNewMoves: moves => {
+      dispatch({
+        type: "ADD_NEW_MOVES",
+        payload: moves
       });
     }
   };

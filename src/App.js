@@ -4,18 +4,28 @@ import { Navbar } from "./components/Navbar";
 import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
 import DanceWindow from "./components/DanceWindow";
+import RecordWindow from "./components/RecordWindow";
 import Score from "./components/Score";
 
 class App extends Component {
+  showMenu = () => {
+    if (this.props.isSongSelected || this.props.isRecording) {
+      return false;
+    }
+    return true;
+  };
   render() {
     return (
       <div className="App">
         <Navbar />
-        {!this.props.isSongSelected && <SongMenu />}
+        {this.showMenu() && <SongMenu />}
         {this.props.isSongSelected && !this.props.isDanceFinished && (
           <DanceWindow />
         )}
-        {this.props.isDanceFinished && <Score />}
+        {this.props.isRecording && !this.props.isAudioFinished && (
+          <RecordWindow />
+        )}
+        {this.props.isAudioFinished && <Score />}
       </div>
     );
   }
@@ -24,7 +34,9 @@ class App extends Component {
 const mapStateToProps = state => {
   return {
     isSongSelected: state.isSongSelected,
-    isDanceFinished: state.isDanceFinished
+    isDanceFinished: state.isDanceFinished,
+    isRecording: state.isRecording,
+    isAudioFinished: state.isAudioFinished
   };
 };
 
