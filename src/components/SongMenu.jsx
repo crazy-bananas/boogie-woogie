@@ -18,6 +18,8 @@ import { styled } from "@material-ui/styles";
 import banana from "../images/dancing_banana.gif";
 import RecordDanceModal from "./RecordDanceModal";
 
+import axios from "axios";
+
 const MyPaper = styled(Paper)({
   display: "flex",
   flexDirection: "column",
@@ -32,17 +34,27 @@ class SongMenu extends Component {
     super(props);
     this.songRef = React.createRef();
     this.state = {
-      showModal: false
+      showModal: false,
+      songList: []
     };
   }
 
-  playSong = (event) => {
+  playSong = event => {
     this.props.playSong(event);
   };
 
   switchModal = () => {
     this.setState({ showModal: !this.state.showModal });
   };
+
+  componentDidMount() {
+    axios
+      .get("http://localhost:4000/api/songs")
+      .then(songs => {
+        this.setState({ songList: songs.data });
+      })
+      .catch(err => console.log(err));
+  }
 
   render() {
     return (
@@ -69,7 +81,7 @@ class SongMenu extends Component {
             </Typography>
 
             <List>
-              {this.props.songList.map((song, index) => {
+              {this.state.songList.map((song, index) => {
                 return (
                   <ListItem key={index}>
                     <ListItemAvatar>
@@ -78,10 +90,10 @@ class SongMenu extends Component {
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                      key={index}
+                      key={song.code}
                       primary={song.title}
                       secondary={song.artist}
-                      onClick={() => this.playSong({ songIndex: index })}
+                      onClick={() => this.playSong({ songCode: song.code })}
                     />
                   </ListItem>
                 );
@@ -107,19 +119,19 @@ class SongMenu extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     songList: state.songList,
     indexOfSelectedSong: state.songSelected
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    playSong: (song) => {
+    playSong: song => {
       dispatch({
         type: "SELECT_SONG",
-        payload: song.songIndex
+        payload: song.songCode
       });
     }
   };
