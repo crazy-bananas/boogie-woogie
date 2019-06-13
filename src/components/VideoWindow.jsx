@@ -135,8 +135,8 @@ export class VideoWindow extends Component {
     for (let index = 0; index < pose.keypoints.length; index++) {
       const part = pose.keypoints[index].part;
       latestCatch[part] = {};
-      latestCatch[part].x = pose.keypoints[index].position.x;
-      latestCatch[part].y = pose.keypoints[index].position.y;
+      latestCatch[part].x = Math.round(pose.keypoints[index].position.x);
+      latestCatch[part].y = Math.round(pose.keypoints[index].position.y);
       latestCatch[part].score = pose.keypoints[index].score;
     }
 
@@ -275,11 +275,13 @@ export class VideoWindow extends Component {
         if (!this.props.isUserReady) {
           this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
-        } else {
+        } else if (this.indexCorrectP < correctPoses.length) {
           this.drawCurrentDancePose();
         }
 
-        requestAnimationFrame(poseDetectionFrame);
+        if (!this.props.isAudioFinished) {
+          requestAnimationFrame(poseDetectionFrame);
+        }
       };
 
       poseDetectionFrame();
@@ -409,11 +411,6 @@ export class VideoWindow extends Component {
 
       return correctX && correctY;
     };
-
-    for (let bodyPart in playersPosition) {
-      playersPosition[bodyPart].x = Math.round(playersPosition[bodyPart].x);
-      playersPosition[bodyPart].y = Math.round(playersPosition[bodyPart].y);
-    }
 
     if (
       isPositionWithinMargin(playersPosition.nose, startPosition.nose) &&
