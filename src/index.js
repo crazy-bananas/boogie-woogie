@@ -24,9 +24,9 @@ const initialState = {
       url: "https://soundcloud.com/instanthellmurder/radio-taiso-workout"
     }
   ],
-  isUserLoggedIn:true,
+  isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: true,
+  isUserReady: false,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
