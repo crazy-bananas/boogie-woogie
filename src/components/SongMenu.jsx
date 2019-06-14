@@ -49,7 +49,7 @@ class SongMenu extends Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:4000/api/songs")
+      .get("https://boogie-banana.herokuapp.com/api/songs")
       .then(songs => {
         this.setState({ songList: songs.data });
       })

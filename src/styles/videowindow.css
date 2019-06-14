@@ -1,6 +1,3 @@
-body {
-}
-
 #video {
   display: none;
 }
@@ -13,10 +10,18 @@ body {
   border-color: #2f4858;
 }
 
+.combo {
+  border-color: #fe61ee !important;
+}
+
 .message {
   font-size: 2em;
   font-weight: bold;
   color: #46557e;
+}
+
+.matchposition {
+  color: #fe61ee;
 }
 
 #grid {

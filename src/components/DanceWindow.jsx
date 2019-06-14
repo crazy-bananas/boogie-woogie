@@ -11,15 +11,15 @@ class DanceWindow extends Component {
     this.audioPlayerRef = new React.createRef();
   }
 
-  startLevel = () => {
-    this.audioPlayerRef.current.play();
-  };
+  // startLevel = () => {
+  //   this.audioPlayerRef.current.play();
+  // };
 
-  componentDidUpdate() {
-    if (this.props.isCountdownFinished) {
-      this.startLevel();
-    }
-  }
+  // componentDidUpdate() {
+  //   if (this.props.isCountdownFinished) {
+  //     this.startLevel();
+  //   }
+  // }
 
   render() {
     return (
@@ -27,17 +27,19 @@ class DanceWindow extends Component {
         <VideoWindow />
         <Counter />
 
-        <YouTube
-          videoId={this.props.songSelected}
-          ref={this.audioPlayerRef}
-          opts={{
-            playerVars: {
-              autoplay: 1
-            }
-          }}
-          onEnd={this.props.audioFinished}
-          muted={false}
-        />
+        {this.props.isCountdownFinished && (
+          <YouTube
+            videoId={this.props.songSelected}
+            ref={this.audioPlayerRef}
+            opts={{
+              playerVars: {
+                autoplay: 1
+              }
+            }}
+            onEnd={this.props.audioFinished}
+            muted={false}
+          />
+        )}
 
         {/* <audio
           id="audio_player"

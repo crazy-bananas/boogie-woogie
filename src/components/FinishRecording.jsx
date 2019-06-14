@@ -18,13 +18,15 @@ class ScoreCard extends Component {
   }
 
   save = () => {
-    axios.post("http://localhost:4000/api/moves", {
-      songcode: this.props.newSong.url,
-      moves: this.props.newSong.moves,
-      name: "test"
-    });
-    console.log(this.props.newSong);
-    axios.post("http://localhost:4000/api/songs", {
+    axios
+      .post("https://boogie-banana.herokuapp.com/api/moves", {
+        songcode: this.props.newSong.url,
+        moves: this.props.newSong.moves,
+        name: "test"
+      })
+      .then(data => console.log(this.props.newSong));
+
+    axios.post("https://boogie-banana.herokuapp.com/api/songs", {
       code: this.props.newSong.url,
       title: this.props.newSong.title,
       artist: this.props.newSong.artist
