@@ -63,7 +63,9 @@ export class VideoWindow extends Component {
       "rightShoulder",
       "rightWrist"
     ];
-    this.maxScore = correctPoses.length * this.bodyParts.length;
+    this.maxScore = Math.floor(
+      (correctPoses.length * this.bodyParts.length) / 10
+    );
     this.state = {
       danceStart: false,
       score: 0,
@@ -71,7 +73,8 @@ export class VideoWindow extends Component {
       leftWristMatched: false,
       rightWristMatched: false,
       leftAnkleMatched: false,
-      rightAnkleMatched: false
+      rightAnkleMatched: false,
+      combo: 0
     };
     // to check user's standing at right position before dancing
     this.startPosition = {
@@ -123,16 +126,13 @@ export class VideoWindow extends Component {
 
     this.drawNose(this.startPosition.nose);
 
-    this.drawShoes(
-      this.startPosition.leftAnkle,
-      this.startPosition.rightAnkle
-    );
+    this.drawShoes(this.startPosition.leftAnkle, this.startPosition.rightAnkle);
 
     this.drawPoint(this.startPosition.leftElbow, this.ctx);
     this.drawPoint(this.startPosition.rightElbow, this.ctx);
-  }
+  };
 
-  checkIfUserIsInStartPosition = (pose) => {
+  checkIfUserIsInStartPosition = pose => {
     const latestCatch = {};
 
     for (let index = 0; index < pose.keypoints.length; index++) {
@@ -144,11 +144,11 @@ export class VideoWindow extends Component {
     }
 
     this.isPlayerInStartPosition(latestCatch);
-  }
+  };
 
   drawCurrentDancePose = () => {
-    if(this.indexCorrectP >= correctPoses.length - 1){
-      console.log("drawCurrentDancePose was called to many times")
+    if (this.indexCorrectP >= correctPoses.length - 1) {
+      console.log("drawCurrentDancePose was called to many times");
       return;
     }
     this.drawHand(
@@ -162,12 +162,12 @@ export class VideoWindow extends Component {
       this.rightHandRef.current
     );
     this.drawNose(correctPoses[this.indexCorrectP]["nose"]);
-    
+
     this.drawShoes(
       correctPoses[this.indexCorrectP]["leftAnkle"],
       correctPoses[this.indexCorrectP]["rightAnkle"]
     );
-  }
+  };
 
   displayCorrectPoses = () => {
     return setInterval(() => {
@@ -207,36 +207,41 @@ export class VideoWindow extends Component {
     }
   }
 
-  matchedPositions = body => {  // TODO: Check this, it does state changes
+  matchedPositions = (body, boolean) => {
+    if (boolean) {
+      this.setState({ combo: this.state.combo + 1 });
+    } else {
+      this.setState({ combo: 0 });
+    }
+
     switch (body) {
       case "nose": {
-        this.setState({ noseMatched: true });
+        this.setState({ noseMatched: boolean });
         break;
       }
       case "leftWrist": {
-        this.setState({ leftWristMatched: true });
+        this.setState({ leftWristMatched: boolean });
         break;
       }
       case "rightWrist": {
-        this.setState({ rightWristMatched: true });
+        this.setState({ rightWristMatched: boolean });
         break;
       }
       case "leftAnkle": {
-        this.setState({ leftAnkleMatched: true });
+        this.setState({ leftAnkleMatched: boolean });
         break;
       }
       case "rightAnkle": {
-        this.setState({ rightAnkleMatched: true });
+        this.setState({ rightAnkleMatched: boolean });
         break;
       }
-     default: {
+      default: {
         return;
       }
     }
   };
 
   componentDidUpdate = () => {
-    // Added new condition "=== 0" bacause DidUpdate is called twice and was causing two interval calls.
     if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
       this.danceIntervalStopValue = this.displayCorrectPoses();
     }
@@ -276,13 +281,13 @@ export class VideoWindow extends Component {
         }
 
         if (!this.props.isUserReady) {
-          this.drawStartPosition()
+          this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
-        } else if(this.indexCorrectP < correctPoses.length){
-          this.drawCurrentDancePose()
+        } else if (this.indexCorrectP < correctPoses.length) {
+          this.drawCurrentDancePose();
         }
 
-        if(!this.props.isAudioFinished){
+        if (!this.props.isAudioFinished) {
           requestAnimationFrame(poseDetectionFrame);
         }
       };
@@ -337,7 +342,6 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
-    // clearInterval(this.danceIntervalStopValue); TODO: Seems this is not Necessary. Need confirmation.
     if (this.props.isRecording) {
       this.exportToJson(this.recordedPoses);
     }
@@ -374,10 +378,11 @@ export class VideoWindow extends Component {
           correctPose[body].y <= Math.round(userPose[body].y) + 30 &&
           correctPose[body].y >= Math.round(userPose[body].y) - 30
         ) {
-          this.drawGame(userPose[body]);
           this.setState({ score: this.state.score + 1 });
           this.score++; // TODO: to be deleted
-          this.matchedPositions(body);
+          this.matchedPositions(body, true);
+        } else {
+          this.matchedPositions(body, false);
         }
       }
     }
@@ -393,13 +398,15 @@ export class VideoWindow extends Component {
       correctPose[part].score = pose.keypoints[index].score;
     }
     this.recordedPoses.push(correctPose);
-
-    this.realTimeScoring(correctPose);
+    if (this.recordedPoses.length % 10 === 0) {
+      this.realTimeScoring(correctPose);
+    }
   };
 
   isPlayerInStartPosition = playersPosition => {
     const startPosition = this.startPosition;
     const margin = 30;
+    let matchStatus = 0; // upto 4(nose, wrists, ankles)
 
     const isPositionWithinMargin = (
       playersBodyPartsPosition,
@@ -416,25 +423,65 @@ export class VideoWindow extends Component {
       return correctX && correctY;
     };
 
+    if (isPositionWithinMargin(playersPosition.nose, startPosition.nose)) {
+      this.setState({ noseMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ noseMatched: false });
+    }
     if (
-      isPositionWithinMargin(playersPosition.nose, startPosition.nose) &&
       isPositionWithinMargin(
         playersPosition.rightWrist,
         startPosition.rightWrist
-      ) &&
-      isPositionWithinMargin(
-        playersPosition.leftWrist,
-        startPosition.leftWrist
-      ) &&
+      )
+    ) {
+      this.setState({ rightWristMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ rightWristMatched: false });
+    }
+    if (
+      isPositionWithinMargin(playersPosition.leftWrist, startPosition.leftWrist)
+    ) {
+      this.setState({ leftWristMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ leftWristMatched: false });
+    }
+    if (
       isPositionWithinMargin(
         playersPosition.rightAnkle,
         startPosition.rightAnkle
-      ) &&
+      )
+    ) {
+      this.setState({ rightAnkleMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ rightAnkleMatched: false });
+    }
+    if (
       isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
     ) {
+      this.setState({ leftAnkleMatched: true });
+      matchStatus++;
+    } else {
+      this.setState({ leftAnkleMatched: false });
+    }
+    if (matchStatus === 4) {
       this.props.userIsReady();
+      this.clearPositionStatus();
     }
   };
+
+  clearPositionStatus() {
+    this.setState({
+      noseMatched: false,
+      leftWristMatched: false,
+      rightWristMatched: false,
+      leftAnkleMatched: false,
+      rightAnkleMatched: false
+    });
+  }
 
   calculateHandRotationAngle(wristPosition, elbowPosition) {
     let diffX = wristPosition.x - elbowPosition.x;
@@ -463,7 +510,7 @@ export class VideoWindow extends Component {
     this.ctx.drawImage(hand, wristX, wristY, spacingX, spacingY);
     this.ctx.restore();
   };
-  
+
   drawShoes = (leftAnkle, rightAnkle) => {
     const lShoe = this.leftShoeRef.current;
     const rShoe = this.rightShoeRef.current;
@@ -486,13 +533,6 @@ export class VideoWindow extends Component {
     const y = noseCoordinates.y - 50;
 
     this.ctx.drawImage(nose, x, y, height, width);
-  };
-
-  drawGame = position => {
-    const image1 = this.musicRef.current;
-    const x = position.x;
-    const y = position.y;
-    this.ctx.drawImage(image1, x, y);
   };
 
   render() {
@@ -521,7 +561,9 @@ export class VideoWindow extends Component {
           <Grid container>
             <Grid item xs={2}>
               {!this.props.isUserReady && (
-                <div className="message">Match your position!</div>
+                <div className="message matchposition">
+                  Match your position!
+                </div>
               )}
               {this.props.isUserReady && !this.props.isCountdownFinished && (
                 <div className="message">Ready for Dance!</div>
@@ -576,28 +618,36 @@ export class VideoWindow extends Component {
                     Right 👟
                   </span>
                 </li>
+                {this.state.combo > 1 && (
+                  <li className="matched">Combo: {this.state.combo}</li>
+                )}
               </ul>
             </Grid>
             <Grid item xs={8}>
-        <video
-          id="video"
-          ref={this.videoRef}
-          width="800px"
-          height="600px"
-          autoPlay="1"
-        />
-        <canvas id="canvas" ref={this.canvasRef} width="800px" height="600px">
-          Your browser do not support the HTML5 element canvas. Please try to user another browswer
-        </canvas>
+              <video
+                id="video"
+                ref={this.videoRef}
+                width="800px"
+                height="600px"
+                autoPlay="1"
+              />
+              <canvas
+                id="canvas"
+                ref={this.canvasRef}
+                width="800px"
+                height="600px"
+                className={`${this.state.combo > 1 ? "combo" : ""}`}
+              >
+                Your browser do not support the HTML5 element canvas. Please try
+                to user another browswer
+              </canvas>
             </Grid>
             <Grid item xs={2}>
               <div>
                 <div className="current_score">Score</div>
                 <div className="score_num">
                   {this.state.score}{" "}
-                  <span className="score_max">
-                    /{correctPoses.length * this.bodyParts.length}
-                  </span>
+                  <span className="score_max">/{this.maxScore}</span>
                 </div>
                 {this.props.isCountdownFinished && <Timer />}
               </div>
