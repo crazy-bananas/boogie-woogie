@@ -63,7 +63,6 @@ class RecordWindow extends Component {
 const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished,
-    songURL: state.songList[state.songSelected].url,
     isAudioFinished: state.isAudioFinished,
     newSong: state.newSong
   };

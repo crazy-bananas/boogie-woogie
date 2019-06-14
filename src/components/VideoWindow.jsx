@@ -4,14 +4,11 @@ import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import Grid from "@material-ui/core/Grid";
 import { connect } from "react-redux";
-import correctPoses from "./radioTaisoCorrectPose.json";
-
 import leftHandImg from "../images/leftHand.png";
 import rightHandImg from "../images/rightHand.svg";
 import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
-
 import dancing from "../images/score/dancing.png";
 import music from "../images/score/music.png";
 import axios from "axios";
@@ -154,8 +151,6 @@ export class VideoWindow extends Component {
       return;
     }
 
-    console.log("!!!!", this.state.correctPoses[this.indexCorrectP]);
-
     this.drawHand(
       this.state.correctPoses[this.indexCorrectP]["leftWrist"],
       this.state.correctPoses[this.indexCorrectP]["leftElbow"],
@@ -260,7 +255,6 @@ export class VideoWindow extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.songSelected);
     if (!this.props.isRecording) {
       axios
         .get(
@@ -270,8 +264,6 @@ export class VideoWindow extends Component {
         )
         .then(poses => {
           this.setState({ correctPoses: poses.data[0].moves });
-          console.log(poses.data[0].moves);
-          console.log("MOVES" + this.state.correctPoses);
         });
     }
     this.maxScore = Math.floor(
@@ -303,7 +295,7 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
-        if (!this.props.isUserReady && !this.props.isRecording) {
+        if (!this.props.isUserReady) {
           this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
         } else if (!this.props.isRecording) {
@@ -529,8 +521,7 @@ export class VideoWindow extends Component {
 
     this.ctx.save();
     this.ctx.translate(wristX, wristY); // change origin
-    console.log("pp", wrist);
-    console.log("pp2", elbow);
+
     let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
     this.ctx.rotate(rotationAngle);
     this.ctx.translate(-wristX - 25, -wristY - 50);

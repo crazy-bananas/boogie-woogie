@@ -11,19 +11,7 @@ const initialState = {
   songSelected: "",
   totalScore: 0,
   maxScore: 0,
-  songList: [
-    {
-      artist: "NHK",
-      title: "Radio Taiso",
-      url:
-        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio-taiso-33s.mov"
-    },
-    {
-      artist: "CC",
-      title: "EIGHT",
-      url: "https://soundcloud.com/instanthellmurder/radio-taiso-workout"
-    }
-  ],
+
   isUserLoggedIn: true,
   isCountdownFinished: false,
   isUserReady: false,
@@ -92,8 +80,7 @@ const appReducer = (state = initialState, action) => {
       newState.newSong.url = action.payload.songUrl.substring(
         action.payload.songUrl.indexOf("=") + 1
       );
-      newState.songList.push(action.payload);
-      newState.songSelected = newState.songList.length - 1;
+
       newState.isRecording = !state.isRecording;
       return newState;
     }
