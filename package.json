@@ -17,6 +17,7 @@
     "react-dom": "^16.8.6",
     "react-pure-lifecycle": "^3.0.0",
     "react-redux": "^7.0.3",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "redux": "^4.0.1"
   },

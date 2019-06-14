@@ -10,10 +10,15 @@ export class Timer extends Component {
     this.totalSeconds = 0;
     this.minutesLabel = this.minutesRef;
     this.secondsLabel = this.secondsRef;
+    this.startTimer = 0;
   }
 
   componentDidMount() {
-    setInterval(this.setTime, 1000);
+    this.startTimer = this.timerSet();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.startTimer);
   }
 
   pad = val => {
@@ -23,6 +28,10 @@ export class Timer extends Component {
     } else {
       return valString;
     }
+  };
+
+  timerSet = () => {
+    return setInterval(this.setTime, 1000);
   };
 
   setTime = () => {
