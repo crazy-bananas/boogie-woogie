@@ -150,7 +150,7 @@ export class VideoWindow extends Component {
       console.log("drawCurrentDancePose was called to many times");
       return;
     }
-    console.log("@@", correctPoses);
+    console.log(`@@ ${this.props.isAudioFinished}`, correctPoses);
     this.drawHand(
       correctPoses[this.indexCorrectP]["leftWrist"],
       correctPoses[this.indexCorrectP]["leftElbow"],
@@ -463,6 +463,7 @@ export class VideoWindow extends Component {
   }
 
   drawHand = (wrist, elbow, hand) => {
+    if (!hand) return;
     const spacingX = 50;
     const spacingY = 50;
     const wristX = wrist.x;
@@ -473,6 +474,7 @@ export class VideoWindow extends Component {
     let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
     this.ctx.rotate(rotationAngle);
     this.ctx.translate(-wristX - 25, -wristY - 50);
+    console.log("PP", typeof this.props.isAudioFinished);
     this.ctx.drawImage(hand, wristX, wristY, spacingX, spacingY);
     this.ctx.restore();
     this.ctx.save();
@@ -481,6 +483,8 @@ export class VideoWindow extends Component {
   drawShoes = (leftAnkle, rightAnkle) => {
     const lShoe = this.leftShoeRef.current;
     const rShoe = this.rightShoeRef.current;
+
+    if (!lShoe || !rShoe) return;
 
     const height = 50;
     const width = 75;
@@ -494,6 +498,7 @@ export class VideoWindow extends Component {
 
   drawNose = noseCoordinates => {
     const nose = this.noseRef.current;
+    if (!nose) return;
     const height = 70;
     const width = 70;
     const x = noseCoordinates.x - 30;
