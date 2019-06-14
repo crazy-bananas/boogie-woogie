@@ -8,23 +8,11 @@ import { createStore } from "redux";
 
 const initialState = {
   isSongSelected: false,
-  songSelected: -1,
+  songSelected: "",
   totalScore: 0,
   maxScore: 0,
-  songList: [
-    {
-      artist: "NHK",
-      title: "Radio Taiso",
-      url:
-        "https://boogie-woogie-banana.s3-ap-northeast-1.amazonaws.com/radio-taiso-33s.mov"
-    },
-    {
-      artist: "CC",
-      title: "EIGHT",
-      url: "https://soundcloud.com/instanthellmurder/radio-taiso-workout"
-    }
-  ],
-  isUserLoggedIn:true,
+
+  isUserLoggedIn: true,
   isCountdownFinished: false,
   isUserReady: false,
   isDanceFinished: false,
@@ -32,7 +20,8 @@ const initialState = {
   newSong: {
     artist: "",
     title: "",
-    url: ""
+    url: "",
+    moves: []
   },
   isRecording: false
 };
@@ -84,14 +73,21 @@ const appReducer = (state = initialState, action) => {
       newState.songSelected = state.songSelected;
       return newState;
     }
-    case "ADD_SONG": {
+    case "ADD_NEW_SONG": {
       const newState = { ...state };
       newState.newSong.artist = action.payload.artist;
       newState.newSong.title = action.payload.title;
-      newState.newSong.url = action.payload.songUrl;
-      newState.songList.push(action.payload);
-      newState.songSelected = newState.songList.length - 1;
+      newState.newSong.url = action.payload.songUrl.substring(
+        action.payload.songUrl.indexOf("=") + 1
+      );
+
       newState.isRecording = !state.isRecording;
+      return newState;
+    }
+    case "ADD_NEW_MOVES": {
+      const newState = { ...state };
+      newState.newSong.moves = action.payload;
+      console.log(newState.newSong.moves);
       return newState;
     }
 
