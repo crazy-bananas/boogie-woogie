@@ -1,21 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import { Route, Link, BrowserRouter as Router} from "react-router-dom";
-import SignUp from "./components/SignUp";
-
-const routing = (
-  <Router>
-    <div>
-      <Route exact path="/" component={App} />
-      <Route path="/signup" component={SignUp} />
-    </div>
-  </ Router>
-)
+import routing from "./routes"
 
 const initialState = {
   isSongSelected: false,
@@ -114,7 +103,7 @@ const store = createStore(appReducer);
 
 ReactDOM.render(
   <Provider store={store}>
-    {routing}
+    {routing()}
   </Provider>,
   document.getElementById("root")
 );
