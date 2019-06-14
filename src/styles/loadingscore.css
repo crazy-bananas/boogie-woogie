@@ -1,0 +1,23 @@
+h1 {
+  color: #2f4858;
+}
+
+h2 {
+  position: relative;
+  color: #2f4858;
+  font-size: 5em;
+}
+h2:before {
+  content: attr(data-text);
+  position: absolute;
+  overflow: hidden;
+  max-width: 12em;
+  white-space: nowrap;
+  color: #fe61ee;
+  animation: loading 1.3s linear;
+}
+@keyframes loading {
+  0% {
+    max-width: 0;
+  }
+}
