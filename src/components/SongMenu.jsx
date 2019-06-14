@@ -15,8 +15,9 @@ import MusicNote from "@material-ui/icons/MusicNote";
 import List from "@material-ui/core/List";
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
-import banana from "../images/dancing_banana.gif";
+import dancingPeople from "../images/dancingPeople.jpg";
 import RecordDanceModal from "./RecordDanceModal";
+import "../styles/songmenu.css"
 
 import axios from "axios";
 
@@ -26,7 +27,8 @@ const MyPaper = styled(Paper)({
   alignItems: "center",
   height: "100vh",
   justifyContent: "center",
-  alignContent: "center"
+  alignContent: "center", 
+  
 });
 
 class SongMenu extends Component {
@@ -62,7 +64,7 @@ class SongMenu extends Component {
         <CssBaseline />
         <Grid item xs={false} sm={4} md={8}>
           <MyPaper>
-            <img alt="Dancing Banana" src={banana} />
+            <img alt="People Dancing" src={dancingPeople} style={{height:600,width:800}}/>
           </MyPaper>
         </Grid>
         <Grid
@@ -73,7 +75,6 @@ class SongMenu extends Component {
           component={MyPaper}
           elevation={6}
           square
-          className="sideBar"
         >
           <div>
             <Typography component="h1" variant="h5">

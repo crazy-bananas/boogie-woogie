@@ -17,6 +17,7 @@
     "react-pure-lifecycle": "^3.0.0",
     "react-redux": "^7.0.3",
     "react-scripts": "3.0.1",
+    "react-virtualized": "^9.21.1",
     "react-youtube": "^7.9.0",
     "redux": "^4.0.1"
   },

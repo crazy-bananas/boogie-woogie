@@ -10,7 +10,8 @@ import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
 import dancing from "../images/score/dancing.png";
-import music from "../images/score/music.png";
+import music from "../images/score/music.png"
+import Retry from "../components/Retry"
 import axios from "axios";
 
 export class VideoWindow extends Component {
@@ -249,10 +250,7 @@ export class VideoWindow extends Component {
     return null;
   };
 
-  componentWillMount() {
-    document.body.style.background = // TODO: Set this in the CSS file
-      "linear-gradient(90deg, #ffc414 20%, #fa7f2d 50%, #ffc414 90%)";
-  }
+
 
   componentDidMount() {
     if (!this.props.isRecording) {
@@ -672,8 +670,10 @@ export class VideoWindow extends Component {
                   <span className="score_max">/{this.maxScore}</span>
                 </div>
                 {this.props.isCountdownFinished && <Timer />}
+                <Retry/>
               </div>
             </Grid>
+            
           </Grid>
         </div>
       </div>
