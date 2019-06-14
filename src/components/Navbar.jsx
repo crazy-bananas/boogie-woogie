@@ -6,7 +6,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
-import Auth from '../authication/Auth';
 
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #ffc414 20%, #fa7f2d 50%, #ffc414 90%)"
@@ -18,12 +17,25 @@ const MyTypography = styled(Typography)({
   fontSize: 40
 });
 
-const auth = new Auth();
-
 export class Navbar extends Component {
-  auth = new Auth();
+  login() {
+    this.props.auth.login();
+  }
+
+  logout() {
+    this.props.auth.logout();
+  }
+
+  componentDidMount() {
+    const { renewSession } = this.props.auth;
+
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      renewSession();
+    }
+  }
 
   render() {
+    const { isAuthenticated } = this.props.auth;
     return (
       <div>
         <MyAppBar position="static" className="navbar">
@@ -43,9 +55,9 @@ export class Navbar extends Component {
                 </MyTypography>
               </Grid>
               <Grid item>
-                <Button color="inherit" onClick={() => {
-                  console.log("Login");
-                  auth.login();}} >Login</Button>
+              {console.log(isAuthenticated())}
+              {!isAuthenticated() && <Button color="inherit" onClick={this.login.bind(this)} >Login</Button>}
+              {isAuthenticated() && <Button color="inherit" onClick={this.logout.bind(this)} >Logout</Button>}
               </Grid>
             </Grid>
           </Toolbar>

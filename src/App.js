@@ -6,37 +6,38 @@ import { connect } from "react-redux";
 import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
 import Score from "./components/Score";
-import Login from "./components/Login";
-import Profile from "./components/Profile";
-import SignUp from "./components/SignUp";
+import Auth from "./authentication/Auth"
+const auth = new Auth();
 
-class App extends Component {
+const handleAuthentication = (nextState, replace) => {
+    auth.handleAuthentication();
+}
+
+handleAuthentication();
+
+console.log("handed shit")
+
+class App extends Component {  
   showMenu = () => {
     if (this.props.isSongSelected || this.props.isRecording) {
       return false;
     }
     return true;
   };
-  loggedIn = () => {
-    if (!this.props.isUserLoggedIn) {
-      return <Login />;
-    } 
-      return (
-        <div className="App">
-          <Navbar />
-          {this.showMenu() && <SongMenu />}
-          {this.props.isSongSelected && !this.props.isDanceFinished && (
-            <DanceWindow />
-          )}
-          {this.props.isRecording && !this.props.isAudioFinished && (
-            <RecordWindow />
-          )}
-          {this.props.isAudioFinished && <Score />}
-        </div>
-      );
-  };
   render() {
-    return this.loggedIn();
+    return (
+      <div className="App">
+        <Navbar auth={auth}/>
+        {this.showMenu() && <SongMenu />}
+        {this.props.isSongSelected && !this.props.isDanceFinished && (
+          <DanceWindow />
+        )}
+        {this.props.isRecording && !this.props.isAudioFinished && (
+          <RecordWindow />
+        )}
+        {this.props.isAudioFinished && <Score />}
+      </div>
+    );
   }
 }
 
@@ -46,7 +47,6 @@ const mapStateToProps = state => {
     isDanceFinished: state.isDanceFinished,
     isRecording: state.isRecording,
     isAudioFinished: state.isAudioFinished,
-    isUserLoggedIn: state.isUserLoggedIn,
     checkProfile: state.checkProfile
   };
 };
