@@ -5,6 +5,7 @@ import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
 import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
+import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
@@ -20,23 +21,40 @@ class App extends Component {
   loggedIn = () => {
     if (!this.props.isUserLoggedIn) {
       return <Login />;
-    } 
-      return (
-        <div className="App">
-          <Navbar />
-          {this.showMenu() && <SongMenu />}
-          {this.props.isSongSelected && !this.props.isDanceFinished && (
-            <DanceWindow />
-          )}
-          {this.props.isRecording && !this.props.isAudioFinished && (
-            <RecordWindow />
-          )}
-          {this.props.isAudioFinished && <Score />}
-        </div>
-      );
+    }
+    return (
+      <div className="App">
+        <Navbar />
+        {this.showMenu() && <SongMenu />}
+        {this.props.isSongSelected && !this.props.isDanceFinished && (
+          <DanceWindow />
+        )}
+        {this.props.isRecording && !this.props.isAudioFinished && (
+          <RecordWindow />
+        )}
+        {this.props.isAudioFinished && <Score />}
+      </div>
+    );
   };
   render() {
-    return this.loggedIn();
+    return (
+      <div className="App">
+        <Navbar />
+        {this.showMenu() && <SongMenu />}
+        {this.props.isSongSelected && !this.props.isDanceFinished && (
+          <DanceWindow />
+        )}
+
+        {this.props.isRecording && !this.props.isAudioFinished && (
+          <RecordWindow />
+        )}
+        {this.props.isRecording && this.props.isAudioFinished && (
+          <FinishRecording />
+        )}
+
+        {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
+      </div>
+    );
   }
 }
 

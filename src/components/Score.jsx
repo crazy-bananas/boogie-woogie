@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import ScoreCard from "./ScoreCard";
 import Retry from "./Retry";
 import LoadingScore from "./LoadingScore";
+import HighScore from "./HighScore";
+import "../styles/scores.css";
 
 class Score extends Component {
   constructor(props) {
@@ -13,7 +15,7 @@ class Score extends Component {
     let endTimeout = setTimeout(() => {
       this.setState({ loadingScore: false });
       clearTimeout(endTimeout);
-    }, 1500);
+    }, 30000);
   };
 
   componentDidMount() {
@@ -26,8 +28,9 @@ class Score extends Component {
         {this.state.loadingScore ? (
           <LoadingScore />
         ) : (
-          <div>
+          <div id="scores">
             <ScoreCard />
+            <HighScore />
             <Retry />
           </div>
         )}
