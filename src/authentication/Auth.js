@@ -33,7 +33,7 @@ export default class Audth {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
       } else if (err) {
-        history.replace('/home');
+        history.replace('/failedlogin');
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
@@ -49,6 +49,7 @@ export default class Audth {
   }
 
   setSession(authResult) {
+    console.log("setSession was called here");
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true');
 
@@ -58,8 +59,10 @@ export default class Audth {
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
 
+    console.log("setSession was also called here", this.expiresAt);
+
     // navigate to the home route
-    history.replace('/home');
+    history.replace('/home2');
   }
 
   renewSession() {
@@ -95,6 +98,9 @@ export default class Audth {
     // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = this.expiresAt;
+    console.log("access token", this.accessToken)
+    console.log("access id", this.idToken)
+    console.log("date:", new Date().getTime(), "Expire", expiresAt);
     return new Date().getTime() < expiresAt;
   }
 }
