@@ -245,10 +245,7 @@ export class VideoWindow extends Component {
     return null;
   };
 
-  componentWillMount() {
-    document.body.style.background = // TODO: Set this in the CSS file
-      "linear-gradient(90deg, #ffc414 20%, #fa7f2d 50%, #ffc414 90%)";
-  }
+
 
   componentDidMount() {
     this.ctx = this.canvasRef.current.getContext("2d");
