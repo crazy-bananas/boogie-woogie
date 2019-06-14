@@ -13,7 +13,8 @@ import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
 
 import dancing from "../images/score/dancing.png";
-import music from "../images/score/music.png";
+import music from "../images/score/music.png"
+import Retry from "../components/Retry"
 
 export class VideoWindow extends Component {
   constructor(props) {
@@ -374,10 +375,11 @@ export class VideoWindow extends Component {
           correctPose[body].y <= Math.round(userPose[body].y) + 30 &&
           correctPose[body].y >= Math.round(userPose[body].y) - 30
         ) {
-          this.drawGame(userPose[body]);
+          
           this.setState({ score: this.state.score + 1 });
           this.score++; // TODO: to be deleted
           this.matchedPositions(body);
+          this.drawGame(userPose[body]);
         }
       }
     }
@@ -600,8 +602,10 @@ export class VideoWindow extends Component {
                   </span>
                 </div>
                 {this.props.isCountdownFinished && <Timer />}
+                <Retry/>
               </div>
             </Grid>
+            
           </Grid>
         </div>
       </div>
