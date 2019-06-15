@@ -15,7 +15,7 @@ class Score extends Component {
     let endTimeout = setTimeout(() => {
       this.setState({ loadingScore: false });
       clearTimeout(endTimeout);
-    }, 30000);
+    }, 1500);
   };
 
   componentDidMount() {
