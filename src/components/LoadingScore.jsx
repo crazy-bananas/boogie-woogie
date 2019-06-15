@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import "../styles/loadingscore.css";
 import anime from "animejs";
 
-class LoadingScore extends Component {
+export default class LoadingScore extends Component {
   componentDidMount() {
     anime
       .timeline({ loop: true })
@@ -29,7 +28,7 @@ class LoadingScore extends Component {
 
   render() {
     return (
-      <div className="loading">
+      <div className="loadingScore">
         <h1 className="message">Dance Finished!</h1>
         <h2 className="message">
           <span className="letter">C</span>
@@ -60,16 +59,3 @@ class LoadingScore extends Component {
     );
   }
 }
-
-const mapStateToProps = state => {
-  return {};
-};
-
-const mapDispatchToProps = dispatch => {
-  return {};
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoadingScore);
