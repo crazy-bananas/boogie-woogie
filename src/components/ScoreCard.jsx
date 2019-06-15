@@ -14,7 +14,7 @@ import Trophy from "../images/trophy.png";
 import "../styles/scoreCard.css";
 import { connect } from "react-redux";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 345
   },
@@ -71,10 +71,8 @@ function ScoreCard(props) {
   );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    title: state.songList[state.songSelected].title,
-    artist: state.songList[state.songSelected].artist,
     score: state.totalScore,
     maxScore: state.maxScore
   };

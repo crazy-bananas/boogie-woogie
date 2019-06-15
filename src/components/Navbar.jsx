@@ -6,6 +6,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
+import logo from "../images/logo.svg"
 
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #ffc414 20%, #fa7f2d 50%, #ffc414 90%)"
@@ -37,7 +38,7 @@ export class Navbar extends Component {
   render() {
     const { isAuthenticated } = this.props.auth;
     return (
-      <div>
+      <div >
         <MyAppBar position="static" className="navbar">
           <Toolbar>
             <Grid justify="space-between" alignItems="center" container>
@@ -46,18 +47,20 @@ export class Navbar extends Component {
                 <IconButton edge="start" color="inherit" aria-label="Menu">
                 <MenuIcon />
                 </IconButton> */}
-                <MyTypography
+                <h1 style={{"font-family": 'Gloria Hallelujah'}}>Boogie Woogie</h1>
+                <img alt="logo" src={logo} style={{height:50,width:50}}/>
+                {/* <MyTypography
                   variant="h6"
                   className="heading"
                   onClick={this.props.resetState}
                   >
                   Boogie Woogie
-                </MyTypography>
+                </MyTypography> */}
               </Grid>
               <Grid item>
-              {console.log(isAuthenticated())}
-              {!isAuthenticated() && <Button color="inherit" onClick={this.login.bind(this)} >Login</Button>}
-              {isAuthenticated() && <Button color="inherit" onClick={this.logout.bind(this)} >Logout</Button>}
+                {console.log(isAuthenticated())}
+                {!isAuthenticated() && <Button color="inherit" onClick={this.login.bind(this)} >Login</Button>}
+                {isAuthenticated() && <Button color="inherit" onClick={this.logout.bind(this)} >Logout</Button>}
               </Grid>
             </Grid>
           </Toolbar>

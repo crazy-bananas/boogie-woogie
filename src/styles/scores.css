@@ -1,0 +1,9 @@
+#scores{
+  display:flex;
+  flex-direction: row;
+  justify-content: center
+}
+#highscore{
+  margin:50px;
+  margin-top: 20px;
+}

@@ -5,6 +5,7 @@ import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
 import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
+import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
 import Auth from "./authentication/Auth"
 const auth = new Auth();
@@ -28,14 +29,21 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar auth={auth}/>
-        {this.showMenu() && <SongMenu />}
-        {this.props.isSongSelected && !this.props.isDanceFinished && (
-          <DanceWindow />
-        )}
-        {this.props.isRecording && !this.props.isAudioFinished && (
-          <RecordWindow />
-        )}
-        {this.props.isAudioFinished && <Score />}
+          {this.showMenu() && <SongMenu />}
+
+          {this.props.isSongSelected && !this.props.isDanceFinished && (
+            <DanceWindow />
+          )}
+
+          {this.props.isRecording && !this.props.isAudioFinished && (
+            <RecordWindow />
+          )}
+
+          {this.props.isRecording && this.props.isAudioFinished && (
+            <FinishRecording />
+          )}
+
+          {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
       </div>
     );
   }
