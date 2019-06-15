@@ -29,8 +29,8 @@ export default class LoadingScore extends Component {
   render() {
     return (
       <div className="loadingScore">
-        <h1 className="message">Dance Finished!</h1>
-        <h2 className="message">
+        <h1 className="message-loading">Dance Finished!</h1>
+        <h2 className="message-loading">
           <span className="letter">C</span>
           <span className="letter">a</span>
           <span className="letter">l</span>
