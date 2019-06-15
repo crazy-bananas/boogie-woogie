@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 
-class ScoreCard extends Component {
+class FinishRecording extends Component {
   save = () => {
     axios
       .post("https://boogie-banana.herokuapp.com/api/moves", {
@@ -14,11 +14,13 @@ class ScoreCard extends Component {
       })
       .then(data => console.log(this.props.newSong));
 
-    // axios.post("https://boogie-banana.herokuapp.com/api/songs", {
-    //   code: this.props.newSong.url,
-    //   title: this.props.newSong.title,
-    //   artist: this.props.newSong.artist
-    // });
+    axios
+      .post("https://boogie-banana.herokuapp.com/api/songs", {
+        code: this.props.newSong.url,
+        title: this.props.newSong.title,
+        artist: this.props.newSong.artist
+      })
+      .then(data => console.log("song saved"));
   };
   render() {
     return (
@@ -44,4 +46,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(ScoreCard);
+export default connect(mapStateToProps)(FinishRecording);

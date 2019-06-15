@@ -6,15 +6,24 @@ import HighScore from "./HighScore";
 import HighScoreList from "./HighScoreList";
 import "../styles/scores.css";
 import axios from "axios";
+import LoadingScore from "./LoadingScore";
+
+import "../styles/scores.css";
 
 class Score extends Component {
   constructor(props) {
     super(props);
-    this.state = { scoreList: [] };
+    this.state = { scoreList: [], loadingScore: true };
   }
+  startLoading = () => {
+    let endTimeout = setTimeout(() => {
+      this.setState({ loadingScore: false });
+      clearTimeout(endTimeout);
+    }, 1500);
+  };
   componentDidMount() {
-    console.log(this.props.currentScore);
-    axios.post("http://localhost:4000/api/scores", {
+    this.startLoading();
+    axios.post("https://boogie-banana.herokuapp.com/api/scores", {
       songId: this.props.songSelected,
       moveId: this.props.moveSelected,
       user: "Anonymous",
@@ -23,12 +32,18 @@ class Score extends Component {
   }
   render() {
     return (
-      <div id="scores">
-        <ScoreCard />
-        {console.log(this.state.scoreList.data)}
-        <HighScoreList scoreList={this.state.scoreList.data} />
-        <HighScore scoreList={this.state.scoreList.data} />
-        <Retry />
+      <div>
+        {this.state.loadingScore ? (
+          <LoadingScore />
+        ) : (
+          <div>
+            <ScoreCard />
+
+            <HighScoreList scoreList={this.state.scoreList.data} />
+            <HighScore scoreList={this.state.scoreList.data} />
+            <Retry />
+          </div>
+        )}
       </div>
     );
   }

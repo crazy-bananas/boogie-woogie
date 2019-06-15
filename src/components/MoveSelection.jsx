@@ -11,7 +11,9 @@ export class HighScoreList extends Component {
   componentDidMount() {
     axios
       .get(
-        `http://localhost:4000/api/moves/${this.props.songSelected}
+        `https://boogie-banana.herokuapp.com/api/moves/${
+          this.props.songSelected
+        }
         `
       )
       .then(data => {

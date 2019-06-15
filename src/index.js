@@ -56,9 +56,15 @@ const appReducer = (state = initialState, action) => {
     case "UPDATE_TOTAL_SCORE": {
       const newState = { ...state };
       newState.totalScore = action.payload.userScore;
-      newState.maxScore = action.payload.maxScore;
       return newState;
     }
+
+    case "UPDATE_MAXSCORE": {
+      const newState = { ...state };
+      newState.maxScore = action.maxScore;
+      return newState;
+    }
+
     case "AUDIO_FINISHED": {
       const newState = { ...state };
       newState.isAudioFinished = true;

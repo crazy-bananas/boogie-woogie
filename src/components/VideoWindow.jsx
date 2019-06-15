@@ -9,8 +9,8 @@ import rightHandImg from "../images/rightHand.svg";
 import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
-import dancing from "../images/score/dancing.png";
-import music from "../images/score/music.png";
+// import dancing from "../images/score/dancing.png";
+// import music from "../images/score/music.png";
 import Retry from "../components/Retry";
 import axios from "axios";
 
@@ -31,8 +31,6 @@ export class VideoWindow extends Component {
     this.noseRef = new React.createRef();
     this.leftShoeRef = new React.createRef();
     this.rightShoeRef = new React.createRef();
-    this.dancingRef = new React.createRef();
-    this.musicRef = new React.createRef();
 
     this.ctx = "";
     this.danceIntervalStopValue = 0;
@@ -42,7 +40,6 @@ export class VideoWindow extends Component {
     this.score = 0;
     this.recordedPoses = [];
     this.stream = null; // Video stream
-    this.called = true; // TODO: What is this?
     this.bodyParts = [
       "leftAnkle",
       // "leftEar",
@@ -75,7 +72,7 @@ export class VideoWindow extends Component {
       combo: 0
     };
 
-    this.maxScore = 0;
+    //  this.maxScore = 0;
 
     // to check user's standing at right position before dancing
     this.startPosition = {
@@ -254,14 +251,19 @@ export class VideoWindow extends Component {
   componentDidMount() {
     if (!this.props.isRecording) {
       axios
-        .get(`http://localhost:4000/api/moves/${this.props.moveSelected}`)
+        .get(
+          `https://boogie-banana.herokuapp.com/api/moves/${
+            this.props.moveSelected
+          }`
+        )
         .then(poses => {
           this.setState({ correctPoses: poses.data[0].moves });
+          let maxScore = Math.floor(
+            (this.state.correctPoses.length * this.bodyParts.length) / 10
+          );
+          this.props.updateMaxScore(maxScore);
         });
     }
-    this.maxScore = Math.floor(
-      (this.state.correctPoses.length * this.bodyParts.length) / 10
-    );
 
     this.ctx = this.canvasRef.current.getContext("2d");
     const detectPoseInRealTime = (video, net) => {
@@ -569,8 +571,6 @@ export class VideoWindow extends Component {
           <img id="nose" ref={this.noseRef} src={nose} alt="nose" />
           <img id="lShoe" ref={this.leftShoeRef} src={leftShoe} alt="lshoe" />
           <img id="rShoe" ref={this.rightShoeRef} src={rightShoe} alt="rshoe" />
-          <img id="dancing" ref={this.dancingRef} src={dancing} alt="dancing" />
-          <img id="music" ref={this.musicRef} src={music} alt="music" />
         </div>
         <div id="grid">
           <Grid container>
@@ -662,7 +662,7 @@ export class VideoWindow extends Component {
                 <div className="current_score">Score</div>
                 <div className="score_num">
                   {this.state.score}{" "}
-                  <span className="score_max">/{this.maxScore}</span>
+                  <span className="score_max">/{this.props.maxScore}</span>
                 </div>
                 {this.props.isCountdownFinished && <Timer />}
                 <Retry />
@@ -684,7 +684,8 @@ const mapStateToProps = state => {
     isAudioFinished: state.isAudioFinished,
     isRecording: state.isRecording,
     songSelected: state.songSelected,
-    moveSelected: state.moveSelected
+    moveSelected: state.moveSelected,
+    maxScore: state.maxScore
   };
 };
 
@@ -700,10 +701,16 @@ const mapDispatchToProps = dispatch => {
         type: "DANCE_FINISHED"
       });
     },
-    updateTotalScore: (score, maxScore) => {
+    updateMaxScore: maxScore => {
+      dispatch({
+        type: "UPDATE_MAXSCORE",
+        maxScore
+      });
+    },
+    updateTotalScore: score => {
       dispatch({
         type: "UPDATE_TOTAL_SCORE",
-        payload: { userScore: score, maxScore: maxScore }
+        payload: { userScore: score }
       });
     },
     addNewMoves: moves => {
