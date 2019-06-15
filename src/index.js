@@ -9,12 +9,13 @@ import { createStore } from "redux";
 const initialState = {
   isSongSelected: false,
   songSelected: "",
+  moveSelected: "",
   totalScore: 0,
   maxScore: 0,
 
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: false,
+  isUserReady: true,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
@@ -87,7 +88,14 @@ const appReducer = (state = initialState, action) => {
     case "ADD_NEW_MOVES": {
       const newState = { ...state };
       newState.newSong.moves = action.payload;
-      console.log(newState.newSong.moves);
+
+      return newState;
+    }
+
+    case "SELECTED_MOVEID": {
+      const newState = { ...state };
+      console.log(action.payload);
+      newState.moveSelected = action.payload;
       return newState;
     }
 

@@ -49,7 +49,9 @@ class RecordWindow extends Component {
             opts={{
               playerVars: {
                 autoplay: 1
-              }
+              },
+              height: "1",
+              width: "1"
             }}
             onEnd={this.props.audioFinished}
             muted={false}

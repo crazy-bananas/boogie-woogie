@@ -79,7 +79,7 @@ class MuiVirtualizedTable extends React.PureComponent {
           classes.noClick
         )}
         variant="head"
-        style={{backgroundColor:"#FA7F2D" ,height: headerHeight }}
+        style={{ backgroundColor: "#FA7F2D", height: headerHeight }}
         align={columns[columnIndex].numeric || false ? "right" : "left"}
       >
         <span>{label}</span>
@@ -155,7 +155,7 @@ for (let i = 0; i < 11; i += 1) {
 
 export default function HighShcore() {
   return (
-    <Paper style={{margin:50,marginTop: 20,height: 460, width: "35%" }}>
+    <Paper style={{ margin: 50, marginTop: 20, height: 460, width: "35%" }}>
       <VirtualizedTable
         rowCount={rows.length}
         rowGetter={({ index }) => rows[index]}

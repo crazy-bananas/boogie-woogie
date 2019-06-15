@@ -10,8 +10,8 @@ import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
 import dancing from "../images/score/dancing.png";
-import music from "../images/score/music.png"
-import Retry from "../components/Retry"
+import music from "../images/score/music.png";
+import Retry from "../components/Retry";
 import axios from "axios";
 
 export class VideoWindow extends Component {
@@ -76,6 +76,7 @@ export class VideoWindow extends Component {
     };
 
     this.maxScore = 0;
+
     // to check user's standing at right position before dancing
     this.startPosition = {
       nose: {
@@ -250,16 +251,10 @@ export class VideoWindow extends Component {
     return null;
   };
 
-
-
   componentDidMount() {
     if (!this.props.isRecording) {
       axios
-        .get(
-          `https://boogie-banana.herokuapp.com/api/moves/${
-            this.props.songSelected
-          }`
-        )
+        .get(`http://localhost:4000/api/moves/${this.props.moveSelected}`)
         .then(poses => {
           this.setState({ correctPoses: poses.data[0].moves });
         });
@@ -670,10 +665,9 @@ export class VideoWindow extends Component {
                   <span className="score_max">/{this.maxScore}</span>
                 </div>
                 {this.props.isCountdownFinished && <Timer />}
-                <Retry/>
+                <Retry />
               </div>
             </Grid>
-            
           </Grid>
         </div>
       </div>
@@ -689,7 +683,8 @@ const mapStateToProps = state => {
     isCountdownFinished: state.isCountdownFinished,
     isAudioFinished: state.isAudioFinished,
     isRecording: state.isRecording,
-    songSelected: state.songSelected
+    songSelected: state.songSelected,
+    moveSelected: state.moveSelected
   };
 };
 
@@ -715,6 +710,12 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: "ADD_NEW_MOVES",
         payload: moves
+      });
+    },
+    setSelectedMoveId: key => {
+      dispatch({
+        type: "SELECTED_MOVEID",
+        payload: key
       });
     }
   };
