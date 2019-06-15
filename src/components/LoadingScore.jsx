@@ -7,7 +7,7 @@ export default class LoadingScore extends Component {
     anime
       .timeline({ loop: true })
       .add({
-        targets: ".message .letter",
+        targets: ".message-loading .letter",
         scale: [4, 1],
         opacity: [0, 1],
         translateZ: 0,
@@ -18,7 +18,7 @@ export default class LoadingScore extends Component {
         }
       })
       .add({
-        targets: ".message",
+        targets: ".message-loading",
         opacity: 0,
         duration: 200,
         easing: "easeOutExpo",
