@@ -10,7 +10,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'dev-boogie-woogie.auth0.com',
     clientID: 'Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ',
-    redirectUri: process.env.AUTH_REDIRECT_LINK,
+    redirectUri: "http://localhost:3000/", //process.env.AUTH_REDIRECT_LINK,
     responseType: 'token id_token',
     scope: 'openid'
   });
