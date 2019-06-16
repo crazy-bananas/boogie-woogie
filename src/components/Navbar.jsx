@@ -32,7 +32,8 @@ export class Navbar extends Component {
               </Grid>
 
               <Grid item>
-                <Button color="inherit" onClick={this.login.bind(this)} >Login</Button>
+                {!this.props.auth.isAuthenticated() && <Button color="inherit" onClick={this.props.auth.login} >Login</Button>}
+                {this.props.auth.isAuthenticated() && <Button color="inherit" onClick={this.props.auth.logout} >Logout</Button>}
               </Grid>
             </Grid>
           </Toolbar>

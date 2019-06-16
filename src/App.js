@@ -8,7 +8,15 @@ import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
 
-class App extends Component {  
+class App extends Component {
+  login = () => {
+    this.props.auth.login();
+  }
+
+  logout() {
+    this.props.auth.logout();
+  }
+
   showMenu = () => {
     if (this.props.isSongSelected || this.props.isRecording) {
       return false;
@@ -18,7 +26,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Navbar />
+        <Navbar auth={this.props.auth} />
           {this.showMenu() && <SongMenu />}
 
           {this.props.isSongSelected && !this.props.isDanceFinished && (

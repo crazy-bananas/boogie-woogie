@@ -9,7 +9,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'dev-boogie-woogie.auth0.com',
     clientID: 'Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ',
-    redirectUri: "http://localhost:3000/",
+    redirectUri: "http://localhost:3000/home2",
     responseType: 'token id_token',
     scope: 'openid profile email'
   });
@@ -62,7 +62,7 @@ export default class Auth {
     console.log("setSession was also called here", this.expiresAt);
 
     // navigate to the home route
-    history.replace('/home2');
+    history.replace('/');
   }
 
   renewSession(check) {
@@ -92,7 +92,7 @@ export default class Auth {
     });
 
     // navigate to the home route
-    history.replace('/home');
+    history.replace('/');
   }
 
   isAuthenticated() {
