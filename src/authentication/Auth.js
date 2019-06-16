@@ -1,5 +1,6 @@
 import auth0 from "auth0-js";
 import history from "../history"
+require("dotenv").config();
 
 export default class Auth {
   accessToken;
@@ -9,7 +10,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'dev-boogie-woogie.auth0.com',
     clientID: 'Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ',
-    redirectUri: 'http://localhost:3000/',
+    redirectUri: process.env.AUTH_REDIRECT_LINK,
     responseType: 'token id_token',
     scope: 'openid'
   });
