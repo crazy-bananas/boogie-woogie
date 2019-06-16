@@ -47,7 +47,7 @@ export class Navbar extends Component {
                 <IconButton edge="start" color="inherit" aria-label="Menu">
                 <MenuIcon />
                 </IconButton> */}
-                <h1 style={{"font-family": 'Gloria Hallelujah'}}>Boogie Woogie</h1>
+                <h1 style={{"fontFamily": 'Gloria Hallelujah'}}>Boogie Woogie</h1>
                 <img alt="logo" src={logo} style={{height:50,width:50}}/>
                 {/* <MyTypography
                   variant="h6"
