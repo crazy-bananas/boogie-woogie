@@ -1,6 +1,5 @@
 import auth0 from "auth0-js";
 import history from "../history"
-require("dotenv").config();
 
 export default class Auth {
   accessToken;
@@ -10,9 +9,9 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'dev-boogie-woogie.auth0.com',
     clientID: 'Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ',
-    redirectUri: "http://localhost:3000/", //process.env.AUTH_REDIRECT_LINK,
+    redirectUri: "http://localhost:3000/",
     responseType: 'token id_token',
-    scope: 'openid'
+    scope: 'openid profile email'
   });
 
   login() {
@@ -66,7 +65,8 @@ export default class Auth {
     history.replace('/home2');
   }
 
-  renewSession() {
+  renewSession(check) {
+    console.log(check)
     this.auth0.checkSession({}, (err, authResult) => {
        if (authResult && authResult.accessToken && authResult.idToken) {
          this.setSession(authResult);

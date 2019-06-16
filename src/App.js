@@ -7,16 +7,6 @@ import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
-import Auth from "./authentication/Auth"
-const auth = new Auth();
-
-const handleAuthentication = (nextState, replace) => {
-    auth.handleAuthentication();
-}
-
-handleAuthentication();
-
-console.log("handed shit")
 
 class App extends Component {  
   showMenu = () => {
@@ -28,7 +18,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Navbar auth={auth}/>
+        <Navbar />
           {this.showMenu() && <SongMenu />}
 
           {this.props.isSongSelected && !this.props.isDanceFinished && (
