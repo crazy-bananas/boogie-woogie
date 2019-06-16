@@ -48,6 +48,8 @@ export class Navbar extends Component {
                 <MenuIcon />
                 </IconButton> */}
                 <h1 style={{"fontFamily": 'Gloria Hallelujah'}}>Boogie Woogie</h1>
+              </Grid>
+              <Grid item>
                 <img alt="logo" src={logo} style={{height:50,width:50}}/>
                 {/* <MyTypography
                   variant="h6"
