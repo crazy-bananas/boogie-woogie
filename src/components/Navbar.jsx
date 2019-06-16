@@ -5,7 +5,8 @@ import { styled } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { connect } from "react-redux";
-import logo from "../images/logo.svg"
+import logo from "../images/logo.svg";
+import axios from "axios";
 
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #ffc414 20%, #fa7f2d 50%, #ffc414 90%)"
@@ -13,6 +14,17 @@ const MyAppBar = styled(AppBar)({
 });
 
 export class Navbar extends Component {
+  async getUserInfo() {
+    return await axios
+      .get("https://dev-boogie-woogie.auth0.com/userinfo", 
+        {
+          headers: {
+            Authorization: `Bearer ${this.props.auth.getAccessToken()}`
+          }
+        }
+      )
+  }
+
   render() {
     return (
       <div >
@@ -34,6 +46,17 @@ export class Navbar extends Component {
               <Grid item>
                 {!this.props.auth.isAuthenticated() && <Button color="inherit" onClick={this.props.auth.login} >Login</Button>}
                 {this.props.auth.isAuthenticated() && <Button color="inherit" onClick={this.props.auth.logout} >Logout</Button>}
+              </Grid>
+
+              <Grid item>
+                {this.props.auth.isAuthenticated() && <Button color="inherit" onClick={
+                  async () => {
+                    const userInfo = await this.getUserInfo()
+                    console.log(userInfo.data)
+                  }
+                } >
+                Console Log User Info
+                </Button>}
               </Grid>
             </Grid>
           </Toolbar>

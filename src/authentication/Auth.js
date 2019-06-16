@@ -49,7 +49,6 @@ export default class Auth {
   }
 
   setSession(authResult) {
-    console.log("setSession was called here");
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true');
 
@@ -58,8 +57,6 @@ export default class Auth {
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
-
-    console.log("setSession was also called here", this.expiresAt);
 
     // navigate to the home route
     history.replace('/');
@@ -99,9 +96,6 @@ export default class Auth {
     // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = this.expiresAt;
-    console.log("access token", this.accessToken)
-    console.log("access id", this.idToken)
-    console.log("date:", new Date().getTime(), "Expire", expiresAt);
     return new Date().getTime() < expiresAt;
   }
 }
