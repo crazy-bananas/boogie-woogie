@@ -7,19 +7,42 @@ import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
-<<<<<<< HEAD
-import Login from "./components/Login";
-import Profile from "./components/Profile";
-import SignUp from "./components/SignUp";
-import HighScore from "./components/HighScore";
-=======
 import MoveSelection from "./components/MoveSelection";
->>>>>>> 9c8c5b5f2d56ba6b27fd786010a409fa8404c5d3
+import Profile from "./components/Profile";
+import axios from "axios";
 
 class App extends Component {
+  componentDidMount() {
+    if (localStorage.getItem("isLoggedIn")) {
+      try {
+        axios
+          .get("https://dev-boogie-woogie.auth0.com/userinfo", {
+            headers: {
+              Authorization: `Bearer ${this.props.auth.getAccessToken()}`
+            }
+          })
+          .then(responseWithUserInfo => {
+            return responseWithUserInfo.data;
+          })
+          .then(userInfo => {
+            // Update state
+            console.log(userInfo)
+            this.props.userAuthInfo(userInfo);
+          })
+          .catch(err => {
+            console.log("Please Login")
+          });
+      } catch (err) {
+        throw err;
+      }
+    }else{
+      console.log("please login")
+    }
+  }
+
   login = () => {
     this.props.auth.login();
-  }
+  };
 
   logout() {
     this.props.auth.logout();
@@ -31,27 +54,12 @@ class App extends Component {
     }
     return true;
   };
-<<<<<<< HEAD
-  loggedIn = () => {
-    if (!this.props.isUserLoggedIn) {
-      return (<div>
-        <HighScore/>
-         </div>)
-    }
-    return (
-      <div className="App">
-        <Navbar />
-        {this.showMenu() && <SongMenu />}
-        {this.props.isSongSelected && !this.props.isDanceFinished && (
-          <DanceWindow />
-        )}
-=======
+
   render() {
     return (
       <div className="App">
         <Navbar auth={this.props.auth} />
         {this.showMenu() && <SongMenu />}
-
         {this.props.isSongSelected &&
           !this.props.isDanceFinished &&
           this.props.moveSelected.length === 0 && <MoveSelection />}
@@ -59,7 +67,6 @@ class App extends Component {
         {this.props.isSongSelected &&
           !this.props.isDanceFinished &&
           this.props.moveSelected.length !== 0 && <DanceWindow />}
->>>>>>> 9c8c5b5f2d56ba6b27fd786010a409fa8404c5d3
 
         {this.props.isRecording && !this.props.isAudioFinished && (
           <RecordWindow />
@@ -71,7 +78,7 @@ class App extends Component {
 
         {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
       </div>
-    
+
       ////////
       // <div className="App">
       //   <Navbar />
@@ -85,11 +92,6 @@ class App extends Component {
       //   {this.props.isAudioFinished && <Score />}
       // </div>
     );
-  };
-  render() {
-    return (
-      this.loggedIn()
-    )
   }
 }
 
@@ -106,7 +108,14 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    userAuthInfo: data => {
+      dispatch({
+        type: "USER_AUTH_INFO",
+        payload: data
+      });
+    }
+  };
 };
 
 export default connect(

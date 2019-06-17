@@ -34,18 +34,18 @@ class Profile extends Component {
       data: 0
     };
   }
-  getUserAuth = () => {
-    axios
-      .get(
-        `
-      https://boogie-banana.herokuapp.com/api/users/auth0%7C5d044ea240040b0d55201f6f`
-      )
-      .then(data => {
-        this.setState({
-          data: data.data
-        });
-      });
-  };
+  // getUserAuth = () => {
+  //   axios
+  //     .get(
+  //       `
+  //     https://boogie-banana.herokuapp.com/api/users/auth0%7C5d044ea240040b0d55201f6f`
+  //     )
+  //     .then(data => {
+  //       this.setState({
+  //         data: data.data
+  //       });
+  //     });
+  // };
   getUserScore = () => {
     axios.get(``).then(data => {
       //this.setState({});
@@ -57,12 +57,13 @@ class Profile extends Component {
     });
   };
   componentDidMount() {
-    this.getUserAuth();
+    //this.getUserAuth();
+    console.log(this.props)
     this.getUserScore();
     this.getUserFriends();
   }
   isUserDataFetched = () => {
-    if (this.state.data !== 0) {
+    if (this.props.userAuthInfo) {
       return (
         <div>
            <Fab
@@ -71,20 +72,21 @@ class Profile extends Component {
             aria-label="Add"
             className="fab"
           >
-            <img src={backIcon} />
+            <a href="/">
+            <img src={backIcon} alt="back arrow icon" /></a>
           </Fab>
           <Avatar
             alt="Remy Sharp"
-            src={this.state.data.picture}
+            src={this.props.userAuthInfo.picture}
             className="bigAvatar"
           />
          
 
           <Typography variant="h6" gutterBottom>
-            {this.state.data.nickname}
+            {this.props.userAuthInfonickname}
           </Typography>
           <Typography variant="body2" gutterBottom>
-            Email: {this.state.data.email}
+            Email: {this.props.userAuthInfo.email}
           </Typography>
           <p className="p"> Overall Score : {this.state.data.score} Points</p>
         </div>
@@ -166,6 +168,7 @@ class Profile extends Component {
 }
 const mapStateToProps = state => {
   return {
+    userAuthInfo: state.userAuthInfo,
     currentScore: state.currentScore,
     songSelected: state.songSelected,
     moveSelected: state.moveSelected

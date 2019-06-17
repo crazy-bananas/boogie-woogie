@@ -174,6 +174,7 @@ class  HighShcore extends Component {
     )
     .then(data => {
       this.setState({ scoreList: data.data });
+      console.log(this.state)
     });
   }
   componentDidMount() {
