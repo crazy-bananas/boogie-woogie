@@ -3,7 +3,7 @@ import history from "../history"
 import dotenv from "dotenv";
 dotenv.config();
 
-const REACT_APP_AUTH_REDIRECT_LINK = process.env.REACT_APP_AUTH_REDIRECT_LINK;
+const REACT_APP_AUTH_REDIRECT_LINK = process.env.REACT_APP_AUTH_REDIRECT_LINK || "https://user-login.d22dsl66lm2rw9.amplifyapp.com/";
 const REDIRECT_SUB = REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length -1] === "/" ? "login" : "/login";
 //
 export default class Auth {
@@ -14,7 +14,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'dev-boogie-woogie.auth0.com',
     clientID: 'Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ',
-    redirectUri: `${REACT_APP_AUTH_REDIRECT_LINK}`,
+    redirectUri: `${REACT_APP_AUTH_REDIRECT_LINK}${REDIRECT_SUB}`,
     responseType: 'token id_token',
     scope: 'openid profile email'
   });
