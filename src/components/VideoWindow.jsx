@@ -10,10 +10,10 @@ import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
 import dancing from "../images/score/dancing.png";
-import music from "../images/score/music.png"
-import Retry from "../components/Retry"
+import music from "../images/score/music.png";
+import Retry from "../components/Retry";
 import axios from "axios";
-
+import Loading from "../components/Loading";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +34,7 @@ export class VideoWindow extends Component {
     this.dancingRef = new React.createRef();
     this.musicRef = new React.createRef();
 
+    this.loaded = false;
     this.ctx = "";
     this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
@@ -250,9 +251,12 @@ export class VideoWindow extends Component {
     return null;
   };
 
-
-
   componentDidMount() {
+    bindPage().then(response => {
+      this.setState({
+        loaded:true
+      })
+    });
     if (!this.props.isRecording) {
       axios
         .get(
@@ -320,8 +324,6 @@ export class VideoWindow extends Component {
 
       detectPoseInRealTime(video, net);
     }
-
-    bindPage();
 
     const setupCamera = async () => {
       const video = this.videoRef.current;
@@ -644,13 +646,14 @@ export class VideoWindow extends Component {
               </ul>
             </Grid>
             <Grid item xs={8}>
-              <video
+             <video
                 id="video"
                 ref={this.videoRef}
                 width="800px"
                 height="600px"
                 autoPlay="1"
-              />
+             />
+              
               <canvas
                 id="canvas"
                 ref={this.canvasRef}
@@ -658,10 +661,12 @@ export class VideoWindow extends Component {
                 height="600px"
                 className={`${this.state.combo > 1 ? "combo" : ""}`}
               >
+                 
                 Your browser do not support the HTML5 element canvas. Please try
                 to user another browswer
               </canvas>
-            </Grid>
+              {!this.state.loaded && <Loading/>}
+              </Grid>
             <Grid item xs={2}>
               <div>
                 <div className="current_score">Score</div>
@@ -670,10 +675,9 @@ export class VideoWindow extends Component {
                   <span className="score_max">/{this.maxScore}</span>
                 </div>
                 {this.props.isCountdownFinished && <Timer />}
-                <Retry/>
+                <Retry />
               </div>
             </Grid>
-            
           </Grid>
         </div>
       </div>

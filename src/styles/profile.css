@@ -1,3 +1,53 @@
 body{
   height:100vh;
 }
+.myCard{
+  height:500px;
+  width:75%
+}
+.wrapper{
+  margin-top:30px;
+  display: flex;
+  flex-flow: row wrap;
+}
+.cardBox {
+  text-align: "center";
+}
+.friendBox {
+  margin-left: 15%;
+}
+.p {
+  font-weight: bold;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+}
+.bigAvatar {
+  margin: 10px;
+  width: 200px !important;
+  height: 200px !important;
+}
+.card {
+  min-width: 150px;
+  margin: 10px;
+  overflow: auto !important;
+  white-space: nowrap 
+}
+.bullet {
+  display: inline-block;
+  margin: 0.2px;
+  transform: scale(0.8px);
+}
+.title{
+  font-size: 14px;
+}
+.friends{
+  overflow: auto;
+}
+.textField{
+  background-color: rgba(231, 99, 213, 0.11);
+  width: 100%;
+  margin:20px
+}
