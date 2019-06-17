@@ -17,8 +17,8 @@ import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
 import dancingPeople from "../images/dancingPeople.jpg";
 import RecordDanceModal from "./RecordDanceModal";
-import SongLoading from "./SongLoading"
-import "../styles/songmenu.css"
+import "../styles/songmenu.css";
+import SongLoading from "./SongLoading";
 
 import axios from "axios";
 
@@ -28,14 +28,13 @@ const MyPaper = styled(Paper)({
   alignItems: "center",
   height: "100vh",
   justifyContent: "center",
-  alignContent: "center", 
-  
+  alignContent: "center"
 });
 
 class SongMenu extends Component {
   constructor(props) {
     super(props);
-    this.loaded= false
+    this.loaded = false;
     this.songRef = React.createRef();
     this.state = {
       showModal: false,
@@ -55,45 +54,24 @@ class SongMenu extends Component {
     axios
       .get("https://boogie-banana.herokuapp.com/api/songs")
       .then(songs => {
-        setTimeout(()=>{
-          this.setState({ loaded:true, songList: songs.data });
-        },1000)
-       
+        setTimeout(() => {
+          this.setState({ loaded: true, songList: songs.data });
+        }, 1000);
       })
       .catch(err => console.log(err));
   }
-isSongListLoaded= ()=>{
-  if(this.state.loaded){
-    return(<List>
-      {this.state.songList.map((song, index) => {
-        return (
-          <ListItem key={index}>
-            <ListItemAvatar>
-              <Avatar id="songIcon">
-                <MusicNote />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              key={song.code}
-              primary={song.title}
-              secondary={song.artist}
-              onClick={() => this.playSong({ songCode: song.code })}
-            />
-          </ListItem>
-        );
-      })}
-    </List>)
-  }else{
-    return(<SongLoading/>)
-  }
-}
+
   render() {
     return (
       <Grid container component="main">
         <CssBaseline />
         <Grid item xs={false} sm={4} md={8}>
           <MyPaper>
-            <img alt="People Dancing" src={dancingPeople} style={{height:600,width:800}}/>
+            <img
+              alt="People Dancing"
+              src={dancingPeople}
+              style={{ height: 600, width: 800 }}
+            />
           </MyPaper>
         </Grid>
         <Grid
@@ -110,7 +88,30 @@ isSongListLoaded= ()=>{
               Select your song
             </Typography>
 
-            {this.isSongListLoaded()}
+            {this.state.loaded && (
+              <List>
+                }
+                {this.state.songList.map((song, index) => {
+                  return (
+                    <ListItem key={index}>
+                      <ListItemAvatar>
+                        <Avatar id="songIcon">
+                          <MusicNote />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        key={song.code}
+                        primary={song.title}
+                        //secondary={song.artist}
+                        onClick={() => this.playSong({ songCode: song.code })}
+                      />
+                    </ListItem>
+                  );
+                })}
+              </List>
+            )}
+            {!this.state.loaded && <SongLoading />}
+
             <Typography component="h1" variant="h5">
               Record your dance
             </Typography>
