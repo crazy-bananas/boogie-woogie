@@ -10,7 +10,8 @@ import { connect } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Close from "@material-ui/icons/Close";
 import axios from "axios";
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 const MyButton = styled(Button)({
   marginTop: "20px"
@@ -69,6 +70,7 @@ class SimpleModal extends Component {
       const songCode = this.state.code.substring(
         this.state.code.indexOf("=") + 1
       );
+      console.log(process.env);
       axios
         .get(
           `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
