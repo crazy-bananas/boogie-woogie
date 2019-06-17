@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Counter from "./Counter";
 import "../styles/dancewindow.css";
 import { connect } from "react-redux";
+import YouTube from "react-youtube";
 
 class RecordWindow extends Component {
   constructor(props) {
@@ -10,14 +11,14 @@ class RecordWindow extends Component {
     this.audioPlayerRef = new React.createRef();
   }
 
-  startLevel = () => {
-    this.audioPlayerRef.current.play();
-  };
+  // startLevel = () => {
+  //   this.audioPlayerRef.current.pauseVideo();
+  // };
 
   componentDidUpdate() {
-    if (this.props.isCountdownFinished) {
-      this.startLevel();
-    }
+    // if (this.props.isCountdownFinished) {
+    //   this.startLevel();
+    // }
     // if (this.props.isAudioFinished) {
     //   this.audioPlayerRef.current.pause();
     // }
@@ -28,13 +29,22 @@ class RecordWindow extends Component {
       <div>
         <VideoWindow />
         <Counter />
-        <audio
-          id="audio_player"
-          ref={this.audioPlayerRef}
-          src={this.props.newSong.url}
-          controls
-          onEnded={this.props.audioFinished}
-        />
+        {console.log(this.props.newSong)}
+        {this.props.isCountdownFinished && (
+          <YouTube
+            videoId={this.props.newSong.code}
+            ref={this.audioPlayerRef}
+            onEnd={this.props.audioFinished}
+            opts={{
+              playerVars: {
+                autoplay: 1
+              },
+              height: "1",
+              width: "1"
+            }}
+            muted={false}
+          />
+        )}
       </div>
     );
   }
@@ -43,7 +53,6 @@ class RecordWindow extends Component {
 const mapStateToProps = state => {
   return {
     isCountdownFinished: state.isCountdownFinished,
-    songURL: state.songList[state.songSelected].url,
     isAudioFinished: state.isAudioFinished,
     newSong: state.newSong
   };

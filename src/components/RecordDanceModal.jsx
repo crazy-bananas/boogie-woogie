@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { saveObject } from "../utils/index";
+
 import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
@@ -7,10 +7,10 @@ import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/styles";
 import "../styles/recorddancemodal.css";
 import { connect } from "react-redux";
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
+import Avatar from "@material-ui/core/Avatar";
+import Close from "@material-ui/icons/Close";
+import axios from "axios";
+require("dotenv").config();
 
 const MyButton = styled(Button)({
   marginTop: "20px"
@@ -22,6 +22,12 @@ const MyDialog = styled(Dialog)({
   justifyContent: "center"
 });
 
+const MyTypography = styled(Typography)({
+  color: "#ff0000",
+  fontSize: "15px",
+  fontWeight: "300"
+});
+
 class SimpleModal extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +37,8 @@ class SimpleModal extends Component {
       title: "",
       artist: "",
       file: {},
-      songUrl: ""
+      code: "",
+      error: ""
       //modalStyle: getModalStyle
     };
   }
@@ -43,27 +50,71 @@ class SimpleModal extends Component {
     this.fileInputRef.current.click();
   };
 
-  setTitle = event => {
-    this.setState({ title: event.target.value });
-  };
-
   setArtist = event => {
     this.setState({ artist: event.target.value });
   };
 
   setSongUrl = event => {
-    this.setState({ songUrl: event.target.value });
+    this.setState({ code: event.target.value });
   };
 
+  saveSongData = () => {
+    if (this.state.artist === "") {
+      this.setState({ error: "Title and Artist field can't be empty" });
+    } else if (!this.state.code.startsWith("https://www.youtube.com")) {
+      this.setState({
+        error: "Please enter valid Song URL. We accept only Youtube URLs"
+      });
+    } else {
+      const songCode = this.state.code.substring(
+        this.state.code.indexOf("=") + 1
+      );
+      axios
+        .get(
+          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
+            process.env.YOUTUBE_API_KEY
+          }`
+        )
+        .then(data => {
+          this.props.addSong({
+            artist: this.state.artist,
+            title: data.data.items[0].snippet.title,
+            code: songCode
+          });
+        })
+        .catch(err => {
+          this.props.addSong({
+            artist: this.state.artist,
+            title: "unknown",
+            code: this.state.code.substring(this.state.code.indexOf("=") + 1)
+          });
+        });
+
+      this.handleClose();
+    }
+  };
   render() {
     return (
       <div>
         <MyDialog onClose={this.handleClose} open={this.state.setOpen}>
           <div
+            style={{
+              display: "flex",
+              alignItems: "right",
+              justifyContent: "flex-end",
+              marginTop: "10px",
+              marginRight: "10px"
+            }}
+          >
+            <Avatar id="closeIcon" onClick={this.handleClose}>
+              <Close />
+            </Avatar>
+          </div>
+          <div
             id="dialog"
             style={{
               display: "flex",
-              marginBottom: "20px",
+              marginBottom: "40px",
               alignItems: "center",
               justifyContent: "center"
             }}
@@ -77,7 +128,13 @@ class SimpleModal extends Component {
                 justifyContent: "center"
               }}
             >
-              <TextField
+              {this.state.error.length > 0 && (
+                <MyTypography variant="body1" component="h2">
+                  {this.state.error}
+                </MyTypography>
+              )}
+
+              {/* <TextField
                 variant="outlined"
                 margin="normal"
                 required
@@ -88,7 +145,7 @@ class SimpleModal extends Component {
                 autoComplete="title"
                 autoFocus
                 onChange={this.setTitle}
-              />
+              /> */}
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -106,10 +163,10 @@ class SimpleModal extends Component {
                 margin="normal"
                 required
                 fullWidth
-                name="soundcloud"
-                label="SoundCloud URL"
-                type="soundcloud"
-                id="soundcloud"
+                name="youtube"
+                label="youtube URL"
+                type="youtube"
+                id="youtube"
                 onChange={this.setSongUrl}
               />
 
@@ -117,24 +174,9 @@ class SimpleModal extends Component {
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={() => {
-                  this.props.addSong({
-                    artist: this.state.artist,
-                    title: this.state.title,
-                    songUrl: this.state.songUrl
-                  });
-                  this.handleClose();
-                }}
+                onClick={this.saveSongData}
               >
                 Start Recording
-              </MyButton>
-              <MyButton
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={this.handleClose}
-              >
-                Close
               </MyButton>
             </form>
           </div>
@@ -152,7 +194,7 @@ const mapDispatchToProps = dispatch => {
   return {
     addSong: song => {
       dispatch({
-        type: "ADD_SONG",
+        type: "ADD_NEW_SONG",
         payload: song
       });
     }
