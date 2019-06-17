@@ -15,7 +15,7 @@ const initialState = {
 
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: false,
+  isUserReady: true,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
@@ -28,6 +28,7 @@ const initialState = {
 };
 
 const appReducer = (state = initialState, action) => {
+  console.log(action.type);
   switch (action.type) {
     case "SELECT_SONG": {
       const newState = { ...state };
@@ -68,6 +69,7 @@ const appReducer = (state = initialState, action) => {
     case "AUDIO_FINISHED": {
       const newState = { ...state };
       newState.isAudioFinished = true;
+      console.log("AUDIO FINISHED");
       return newState;
     }
 

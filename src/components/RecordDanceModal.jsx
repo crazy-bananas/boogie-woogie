@@ -37,7 +37,7 @@ class SimpleModal extends Component {
       title: "",
       artist: "",
       file: {},
-      songUrl: "",
+      code: "",
       error: ""
       //modalStyle: getModalStyle
     };
@@ -55,19 +55,19 @@ class SimpleModal extends Component {
   };
 
   setSongUrl = event => {
-    this.setState({ songUrl: event.target.value });
+    this.setState({ code: event.target.value });
   };
 
   saveSongData = () => {
     if (this.state.artist === "") {
       this.setState({ error: "Title and Artist field can't be empty" });
-    } else if (!this.state.songUrl.startsWith("https://www.youtube.com")) {
+    } else if (!this.state.code.startsWith("https://www.youtube.com")) {
       this.setState({
         error: "Please enter valid Song URL. We accept only Youtube URLs"
       });
     } else {
-      const songCode = this.state.songUrl.substring(
-        this.state.songUrl.indexOf("=") + 1
+      const songCode = this.state.code.substring(
+        this.state.code.indexOf("=") + 1
       );
       axios
         .get(
@@ -76,7 +76,6 @@ class SimpleModal extends Component {
           }`
         )
         .then(data => {
-          console.log("fhjdgj", data.data.items[0].snippet.title);
           this.props.addSong({
             artist: this.state.artist,
             title: data.data.items[0].snippet.title,
@@ -87,9 +86,7 @@ class SimpleModal extends Component {
           this.props.addSong({
             artist: this.state.artist,
             title: "unknown",
-            songUrl: this.state.songUrl.substring(
-              this.state.songUrl.indexOf("=") + 1
-            )
+            code: this.state.code.substring(this.state.code.indexOf("=") + 1)
           });
         });
 

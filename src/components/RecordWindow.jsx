@@ -29,11 +29,12 @@ class RecordWindow extends Component {
       <div>
         <VideoWindow />
         <Counter />
-
+        {console.log(this.props.newSong)}
         {this.props.isCountdownFinished && (
           <YouTube
             videoId={this.props.newSong.code}
             ref={this.audioPlayerRef}
+            onEnd={this.props.audioFinished}
             opts={{
               playerVars: {
                 autoplay: 1
@@ -41,7 +42,6 @@ class RecordWindow extends Component {
               height: "1",
               width: "1"
             }}
-            onEnd={this.props.audioFinished}
             muted={false}
           />
         )}
