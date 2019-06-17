@@ -17,6 +17,7 @@ import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
 import dancingPeople from "../images/dancingPeople.jpg";
 import RecordDanceModal from "./RecordDanceModal";
+import SongLoading from "./SongLoading"
 import "../styles/songmenu.css"
 
 import axios from "axios";
@@ -34,6 +35,7 @@ const MyPaper = styled(Paper)({
 class SongMenu extends Component {
   constructor(props) {
     super(props);
+    this.loaded= false
     this.songRef = React.createRef();
     this.state = {
       showModal: false,
@@ -53,11 +55,38 @@ class SongMenu extends Component {
     axios
       .get("https://boogie-banana.herokuapp.com/api/songs")
       .then(songs => {
-        this.setState({ songList: songs.data });
+        setTimeout(()=>{
+          this.setState({ loaded:true, songList: songs.data });
+        },1000)
+       
       })
       .catch(err => console.log(err));
   }
-
+isSongListLoaded= ()=>{
+  if(this.state.loaded){
+    return(<List>
+      {this.state.songList.map((song, index) => {
+        return (
+          <ListItem key={index}>
+            <ListItemAvatar>
+              <Avatar id="songIcon">
+                <MusicNote />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              key={song.code}
+              primary={song.title}
+              secondary={song.artist}
+              onClick={() => this.playSong({ songCode: song.code })}
+            />
+          </ListItem>
+        );
+      })}
+    </List>)
+  }else{
+    return(<SongLoading/>)
+  }
+}
   render() {
     return (
       <Grid container component="main">
@@ -81,25 +110,7 @@ class SongMenu extends Component {
               Select your song
             </Typography>
 
-            <List>
-              {this.state.songList.map((song, index) => {
-                return (
-                  <ListItem key={index}>
-                    <ListItemAvatar>
-                      <Avatar id="songIcon">
-                        <MusicNote />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      key={song.code}
-                      primary={song.title}
-                      secondary={song.artist}
-                      onClick={() => this.playSong({ songCode: song.code })}
-                    />
-                  </ListItem>
-                );
-              })}
-            </List>
+            {this.isSongListLoaded()}
             <Typography component="h1" variant="h5">
               Record your dance
             </Typography>
