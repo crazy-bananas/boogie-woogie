@@ -31,6 +31,7 @@ export default function CircularDeterminate() {
         variant="determinate"
         value={progress}
         color="secondary"
+        style={{position:"absolute",width:200,height:200,top:"35%",left:"40%"}}
       />
     </div>
   );
