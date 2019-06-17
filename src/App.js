@@ -7,6 +7,7 @@ import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
+import MoveSelection from "./components/MoveSelection";
 
 class App extends Component {
   login = () => {
@@ -27,21 +28,25 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar auth={this.props.auth} />
-          {this.showMenu() && <SongMenu />}
+        {this.showMenu() && <SongMenu />}
 
-          {this.props.isSongSelected && !this.props.isDanceFinished && (
-            <DanceWindow />
-          )}
+        {this.props.isSongSelected &&
+          !this.props.isDanceFinished &&
+          this.props.moveSelected.length === 0 && <MoveSelection />}
 
-          {this.props.isRecording && !this.props.isAudioFinished && (
-            <RecordWindow />
-          )}
+        {this.props.isSongSelected &&
+          !this.props.isDanceFinished &&
+          this.props.moveSelected.length !== 0 && <DanceWindow />}
 
-          {this.props.isRecording && this.props.isAudioFinished && (
-            <FinishRecording />
-          )}
+        {this.props.isRecording && !this.props.isAudioFinished && (
+          <RecordWindow />
+        )}
 
-          {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
+        {this.props.isRecording && this.props.isAudioFinished && (
+          <FinishRecording />
+        )}
+
+        {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
       </div>
     );
   }
@@ -53,7 +58,9 @@ const mapStateToProps = state => {
     isDanceFinished: state.isDanceFinished,
     isRecording: state.isRecording,
     isAudioFinished: state.isAudioFinished,
-    checkProfile: state.checkProfile
+    isUserLoggedIn: state.isUserLoggedIn,
+    checkProfile: state.checkProfile,
+    moveSelected: state.moveSelected
   };
 };
 

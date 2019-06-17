@@ -9,6 +9,8 @@ import rightHandImg from "../images/rightHand.svg";
 import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
+// import dancing from "../images/score/dancing.png";
+// import music from "../images/score/music.png";
 import Retry from "../components/Retry";
 import axios from "axios";
 
@@ -71,6 +73,8 @@ export class VideoWindow extends Component {
       correctPoses: [],
       combo: 0
     };
+
+    //  this.maxScore = 0;
 
     // to check user's standing at right position before dancing
     this.startPosition = {
@@ -262,15 +266,17 @@ export class VideoWindow extends Component {
       axios
         .get(
           `https://boogie-banana.herokuapp.com/api/moves/${
-            this.props.songSelected
+            this.props.moveSelected
           }`
         )
         .then(poses => {
+          console.log(poses);
           this.setState({ correctPoses: poses.data[0].moves });
           let maxScore = Math.floor(
             (this.state.correctPoses.length * this.bodyParts.length) / 10
           );
           this.props.updateMaxScore(maxScore);
+          console.log(this.state.correctPoses);
         });
     }
 
@@ -693,6 +699,7 @@ const mapStateToProps = state => {
     isAudioFinished: state.isAudioFinished,
     isRecording: state.isRecording,
     songSelected: state.songSelected,
+    moveSelected: state.moveSelected,
     maxScore: state.maxScore
   };
 };
@@ -725,6 +732,12 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: "ADD_NEW_MOVES",
         payload: moves
+      });
+    },
+    setSelectedMoveId: key => {
+      dispatch({
+        type: "SELECTED_MOVEID",
+        payload: key
       });
     }
   };

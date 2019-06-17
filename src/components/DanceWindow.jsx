@@ -34,20 +34,14 @@ class DanceWindow extends Component {
             opts={{
               playerVars: {
                 autoplay: 1
-              }
+              },
+              height: "1",
+              width: "1"
             }}
             onEnd={this.props.audioFinished}
             muted={false}
           />
         )}
-
-        {/* <audio
-          id="audio_player"
-          ref={this.audioPlayerRef}
-          src={this.props.songURL}
-          controls
-          onEnded={this.props.audioFinished}
-        /> */}
       </div>
     );
   }

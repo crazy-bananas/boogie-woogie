@@ -9,23 +9,25 @@ import routing from "./routes"
 const initialState = {
   isSongSelected: false,
   songSelected: "",
+  moveSelected: "",
   totalScore: 0,
   maxScore: 0,
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: false,
+  isUserReady: true,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
     artist: "",
     title: "",
-    url: "",
+    code: "",
     moves: []
   },
   isRecording: false
 };
 
 const appReducer = (state = initialState, action) => {
+  console.log(action.type);
   switch (action.type) {
     case "SELECT_SONG": {
       const newState = { ...state };
@@ -66,10 +68,12 @@ const appReducer = (state = initialState, action) => {
     case "AUDIO_FINISHED": {
       const newState = { ...state };
       newState.isAudioFinished = true;
+      console.log("AUDIO FINISHED");
       return newState;
     }
 
     case "RESET_STATE": {
+      console.log("RESETTING STATE");
       return { ...initialState };
     }
     case "RETRY_DANCE": {
@@ -80,11 +84,10 @@ const appReducer = (state = initialState, action) => {
     }
     case "ADD_NEW_SONG": {
       const newState = { ...state };
+      console.log(action.payload);
       newState.newSong.artist = action.payload.artist;
       newState.newSong.title = action.payload.title;
-      newState.newSong.url = action.payload.songUrl.substring(
-        action.payload.songUrl.indexOf("=") + 1
-      );
+      newState.newSong.code = action.payload.code;
 
       newState.isRecording = !state.isRecording;
       return newState;
@@ -92,7 +95,14 @@ const appReducer = (state = initialState, action) => {
     case "ADD_NEW_MOVES": {
       const newState = { ...state };
       newState.newSong.moves = action.payload;
-      console.log(newState.newSong.moves);
+
+      return newState;
+    }
+
+    case "SELECTED_MOVEID": {
+      const newState = { ...state };
+      console.log(action.payload);
+      newState.moveSelected = action.payload;
       return newState;
     }
 
