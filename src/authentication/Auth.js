@@ -5,7 +5,7 @@ dotenv.config();
 
 const REACT_APP_AUTH_REDIRECT_LINK = process.env.REACT_APP_AUTH_REDIRECT_LINK;
 const REDIRECT_SUB = REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length -1] === "/" ? "login" : "/login";
-
+//
 export default class Auth {
   accessToken;
   idToken;
