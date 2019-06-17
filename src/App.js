@@ -10,6 +10,7 @@ import Score from "./components/Score";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import SignUp from "./components/SignUp";
+import HighScore from "./components/HighScore";
 
 class App extends Component {
   showMenu = () => {
@@ -20,23 +21,10 @@ class App extends Component {
   };
   loggedIn = () => {
     if (!this.props.isUserLoggedIn) {
-      return <Login />;
+      return (<div>
+        <HighScore/>
+         </div>)
     }
-    return (
-      <div className="App">
-        <Navbar />
-        {this.showMenu() && <SongMenu />}
-        {this.props.isSongSelected && !this.props.isDanceFinished && (
-          <DanceWindow />
-        )}
-        {this.props.isRecording && !this.props.isAudioFinished && (
-          <RecordWindow />
-        )}
-        {this.props.isAudioFinished && <Score />}
-      </div>
-    );
-  };
-  render() {
     return (
       <div className="App">
         <Navbar />
@@ -54,7 +42,25 @@ class App extends Component {
 
         {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
       </div>
+    
+      ////////
+      // <div className="App">
+      //   <Navbar />
+      //   {this.showMenu() && <SongMenu />}
+      //   {this.props.isSongSelected && !this.props.isDanceFinished && (
+      //     <DanceWindow />
+      //   )}
+      //   {this.props.isRecording && !this.props.isAudioFinished && (
+      //     <RecordWindow />
+      //   )}
+      //   {this.props.isAudioFinished && <Score />}
+      // </div>
     );
+  };
+  render() {
+    return (
+      this.loggedIn()
+    )
   }
 }
 
