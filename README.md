@@ -8,49 +8,29 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+You only need yarn and the backend
 
 ```
-Give examples
+brew install yarn
 ```
 
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running
 
-Say what the step will be
+Start with installing all dependencies
 
 ```
-Give the example
+yarn
 ```
 
-And repeat
+Running the app:
 
 ```
-until finished
+yarn start
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Deployment
 
@@ -58,9 +38,7 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [React](https://reactjs.org/) - The web framework used
 
 ## Contributing
 
@@ -69,13 +47,18 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 ## Technologies Used
 
 - [React](https://github.com/facebook/create-react-app)
+- [Posenet](https://github.com/tensorflow/tfjs-models/tree/master/posenet)
+- [auth0](https://auth0.com/) - For authentication and user login
+- [Axios](https://maven.apache.org/) - Dependency Management
+- [Redux](https://redux.js.org/) - To handle the state
+- [MongoDB](https://www.mongodb.com/) - For the database
 
 ## Authors
 
-* **Johannes Jarbratt** - *Initial work* - [PurpleBooth](https://github.com/johachi)
-* **Johannes Jarbratt** - *Initial work* - [PurpleBooth](https://github.com/johachi)
-* **Johannes Jarbratt** - *Initial work* - [PurpleBooth](https://github.com/johachi)
-* **Johannes Jarbratt** - *Initial work* - [PurpleBooth](https://github.com/johachi)
+* **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
+* **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
+* **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
+* **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
 
 ## License
 
@@ -83,6 +66,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
+* [Code Chrysalis](https://www.codechrysalis.io/)
 * [Posenet Team](https://github.com/tensorflow/tfjs-models/tree/master/posenet)
-* Inspiration
-* etc
