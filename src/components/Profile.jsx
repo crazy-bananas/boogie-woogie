@@ -25,6 +25,7 @@ import Loading from "./Loading";
 import { connect } from "react-redux";
 import "../styles/profile.css";
 import backIcon from '../images/backArrow.png'
+import Navbar from "./Navbar"
 
 class Profile extends Component {
   constructor(props) {
@@ -105,7 +106,7 @@ class Profile extends Component {
         </CardContent>
       </Card>
     );
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       this.dummyFriendList.push(friend);
     }
     return this.dummyFriendList;
@@ -113,7 +114,10 @@ class Profile extends Component {
 
   render() {
     return (
+     <div>
+      <Navbar auth={this.props.auth}/>
       <Container className="wrapper">
+        
         <Box flexDirection="col">{this.isUserDataFetched()}</Box>
         <Card className="myCard">
           <CardContent className="cardBox">
@@ -163,6 +167,7 @@ class Profile extends Component {
           </Card>
         </footer>
       </Container>
+      </div>
     );
   }
 }
