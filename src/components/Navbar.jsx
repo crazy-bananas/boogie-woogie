@@ -45,16 +45,16 @@ export class Navbar extends Component {
               </Grid>
 
               
-              <Grid item>
-                {this.props.auth.isAuthenticated() && <Button color="inherit" onClick={
+              {this.props.auth.isAuthenticated() &&  <Grid item>
+                <Button color="inherit" onClick={
                   async () => {
                     const userInfo = await this.getUserInfo()
                     console.log(userInfo.data)
                   }
                 } >
                 Console Log User Info
-                </Button>}
-              </Grid>
+                </Button>
+              </Grid>}
             </Grid>
           </Toolbar>
         </MyAppBar>
