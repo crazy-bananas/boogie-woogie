@@ -8,8 +8,7 @@ import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
 import Login from "./components/Login";
-import Profile from "./components/Profile";
-import SignUp from "./components/SignUp";
+import MoveSelection from "./components/MoveSelection";
 
 class App extends Component {
   showMenu = () => {
@@ -41,9 +40,12 @@ class App extends Component {
       <div className="App">
         <Navbar />
         {this.showMenu() && <SongMenu />}
-        {this.props.isSongSelected && !this.props.isDanceFinished && (
-          <DanceWindow />
-        )}
+        {this.props.isSongSelected &&
+          !this.props.isDanceFinished &&
+          this.props.moveSelected.length === 0 && <MoveSelection />}
+        {this.props.isSongSelected &&
+          !this.props.isDanceFinished &&
+          this.props.moveSelected.length !== 0 && <DanceWindow />}
 
         {this.props.isRecording && !this.props.isAudioFinished && (
           <RecordWindow />
@@ -65,7 +67,8 @@ const mapStateToProps = state => {
     isRecording: state.isRecording,
     isAudioFinished: state.isAudioFinished,
     isUserLoggedIn: state.isUserLoggedIn,
-    checkProfile: state.checkProfile
+    checkProfile: state.checkProfile,
+    moveSelected: state.moveSelected
   };
 };
 
