@@ -26,7 +26,6 @@ class App extends Component {
           })
           .then(userInfo => {
             // Update state
-            console.log(userInfo)
             this.props.userAuthInfo(userInfo);
           })
           .catch(err => {
