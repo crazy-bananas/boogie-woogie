@@ -11,19 +11,6 @@ class RecordWindow extends Component {
     this.audioPlayerRef = new React.createRef();
   }
 
-  // startLevel = () => {
-  //   this.audioPlayerRef.current.pauseVideo();
-  // };
-
-  componentDidUpdate() {
-    // if (this.props.isCountdownFinished) {
-    //   this.startLevel();
-    // }
-    // if (this.props.isAudioFinished) {
-    //   this.audioPlayerRef.current.pause();
-    // }
-  }
-
   render() {
     return (
       <div>
