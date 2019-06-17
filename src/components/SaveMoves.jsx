@@ -66,19 +66,21 @@ class SaveMoves extends Component {
             saved: true
           });
           this.handleClose();
+          this.props.onsaveSuccessful();
         })
         .catch(err => {
           this.setState({
             error: true
           });
           this.handleClose();
+          this.props.onsaveUnsuccessful();
         });
 
       axios
         .post("https://boogie-banana.herokuapp.com/api/songs", {
           code: this.props.newSong.code,
-          title: this.props.newSong.title,
-          artist: this.props.newSong.artist
+          title: this.props.newSong.title
+          //   artist: this.props.newSong.artist
         })
         .then(data => console.log("song saved"));
     }

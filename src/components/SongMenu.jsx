@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
 import dancingPeople from "../images/dancingPeople.jpg";
 import RecordDanceModal from "./RecordDanceModal";
-import "../styles/songmenu.css"
+import "../styles/songmenu.css";
 
 import axios from "axios";
 
@@ -27,8 +27,7 @@ const MyPaper = styled(Paper)({
   alignItems: "center",
   height: "100vh",
   justifyContent: "center",
-  alignContent: "center", 
-  
+  alignContent: "center"
 });
 
 class SongMenu extends Component {
@@ -64,7 +63,11 @@ class SongMenu extends Component {
         <CssBaseline />
         <Grid item xs={false} sm={4} md={8}>
           <MyPaper>
-            <img alt="People Dancing" src={dancingPeople} style={{height:600,width:800}}/>
+            <img
+              alt="People Dancing"
+              src={dancingPeople}
+              style={{ height: 600, width: 800 }}
+            />
           </MyPaper>
         </Grid>
         <Grid
@@ -93,7 +96,7 @@ class SongMenu extends Component {
                     <ListItemText
                       key={song.code}
                       primary={song.title}
-                      secondary={song.artist}
+                      //secondary={song.artist}
                       onClick={() => this.playSong({ songCode: song.code })}
                     />
                   </ListItem>

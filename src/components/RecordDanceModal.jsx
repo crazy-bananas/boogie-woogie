@@ -36,11 +36,10 @@ class SimpleModal extends Component {
     this.state = {
       setOpen: true,
       title: "",
-      artist: "",
+
       file: {},
       code: "",
       error: ""
-      //modalStyle: getModalStyle
     };
   }
   handleClose = () => {
@@ -49,10 +48,6 @@ class SimpleModal extends Component {
 
   clickInputRef = () => {
     this.fileInputRef.current.click();
-  };
-
-  setArtist = event => {
-    this.setState({ artist: event.target.value });
   };
 
   setSongUrl = event => {
@@ -68,7 +63,7 @@ class SimpleModal extends Component {
       const songCode = this.state.code.substring(
         this.state.code.indexOf("=") + 1
       );
-      console.log(process.env);
+
       axios
         .get(
           `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
@@ -77,14 +72,12 @@ class SimpleModal extends Component {
         )
         .then(data => {
           this.props.addSong({
-            artist: this.state.artist,
             title: data.data.items[0].snippet.title,
             code: songCode
           });
         })
         .catch(err => {
           this.props.addSong({
-            artist: this.state.artist,
             title: "unknown",
             code: this.state.code.substring(this.state.code.indexOf("=") + 1)
           });
@@ -133,30 +126,6 @@ class SimpleModal extends Component {
                   {this.state.error}
                 </MyTypography>
               )}
-
-              {/* <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="title"
-                label="Song Title"
-                name="title"
-                autoComplete="title"
-                autoFocus
-                onChange={this.setTitle}
-              /> */}
-              {/* <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="artist"
-                label="Song Artist"
-                type="artist"
-                id="artist"
-                onChange={this.setArtist}
-              /> */}
 
               <TextField
                 variant="outlined"

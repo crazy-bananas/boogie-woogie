@@ -39,7 +39,7 @@ function ScoreCard(props) {
   return (
     <div id="card">
       <Card className={classes.card}>
-        <CardHeader title={props.title} subheader={props.artist} />
+        <CardHeader title={props.title} />
         <div id="trophy">
           <CardMedia
             className={classes.media}

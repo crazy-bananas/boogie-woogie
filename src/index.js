@@ -19,7 +19,7 @@ const initialState = {
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
-    artist: "",
+    //   artist: "",
     title: "",
     code: "",
     moves: []

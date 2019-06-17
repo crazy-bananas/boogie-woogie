@@ -27,16 +27,18 @@ class FinishRecording extends Component {
   render() {
     return (
       <div id="card">
-        <div>
-          <h1>Thank you for recording your moves. Do you want to save it?</h1>
-          <Button
-            onClick={this.switchModal}
-            variant="contained"
-            color="primary"
-          >
-            Save
-          </Button>
-        </div>
+        {!this.state.saved && (
+          <div>
+            <h1>Thank you for recording your moves. Do you want to save it?</h1>
+            <Button
+              onClick={this.switchModal}
+              variant="contained"
+              color="primary"
+            >
+              Save
+            </Button>
+          </div>
+        )}
         {this.state.showModal && (
           <SaveMoves
             onsaveSuccessful={this.saveSuccessful}
