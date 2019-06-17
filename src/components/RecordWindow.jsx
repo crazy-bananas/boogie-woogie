@@ -29,29 +29,19 @@ class RecordWindow extends Component {
       <div>
         <VideoWindow />
         <Counter />
-        {/* <audio
-          id="audio_player"
-          ref={this.audioPlayerRef}
-          src={this.props.newSong.url}
-          controls
-          onEnded={this.props.audioFinished}
-        /> */}
-        {/* <iframe
-          width="640"
-          height="360"
-          title="youtube"
-          src={`https://www.youtube.com/embed/${this.props.newSong.url}`}
-        /> */}
+        {console.log(this.props.newSong)}
         {this.props.isCountdownFinished && (
           <YouTube
-            videoId={this.props.newSong.url}
+            videoId={this.props.newSong.code}
             ref={this.audioPlayerRef}
+            onEnd={this.props.audioFinished}
             opts={{
               playerVars: {
                 autoplay: 1
-              }
+              },
+              height: "1",
+              width: "1"
             }}
-            onEnd={this.props.audioFinished}
             muted={false}
           />
         )}

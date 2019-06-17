@@ -2,14 +2,18 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import ScoreCard from "./ScoreCard";
 import Retry from "./Retry";
-import LoadingScore from "./LoadingScore";
 import HighScore from "./HighScore";
+import HighScoreList from "./HighScoreList";
+import "../styles/scores.css";
+import axios from "axios";
+import LoadingScore from "./LoadingScore";
+
 import "../styles/scores.css";
 
 class Score extends Component {
   constructor(props) {
     super(props);
-    this.state = { loadingScore: true };
+    this.state = { scoreList: [], loadingScore: true };
   }
   startLoading = () => {
     let endTimeout = setTimeout(() => {
@@ -17,20 +21,26 @@ class Score extends Component {
       clearTimeout(endTimeout);
     }, 1500);
   };
-
   componentDidMount() {
     this.startLoading();
+    axios.post("https://boogie-banana.herokuapp.com/api/scores", {
+      songId: this.props.songSelected,
+      moveId: this.props.moveSelected,
+      user: "Anonymous",
+      score: this.props.currentScore
+    });
   }
-
   render() {
     return (
       <div>
         {this.state.loadingScore ? (
           <LoadingScore />
         ) : (
-          <div id="scores">
+          <div>
             <ScoreCard />
-            <HighScore />
+
+            <HighScoreList scoreList={this.state.scoreList.data} />
+            <HighScore scoreList={this.state.scoreList.data} />
             <Retry />
           </div>
         )}
@@ -41,7 +51,9 @@ class Score extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentScore: state.currentScore
+    currentScore: state.totalScore,
+    songSelected: state.songSelected,
+    moveSelected: state.moveSelected
   };
 };
 
