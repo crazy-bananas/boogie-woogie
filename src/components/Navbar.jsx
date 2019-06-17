@@ -8,9 +8,6 @@ import { connect } from "react-redux";
 import logo from "../images/logo.svg";
 import axios from "axios";
 import { Route, Link, Router } from "react-router-dom";
-import Profile from "./Profile";
-import history from "../history";
-
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #E91E63 20%, #9C27B0 50%, #673AB7 90%)"
   //  backgroundColor: "#0a1747"
@@ -44,7 +41,7 @@ export class Navbar extends Component {
                 </h1>
               </Grid>
 
-              <Grid item>
+              <Grid item style={{position:"absolute",right:10}}>
                 {!this.props.auth.isAuthenticated() && (
                   <Button color="inherit" onClick={this.props.auth.login}>
                     Login
@@ -55,10 +52,11 @@ export class Navbar extends Component {
                     <Button color="inherit" onClick={this.props.auth.logout}>
                       Logout
                     </Button>
-                    {/* <Button color="inherit" href="/profile">
-                      Profile
-                    </Button> */}
-                      <Link to="/profile">Profile</Link>
+
+                    <Button color="inherit">
+                    <Link to="/profile"  style={{textDecoration:"none",color:"white"}} component="button">Profile</Link> 
+                    </Button>
+                     
                   </div>
                 )}
               </Grid>
