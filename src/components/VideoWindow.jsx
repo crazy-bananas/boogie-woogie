@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Timer } from "./Timer.jsx";
+import Combo from "./gamification/Combo.jsx";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import Grid from "@material-ui/core/Grid";
@@ -11,6 +12,7 @@ import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
 import Retry from "../components/Retry";
 import axios from "axios";
+import anime from "animejs";
 
 export class VideoWindow extends Component {
   constructor(props) {
@@ -260,6 +262,18 @@ export class VideoWindow extends Component {
           this.props.updateMaxScore(maxScore);
         });
     }
+
+    anime.timeline({ loop: false }).add({
+      targets: ".matchposition",
+      scale: [15, 1],
+      opacity: [0.5, 1],
+      easing: "easeOutCirc",
+      direction: "alternate",
+      duration: 1000,
+      delay: function(el, i) {
+        return 1000 * i;
+      }
+    });
 
     this.ctx = this.canvasRef.current.getContext("2d");
     const detectPoseInRealTime = (video, net) => {
@@ -599,7 +613,7 @@ export class VideoWindow extends Component {
                   }`}
                 >
                   <span role="img" aria-label="lefthand">
-                    Left 🤚
+                    Right 🤚
                   </span>
                 </li>
                 <li
@@ -608,7 +622,7 @@ export class VideoWindow extends Component {
                   }`}
                 >
                   <span role="img" aria-label="righthand">
-                    Right ✋
+                    Left ✋
                   </span>
                 </li>
                 <li
@@ -617,7 +631,7 @@ export class VideoWindow extends Component {
                   }`}
                 >
                   <span role="img" aria-label="leftankle">
-                    Left 👟
+                    Right 👟
                   </span>
                 </li>
                 <li
@@ -626,7 +640,7 @@ export class VideoWindow extends Component {
                   }`}
                 >
                   <span role="img" aria-label="rightankle">
-                    Right 👟
+                    Left 👟
                   </span>
                 </li>
                 {this.state.combo > 1 && (
@@ -647,11 +661,12 @@ export class VideoWindow extends Component {
                 ref={this.canvasRef}
                 width="800px"
                 height="600px"
-                className={`${this.state.combo > 1 ? "combo" : ""}`}
               >
                 Your browser do not support the HTML5 element canvas. Please try
                 to user another browswer
               </canvas>
+              {/* TODO: change equal to or more than 0 to more than 1 */}
+              {this.state.combo >= 0 && <Combo />}
             </Grid>
             <Grid item xs={2}>
               <div>
