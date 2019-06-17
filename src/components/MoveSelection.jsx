@@ -6,7 +6,7 @@ import axios from "axios";
 export class HighScoreList extends Component {
   constructor(props) {
     super(props);
-    this.state = { moves: [], selectedMoveId: "" };
+    this.state = { moves: [], selectedMoveId: "", title: "" };
   }
   componentDidMount() {
     axios
@@ -17,27 +17,40 @@ export class HighScoreList extends Component {
         `
       )
       .then(data => {
-        this.setState({ moves: data.data });
+        if (data.data.length !== 0) {
+          this.setState({ moves: data.data });
+          this.setState({
+            title: "Please select which dance would you like to dance on"
+          });
+        } else {
+          this.setState({
+            title:
+              "Sorry no moves are registered for this Song. You can go home and record your own moves"
+          });
+        }
+
         console.log(data);
       });
   }
   render() {
     return (
       <div>
-        {this.state.moves.map((move, index) => {
-          {
-            return (
-              <h1
-                key={index}
-                data-key={move._id}
-                data-index={index}
-                onClick={this.props.setSelectedMoveId}
-              >
-                MOVES: {move._id}
-              </h1>
-            );
-          }
-        })}
+        <h1>{this.state.title}</h1>
+        {this.state.moves.length !== 0 &&
+          this.state.moves.map((move, index) => {
+            {
+              return (
+                <h1
+                  key={index}
+                  data-key={move._id}
+                  data-index={index}
+                  onClick={this.props.setSelectedMoveId}
+                >
+                  MOVES: {move._id}
+                </h1>
+              );
+            }
+          })}
       </div>
     );
   }

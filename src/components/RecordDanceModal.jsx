@@ -9,6 +9,8 @@ import "../styles/recorddancemodal.css";
 import { connect } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Close from "@material-ui/icons/Close";
+import axios from "axios";
+require("dotenv").config();
 
 const MyButton = styled(Button)({
   marginTop: "20px"
@@ -48,10 +50,6 @@ class SimpleModal extends Component {
     this.fileInputRef.current.click();
   };
 
-  setTitle = event => {
-    this.setState({ title: event.target.value });
-  };
-
   setArtist = event => {
     this.setState({ artist: event.target.value });
   };
@@ -61,16 +59,40 @@ class SimpleModal extends Component {
   };
 
   saveSongData = () => {
-    if (this.state.title === "" || this.state.artist === "") {
+    if (this.state.artist === "") {
       this.setState({ error: "Title and Artist field can't be empty" });
-    } else if (!this.state.songUrl.startsWith("http")) {
-      this.setState({ error: "Please enter valid Song URL" });
-    } else {
-      this.props.addSong({
-        artist: this.state.artist,
-        title: this.state.title,
-        songUrl: this.state.songUrl
+    } else if (!this.state.songUrl.startsWith("https://www.youtube.com")) {
+      this.setState({
+        error: "Please enter valid Song URL. We accept only Youtube URLs"
       });
+    } else {
+      const songCode = this.state.songUrl.substring(
+        this.state.songUrl.indexOf("=") + 1
+      );
+      axios
+        .get(
+          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
+            process.env.YOUTUBE_API_KEY
+          }`
+        )
+        .then(data => {
+          console.log("fhjdgj", data.data.items[0].snippet.title);
+          this.props.addSong({
+            artist: this.state.artist,
+            title: data.data.items[0].snippet.title,
+            code: songCode
+          });
+        })
+        .catch(err => {
+          this.props.addSong({
+            artist: this.state.artist,
+            title: "unknown",
+            songUrl: this.state.songUrl.substring(
+              this.state.songUrl.indexOf("=") + 1
+            )
+          });
+        });
+
       this.handleClose();
     }
   };
@@ -115,7 +137,7 @@ class SimpleModal extends Component {
                 </MyTypography>
               )}
 
-              <TextField
+              {/* <TextField
                 variant="outlined"
                 margin="normal"
                 required
@@ -126,7 +148,7 @@ class SimpleModal extends Component {
                 autoComplete="title"
                 autoFocus
                 onChange={this.setTitle}
-              />
+              /> */}
               <TextField
                 variant="outlined"
                 margin="normal"

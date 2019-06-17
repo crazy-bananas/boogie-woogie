@@ -15,13 +15,13 @@ const initialState = {
 
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: true,
+  isUserReady: false,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
     artist: "",
     title: "",
-    url: "",
+    code: "",
     moves: []
   },
   isRecording: false
@@ -72,6 +72,7 @@ const appReducer = (state = initialState, action) => {
     }
 
     case "RESET_STATE": {
+      console.log("RESETTING STATE");
       return { ...initialState };
     }
     case "RETRY_DANCE": {
@@ -82,11 +83,10 @@ const appReducer = (state = initialState, action) => {
     }
     case "ADD_NEW_SONG": {
       const newState = { ...state };
+      console.log(action.payload);
       newState.newSong.artist = action.payload.artist;
       newState.newSong.title = action.payload.title;
-      newState.newSong.url = action.payload.songUrl.substring(
-        action.payload.songUrl.indexOf("=") + 1
-      );
+      newState.newSong.code = action.payload.code;
 
       newState.isRecording = !state.isRecording;
       return newState;

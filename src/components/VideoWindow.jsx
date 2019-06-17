@@ -257,11 +257,13 @@ export class VideoWindow extends Component {
           }`
         )
         .then(poses => {
+          console.log(poses);
           this.setState({ correctPoses: poses.data[0].moves });
           let maxScore = Math.floor(
             (this.state.correctPoses.length * this.bodyParts.length) / 10
           );
           this.props.updateMaxScore(maxScore);
+          console.log(this.state.correctPoses);
         });
     }
 
