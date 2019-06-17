@@ -85,7 +85,7 @@ class MuiVirtualizedTable extends React.PureComponent {
           classes.noClick
         )}
         variant="head"
-        style={{backgroundColor:"#FA7F2D" ,height: headerHeight }}
+        style={{ backgroundColor: "#FA7F2D", height: headerHeight }}
         align={columns[columnIndex].numeric || false ? "right" : "left"}
       >
         <span>{label}</span>
