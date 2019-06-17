@@ -14,7 +14,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'dev-boogie-woogie.auth0.com',
     clientID: 'Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ',
-    redirectUri: `${REACT_APP_AUTH_REDIRECT_LINK}${REDIRECT_SUB}`,
+    redirectUri: `${REACT_APP_AUTH_REDIRECT_LINK}`,
     responseType: 'token id_token',
     scope: 'openid profile email'
   });
