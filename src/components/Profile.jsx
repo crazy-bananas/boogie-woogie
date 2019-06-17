@@ -1,12 +1,13 @@
-import React from "react";
+import React, { Component } from "react";
 import Avatar from "@material-ui/core/Avatar";
-// import Button from "@material-ui/core/Button";
+import Button from "@material-ui/core/Button";
 // import CssBaseline from "@material-ui/core/CssBaseline";
-// import TextField from "@material-ui/core/TextField";
+import TextField from "@material-ui/core/TextField";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Checkbox from "@material-ui/core/Checkbox";
 // import Link from "@material-ui/core/Link";
 // import Grid from "@material-ui/core/Grid";
+import Fab from '@material-ui/core/Fab';
 import Box from "@material-ui/core/Box";
 //import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -18,186 +19,156 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import "../styles/profile.css";
 //import { textAlign } from "@material-ui/system";
-import lifecycle from 'react-pure-lifecycle';
+import lifecycle from "react-pure-lifecycle";
+import axios from "axios";
+import Loading from "./Loading";
+import { connect } from "react-redux";
+import "../styles/profile.css";
+import backIcon from '../images/backArrow.png'
 
-const methods = {
-  componentDidMount(props) {
-    console.log('I mounted! Here are my props: ', props);
+class Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.dummyFriendList = [];
+    this.state = {
+      data: 0
+    };
   }
-};
-
-const useStyles = makeStyles({
-  myCard:{
-    height:500,
-    width:"75%"
-  },
-  wrapper:{
-    marginTop:30,
-    display: "flex",
-  flexFlow: "row wrap"
-  },
-  cardBox: {
-    textAlign: "center"
-  },
-  friendBox: {
-    marginLeft: "15%;"
-  },
-  // friends: {
-  //   marginTop: "15%"
-  // },
-  p: {
-    fontWeight: "bold"
-  },
-
-  avatar: {
-    width: 70,
-    height: 70
-  },
-  bigAvatar: {
-    margin: 10,
-    width: 200,
-    height: 200
-  },
-  card: {
-    minWidth: 150,
-    margin: 10,
-    overflow: "auto",
-    whiteSpace: "nowrap"
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
-  title: {
-    fontSize: 14
-  },
-  pos: {
-    marginBottom: 12
+  getUserAuth = () => {
+    axios
+      .get(
+        `
+      https://boogie-banana.herokuapp.com/api/users/auth0%7C5d044ea240040b0d55201f6f`
+      )
+      .then(data => {
+        this.setState({
+          data: data.data
+        });
+      });
+  };
+  getUserScore = () => {
+    axios.get(``).then(data => {
+      //this.setState({});
+    });
+  };
+  getUserFriends = () => {
+    axios.get(``).then(data => {
+      //this.setState({});
+    });
+  };
+  componentDidMount() {
+    this.getUserAuth();
+    this.getUserScore();
+    this.getUserFriends();
   }
-});
+  isUserDataFetched = () => {
+    if (this.state.data !== 0) {
+      return (
+        <div>
+           <Fab
+            size="medium"
+            color="secondary"
+            aria-label="Add"
+            className="fab"
+          >
+            <img src={backIcon} />
+          </Fab>
+          <Avatar
+            alt="Remy Sharp"
+            src={this.state.data.picture}
+            className="bigAvatar"
+          />
+         
 
-function Profile(props) {
-  const classes = useStyles();
-
-  return (
-    <Container className={classes.wrapper} >
-      <Box flexDirection="col">
-        <Avatar
-          alt="Remy Sharp"
-          src={bananaImage}
-          className={classes.bigAvatar}
-        />
-
-        <Typography variant="h6" gutterBottom>
-          Anna Banana
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          Email: annaB@example.com
-        </Typography>
-        <p className={classes.p}> Overall Score : 298,40182 Points</p>
-      </Box>
-      <Card className={classes.myCard}>
-        <CardContent className={classes.cardBox}>
-          
+          <Typography variant="h6" gutterBottom>
+            {this.state.data.nickname}
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            Email: {this.state.data.email}
+          </Typography>
+          <p className="p"> Overall Score : {this.state.data.score} Points</p>
+        </div>
+      );
+    }
+    return <Loading />;
+  };
+  dummyFriendsCreator = () => {
+    const friend = (
+      <Card className="card">
+        <CardContent className="cardBox">
+          <Box className="friendBox">
+            <Avatar alt="Remy Sharp" src={bananaImage} className="avatar" />
+          </Box>
+          <p>Jhonny Banana</p>
         </CardContent>
       </Card>
+    );
+    for (let i = 0; i < 5; i++) {
+      this.dummyFriendList.push(friend);
+    }
+    return this.dummyFriendList;
+  };
 
-      <footer
-        className={classes.friends}
-      >
-        <Card className={classes.card}>
-          <CardContent>
-            <Box display="flex" flexDirection="row">
-              <Card className={classes.card}>
-                <CardContent className={classes.cardBox}>
-                  <Box className={classes.friendBox}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={bananaImage}
-                      className={classes.avatar}
-                    />
-                  </Box>
-                  <p>Jhonny Banana</p>
-                </CardContent>
-              </Card>
-              <Card className={classes.card}>
-                <CardContent className={classes.cardBox}>
-                  <Box className={classes.friendBox}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={bananaImage}
-                      className={classes.avatar}
-                    />
-                  </Box>
-                  <p>Jhonny Banana</p>
-                </CardContent>
-              </Card>
-              <Card className={classes.card}>
-                <CardContent className={classes.cardBox}>
-                  <Box className={classes.friendBox}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={bananaImage}
-                      className={classes.avatar}
-                    />
-                  </Box>
-                  <p>Jhonny Banana</p>
-                </CardContent>
-              </Card>
-              <Card className={classes.card}>
-                <CardContent className={classes.cardBox}>
-                  <Box className={classes.friendBox}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={bananaImage}
-                      className={classes.avatar}
-                    />
-                  </Box>
-                  <p>Jhonny Banana</p>
-                </CardContent>
-              </Card>
-              <Card className={classes.card}>
-                <CardContent className={classes.cardBox}>
-                  <Box className={classes.friendBox}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={bananaImage}
-                      className={classes.avatar}
-                    />
-                  </Box>
-                  <p>Jhonny Banana</p>
-                </CardContent>
-              </Card>
-              <Card className={classes.card}>
-                <CardContent className={classes.cardBox}>
-                  <Box className={classes.friendBox}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={bananaImage}
-                      className={classes.avatar}
-                    />
-                  </Box>
-                  <p>Jhonny Banana</p>
-                </CardContent>
-              </Card>
-              <Card className={classes.card}>
-                <CardContent className={classes.cardBox}>
-                  <Box className={classes.friendBox}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={bananaImage}
-                      className={classes.avatar}
-                    />
-                  </Box>
-                  <p>Jhonny Banana</p>
-                </CardContent>
-              </Card>
-            </Box>
+  render() {
+    return (
+      <Container className="wrapper">
+        <Box flexDirection="col">{this.isUserDataFetched()}</Box>
+        <Card className="myCard">
+          <CardContent className="cardBox">
+            <TextField
+              id="filled-name"
+              label="Song PLayed"
+              className="textField"
+              value="Different songs that the user has played"
+            />
+            <TextField
+              id="filled-name"
+              label="Rank"
+              className="textField"
+              value="Display ranking position"
+              margin="normal"
+            />
+            <TextField
+              id="filled-name"
+              label="Other data"
+              className="textField"
+              value=".................................."
+              margin="normal"
+            />
+            <TextField
+              id="filled-name"
+              label="Other data"
+              className="textField"
+              value=".................................."
+              margin="normal"
+            />
+            <TextField
+              id="filled-name"
+              label="Other Data"
+              className="textField"
+              value=".................................."
+              margin="normal"
+            />
           </CardContent>
         </Card>
-      </footer>
-    </Container>
-  );
+        <footer className="friends">
+          <Card className="card">
+            <CardContent>
+              <Box display="flex" flexDirection="row">
+                {this.dummyFriendsCreator()}
+              </Box>
+            </CardContent>
+          </Card>
+        </footer>
+      </Container>
+    );
+  }
 }
-export default lifecycle(methods)(Profile);
+const mapStateToProps = state => {
+  return {
+    currentScore: state.currentScore,
+    songSelected: state.songSelected,
+    moveSelected: state.moveSelected
+  };
+};
+export default connect(mapStateToProps)(Profile);
