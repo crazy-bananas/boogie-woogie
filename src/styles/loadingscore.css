@@ -1,0 +1,17 @@
+.loadingScore {
+  background-color: white;
+  padding: 100px 0px;
+  width: 100vw;
+  height: 100vh;
+}
+
+.message-loading {
+  font-weight: 900;
+  font-size: 3.5em;
+  color: #2f4858;
+}
+
+.message-loading .letter {
+  display: inline-block;
+  line-height: 1em;
+}
