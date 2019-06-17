@@ -20,7 +20,7 @@ export default () => {
     <Router history={history}>
       <div>
         <Route exact path="/" render={(props) => <App auth={auth} {...props} />} />
-        <Route path="/home2" render={(props) => {
+        <Route path="/login" render={(props) => {
           handleAuthentication(props);
           return <AuthCallback {...props} /> 
         }}/>

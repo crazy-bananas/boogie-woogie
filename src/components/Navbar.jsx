@@ -32,10 +32,10 @@ export class Navbar extends Component {
           <Toolbar>
             <Grid justify="space-between" alignItems="center" container>
               <Grid item>
-                {/* After MVP 
-                <IconButton edge="start" color="inherit" aria-label="Menu">
-                <MenuIcon />
-                </IconButton> */}
+                <img alt="logo" src={logo} style={{ height: 50, width: 50 }} />
+              </Grid>
+
+              <Grid item>
                 <h1 style={{ fontFamily: "Gloria Hallelujah" }}>Boogie Woogie</h1>
               </Grid>
 
@@ -44,9 +44,6 @@ export class Navbar extends Component {
                 {this.props.auth.isAuthenticated() && <Button color="inherit" onClick={this.props.auth.logout} >Logout</Button>}
               </Grid>
 
-              <Grid item>
-                <img alt="logo" src={logo} style={{ height: 50, width: 50 }} />
-              </Grid>
               
               <Grid item>
                 {this.props.auth.isAuthenticated() && <Button color="inherit" onClick={
