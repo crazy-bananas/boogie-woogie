@@ -10,8 +10,6 @@ import rightHandImg from "../images/rightHand.svg";
 import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
-// import dancing from "../images/score/dancing.png";
-// import music from "../images/score/music.png";
 import Retry from "../components/Retry";
 import axios from "axios";
 import anime from "animejs";
@@ -210,9 +208,9 @@ export class VideoWindow extends Component {
 
   matchedPositions = (body, boolean) => {
     if (boolean) {
-      this.setState({ combo: this.state.combo + 1 });
+      this.props.updateCombo(this.props.combo + 1);
     } else {
-      this.setState({ combo: 0 });
+      this.props.updateCombo(0);
     }
 
     switch (body) {
@@ -259,13 +257,11 @@ export class VideoWindow extends Component {
           }`
         )
         .then(poses => {
-          console.log(poses);
           this.setState({ correctPoses: poses.data[0].moves });
           let maxScore = Math.floor(
             (this.state.correctPoses.length * this.bodyParts.length) / 10
           );
           this.props.updateMaxScore(maxScore);
-          console.log(this.state.correctPoses);
         });
     }
 
@@ -649,9 +645,6 @@ export class VideoWindow extends Component {
                     Left 👟
                   </span>
                 </li>
-                {this.state.combo > 1 && (
-                  <li className="matched">Combo: {this.state.combo}</li>
-                )}
               </ul>
             </Grid>
             <Grid item xs={8}>
@@ -671,8 +664,7 @@ export class VideoWindow extends Component {
                 Your browser do not support the HTML5 element canvas. Please try
                 to user another browswer
               </canvas>
-              {/* TODO: change equal to or more than 0 to more than 1 */}
-              {this.state.combo >= 0 && <Combo />}
+              {this.props.combo > 1 && <Combo />}
             </Grid>
             <Grid item xs={2}>
               <div>
@@ -702,7 +694,8 @@ const mapStateToProps = state => {
     isRecording: state.isRecording,
     songSelected: state.songSelected,
     moveSelected: state.moveSelected,
-    maxScore: state.maxScore
+    maxScore: state.maxScore,
+    combo: state.combo
   };
 };
 
@@ -728,6 +721,12 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: "UPDATE_TOTAL_SCORE",
         payload: { userScore: score }
+      });
+    },
+    updateCombo: combo => {
+      dispatch({
+        type: "UPDATE_COMBO",
+        combo
       });
     },
     addNewMoves: moves => {
