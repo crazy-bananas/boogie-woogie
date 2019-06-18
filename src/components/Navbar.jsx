@@ -89,7 +89,6 @@ export class Navbar extends Component {
         </MyAppBar>
       </div>
     );
-    document.getElementById("root");
   }
 }
 
