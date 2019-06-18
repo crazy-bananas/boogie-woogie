@@ -38,7 +38,7 @@ class ScoreCard extends Component {
 
   componentDidMount() {
     if (this.props.username !== "") {
-      axios.post("http://localhost:4000/api/scores", {
+      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
         songId: this.props.songSelected,
         moveId: this.props.moveSelected,
         user: this.props.username,
@@ -46,7 +46,7 @@ class ScoreCard extends Component {
         pic: this.props.userpic
       });
     } else {
-      axios.post("http://localhost:4000/api/scores", {
+      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
         songId: this.props.songSelected,
         moveId: this.props.moveSelected,
         user: "Anonymous",
