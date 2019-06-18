@@ -43,7 +43,8 @@ class ScoreCard extends Component {
         moveId: this.props.moveSelected,
         user: this.props.username,
         score: this.props.score,
-        pic: this.props.userpic
+        pic: this.props.userpic,
+        userId: this.props.userId
       });
     } else {
       axios.post("https://boogie-banana.herokuapp.com/api/scores", {
@@ -51,7 +52,8 @@ class ScoreCard extends Component {
         moveId: this.props.moveSelected,
         user: "Anonymous",
         score: this.props.score,
-        pic: "https://dummyimage.com/600x400/000/fff"
+        pic: "https://dummyimage.com/600x400/000/fff",
+        userId: "default"
       });
     }
   }
@@ -90,7 +92,8 @@ const mapStateToProps = state => {
     songSelected: state.songSelected,
     moveSelected: state.moveSelected,
     username: state.userAuthInfo.nickname,
-    userpic: state.userAuthInfo.picture
+    userpic: state.userAuthInfo.picture,
+    userId: state.userAuthInfo.sub
   };
 };
 
