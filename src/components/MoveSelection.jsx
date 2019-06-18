@@ -38,18 +38,16 @@ export class HighScoreList extends Component {
         <h1>{this.state.title}</h1>
         {this.state.moves.length !== 0 &&
           this.state.moves.map((move, index) => {
-            {
-              return (
-                <h1
-                  key={index}
-                  data-key={move._id}
-                  data-index={index}
-                  onClick={this.props.setSelectedMoveId}
-                >
-                  MOVES: {move.name}
-                </h1>
-              );
-            }
+            return (
+              <h1
+                key={index}
+                data-key={move._id}
+                data-index={index}
+                onClick={this.props.setSelectedMoveId}
+              >
+                MOVES: {move.name}
+              </h1>
+            );
           })}
       </div>
     );
