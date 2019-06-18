@@ -9,7 +9,7 @@ const initialState = {
   combo: 0,
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: true,
+  isUserReady: false,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
@@ -118,6 +118,6 @@ const appReducer = (state = initialState, action) => {
   }
 };
 
-const store = createStore(appReducer)
+const store = createStore(appReducer);
 
 export default store;

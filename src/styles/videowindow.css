@@ -22,9 +22,9 @@
 
 .matchposition {
   color: #fe61ee;
-  text-shadow: #46557e 2px 2px 0, #46557e -2px -2px 0, #46557e -2px 2px 0,
-    #46557e 2px -2px 0, #46557e 0px 2px 0, #46557e 0 -2px 0, #46557e -2px 0 0,
-    #46557e 2px 0 0;
+  text-shadow: #46557e 3px 3px 0, #46557e -3px -3px 0, #46557e -3px 3px 0,
+    #46557e 3px -3px 0, #46557e 0px 3px 0, #46557e 0 -3px 0, #46557e -3px 0 0,
+    #46557e 3px 0 0;
 }
 
 #grid {
@@ -65,10 +65,10 @@
 }
 
 .unmatched {
-  color: #f9f871;
-  text-shadow: #46557e 2px 2px 0, #46557e -2px -2px 0, #46557e -2px 2px 0,
-    #46557e 2px -2px 0, #46557e 0px 2px 0, #46557e 0 -2px 0, #46557e -2px 0 0,
-    #46557e 2px 0 0;
+  color: #46557e;
+  text-shadow: #f9f871 7px 7px 6px, #f9f871 -7px -7px 6px, #f9f871 -7px 7px 6px,
+    #f9f871 7px -7px 6px, #f9f871 0px 7px 6px, #f9f871 0 -7px 6px,
+    #f9f871 -7px 0 6px, #f9f871 7px 0 6px;
 }
 
 .matched {
