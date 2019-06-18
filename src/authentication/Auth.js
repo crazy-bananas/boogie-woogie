@@ -1,17 +1,22 @@
 import auth0 from "auth0-js";
 import history from "../history"
+import dotenv from "dotenv";
+dotenv.config();
 
+const REACT_APP_AUTH_REDIRECT_LINK = process.env.REACT_APP_AUTH_REDIRECT_LINK || "https://user-login.d22dsl66lm2rw9.amplifyapp.com/";
+const REDIRECT_SUB = REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length -1] === "/" ? "login" : "/login";
+//
 export default class Auth {
   accessToken;
   idToken;
   expiresAt;
 
   auth0 = new auth0.WebAuth({
-    domain: 'dev-boogie-woogie.auth0.com',
-    clientID: 'Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ',
+    domain: "dev-boogie-woogie.auth0.com",
+    clientID: "Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ",
     redirectUri: "http://localhost:3000/login",
-    responseType: 'token id_token',
-    scope: 'openid profile email'
+    responseType: "token id_token",
+    scope: "openid profile email"
   });
 
   login() {
@@ -33,7 +38,7 @@ export default class Auth {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
       } else if (err) {
-        history.replace('/failedlogin');
+        history.replace("/failedlogin");
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
@@ -50,28 +55,30 @@ export default class Auth {
 
   setSession(authResult) {
     // Set isLoggedIn flag in localStorage
-    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem("isLoggedIn", "true");
 
     // Set the time that the Access Token will expire at
-    let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+    let expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
 
     // navigate to the home route
-    history.replace('/');
+    history.replace("/");
   }
 
   renewSession(check) {
-    console.log(check)
+    console.log(check);
     this.auth0.checkSession({}, (err, authResult) => {
-       if (authResult && authResult.accessToken && authResult.idToken) {
-         this.setSession(authResult);
-       } else if (err) {
-         this.logout();
-         console.log(err);
-         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
-       }
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        this.setSession(authResult);
+      } else if (err) {
+        this.logout();
+        console.log(err);
+        alert(
+          `Could not get a new token (${err.error}: ${err.error_description}).`
+        );
+      }
     });
   }
 
@@ -82,20 +89,21 @@ export default class Auth {
     this.expiresAt = 0;
 
     // Remove isLoggedIn flag from localStorage
-    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem("isLoggedIn");
 
     this.auth0.logout({
       returnTo: window.location.origin
     });
 
     // navigate to the home route
-    history.replace('/');
+    history.replace("/");
   }
 
   isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = this.expiresAt;
+    console.log(expiresAt);
     return new Date().getTime() < expiresAt;
   }
 }

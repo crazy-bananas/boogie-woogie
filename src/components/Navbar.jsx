@@ -12,9 +12,13 @@ import Avatar from '@material-ui/core/Avatar';
 import "../styles/navbar.css"
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #E91E63 20%, #9C27B0 50%, #673AB7 90%)"
-  //  backgroundColor: "#0a1747"
 });
 class Navbar extends Component {
+
+  componentDidMount() {
+    const { isAuthenticated } = this.props.auth;
+    this.setState({ authenticated: isAuthenticated() });
+  }
 
   render() {
    
@@ -26,12 +30,8 @@ class Navbar extends Component {
               <Grid item>
                 <img alt="logo" src={logo} style={{ height: 50, width: 50 }} />
               </Grid>
-              <Grid item>
-                {/* After MVP 
-                <IconButton edge="start" color="inherit" aria-label="Menu">
-                <MenuIcon />
-                </IconButton> */}
 
+              <Grid item>
                 <h1 style={{ fontFamily: "Gloria Hallelujah" }}>
                   Boogie Woogie
                 </h1>
@@ -51,7 +51,13 @@ class Navbar extends Component {
                     </Button>
 
                     <Button color="inherit">
-                    <Link to="/profile"  style={{textDecoration:"none",color:"white"}} component="button">Profile</Link> 
+                      <Link
+                        to="/profile"
+                        style={{ textDecoration: "none", color: "white" }}
+                        component="button"
+                      >
+                        Profile
+                      </Link>
                     </Button>
                     <Avatar alt="Profile Picture" src={this.props.userAuthInfo.picture}/>
                      
