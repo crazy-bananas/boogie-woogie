@@ -96,7 +96,7 @@ export class VideoWindow extends Component {
       },
       rightWrist: {
         x: 356,
-        y: 357
+        y: 350
       },
       // The elbows are only used to calculate
       // the angle of the hands. They are not
@@ -107,7 +107,7 @@ export class VideoWindow extends Component {
       },
       rightElbow: {
         x: 364,
-        y: 300
+        y: 303
       },
       leftAnkle: {
         x: 415,
@@ -806,7 +806,7 @@ export class VideoWindow extends Component {
             <Grid item xs={2}>
               <div>
                 {!this.props.isRecording && (
-                  <div>
+                  <div id="score_common">
                     <div className="current_score">Score</div>
                     <div className="score_num">
                       {this.state.score}{" "}
