@@ -1,28 +1,29 @@
-import React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import React from "react";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Avatar from "@material-ui/core/Avatar";
 
 const StyledTableCell = withStyles(theme => ({
   head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.common.white,
+    color: theme.palette.common.black
   },
   body: {
-    fontSize: 14,
-  },
+    fontSize: 14
+  }
 }))(TableCell);
 
 const StyledTableRow = withStyles(theme => ({
   root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.background.default
+    }
+  }
 }))(TableRow);
 
 function createData(name, calories, fat, carbs, protein) {
@@ -30,49 +31,56 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Gingerbread", 356, 16.0, 49, 3.9)
 ];
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
     marginTop: theme.spacing(3),
-    overflowX: 'auto',
+    overflowX: "auto",
+    height:500
+  },
+  bigAvatar: {
+    margin: 10,
+    width: 35,
+    height: 35
   },
   table: {
-    minWidth: 700,
-  },
+    width: 500,
+  }
 }));
 
-export default function CustomizedTables() {
+export default function CustomizedTables(props) {
   const classes = useStyles();
 
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-            <StyledTableCell align="right">Calories</StyledTableCell>
-            <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+        <TableHead >
+          <TableRow > 
+            <StyledTableCell  align="left"></StyledTableCell>
+            <StyledTableCell >Name</StyledTableCell>
+            <StyledTableCell >Score</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {console.log(props)}
+          {props.scoreList.map(row => (
             <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
+              <StyledTableCell align="left">
+                <Avatar
+                  style={{}}
+                  alt="Profile Picture"
+                  src={row.pic}
+                  className={classes.bigAvatar}
+                />
               </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell align="left">{row.user}</StyledTableCell>
+              <StyledTableCell align="left">{row.score}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
