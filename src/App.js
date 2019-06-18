@@ -8,7 +8,6 @@ import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
 import MoveSelection from "./components/MoveSelection";
-import Profile from "./components/Profile";
 import axios from "axios";
 
 class App extends Component {
@@ -34,10 +33,9 @@ class App extends Component {
               updated_at: userInfo.updated_at
             });
             this.props.userAuthInfo(userInfo);
-            console.log(userInfo);
           })
           .catch(err => {
-            console.log("Please Login");
+            throw err;
           });
       } catch (err) {
         throw err;
