@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import routing from "./routes";
 
 const initialState = {
-  userAuthInfo:"",
   isSongSelected: false,
   songSelected: "",
   moveSelected: "",
@@ -20,12 +20,12 @@ const initialState = {
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
-    //   artist: "",
     title: "",
     code: "",
     moves: []
   },
-  isRecording: false
+  isRecording: false,
+  userAuthInfo: {}
 };
 
 const appReducer = (state = initialState, action) => {
@@ -75,7 +75,7 @@ const appReducer = (state = initialState, action) => {
     case "AUDIO_FINISHED": {
       const newState = { ...state };
       newState.isAudioFinished = true;
-      console.log("AUDIO FINISHED");
+
       return newState;
     }
 
@@ -91,7 +91,8 @@ const appReducer = (state = initialState, action) => {
     }
     case "ADD_NEW_SONG": {
       const newState = { ...state };
-      newState.newSong.artist = action.payload.artist;
+      console.log(action.payload);
+      //   newState.newSong.artist = action.payload.artist;
       newState.newSong.title = action.payload.title;
       newState.newSong.code = action.payload.code;
 
@@ -114,8 +115,8 @@ const appReducer = (state = initialState, action) => {
 
     case "USER_AUTH_INFO": {
       const newState = { ...state };
+      console.log(action.payload);
       newState.userAuthInfo = action.payload;
-      console.log(state)
       return newState;
     }
 
@@ -127,6 +128,7 @@ const store = createStore(appReducer);
 
 ReactDOM.render(
   <Provider store={store}>{routing()}</Provider>,
+
   document.getElementById("root")
 );
 
