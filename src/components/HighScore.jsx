@@ -1,10 +1,16 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import Paper from "@material-ui/core/Paper";
 import { AutoSizer, Column, Table } from "react-virtualized";
+import axios from 'axios'
+import Score from "../components/Score"
+import {connect} from 'react-redux'
+import Loading from './Loading'
+
+
 
 const styles = theme => ({
   head: {
@@ -37,7 +43,7 @@ class MuiVirtualizedTable extends React.PureComponent {
     headerHeight: 48,
     rowHeight: 48
   };
-
+  
   getRowClassName = ({ index }) => {
     const { classes, onRowClick } = this.props;
 
@@ -134,56 +140,93 @@ const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 // ---
 //dummy data
-const sample = [
-  ["picUrl", "Florin Mavroian", 100000],
-  ["picUrl", "Johannes Jarbratt", 237],
-  ["picUrl", "Eclair", 18],
-  ["picUrl", "Cupcake", 2108],
-  ["picUrl", "Gingerbread", 2323]
-];
+// const sample = [
+//   ["picUrl", "Florin Mavroian", 100000],
+//   ["picUrl", "Johannes Jarbratt", 237],
+//   ["picUrl", "Eclair", 18],
+//   ["picUrl", "Cupcake", 2108],
+//   ["picUrl", "Gingerbread", 2323]
+// ];
 
-function createData(id, picture, name, score) {
-  return { id, picture, name, score };
-}
-const rows = [];
+// function createData(id, picture, name, score) {
+//   return { id, picture, name, score };
+// }
+// const rows = [];
 
-for (let i = 0; i < 11; i += 1) {
-  //11shold be change to friendsList lenght
-  const randomSelection = sample[Math.floor(Math.random() * sample.length)];
-  rows.push(createData(i, ...randomSelection));
-}
+// for (let i = 0; i < 11; i += 1) {
+//   //11shold be change to friendsList lenght
+//   const randomSelection = sample[Math.floor(Math.random() * sample.length)];
+//   rows.push(createData(i, ...randomSelection));
+// }
 
-export default function HighShcore() {
-  return (
-    <Paper style={{ margin: 50, marginTop: 20, height: 460, width: "35%" }}>
-      <VirtualizedTable
-        rowCount={rows.length}
-        rowGetter={({ index }) => rows[index]}
-        columns={[
-          {
-            width: 50,
-            label: "ID",
-            dataKey: "id"
-          },
-          {
-            width: 100,
-            label: "Picture",
-            dataKey: "picture"
-          },
-          {
-            width: 200,
-            label: "Name",
-            dataKey: "name"
-            //numeric: true,
-          },
-          {
-            width: 120,
-            label: "Score",
-            dataKey: "score",
-            numeric: true
-          }
-        ]}
-      />
-    </Paper>
-  );
+class  HighShcore extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      scoreList : -1
+    }
+  }
+  fetchUsersScores=()=>{
+    console.log(this.props)
+    axios
+    .get(`
+      https://boogie-banana.herokuapp.com/api/scores/${this.props.songSelected}/${this.props.moveSelected}/`
+    )
+    .then(data => {
+      this.setState({ scoreList: data.data });
+      console.log(this.state)
+    });
+  }
+  componentDidMount() {
+   this.fetchUsersScores()
+  }
+  isDataFetched = () =>{
+    if(this.state.scoreList === -1){
+      return (
+        <Loading/>
+      )
+    } 
+    return(<Paper style={{margin:50,marginTop: 20,height: 460, width: "29%" }}>
+    <VirtualizedTable
+      rowCount={this.state.scoreList.length}
+      rowGetter={({ index }) => this.state.scoreList[index]}
+      columns={[
+        
+        {
+          width: 100,
+          label: "moveID",
+          dataKey: "moveId"
+        },
+        {
+          width: 200,
+          label: "user",
+          dataKey: "user"
+          //numeric: true,
+        },
+        {
+          width: 120,
+          label: "Score",
+          dataKey: "score",
+          numeric: true
+        }
+      ]}
+    />
+  </Paper>
+
+  )
+  }
+ render(){ 
+    return (
+      this.isDataFetched()
+    )
+  }
 }
+const mapStateToProps = state => {
+  return {
+    currentScore: state.currentScore,
+    songSelected: state.songSelected,
+    moveSelected: state.moveSelected
+  };
+};
+
+export default connect(mapStateToProps)(HighShcore)

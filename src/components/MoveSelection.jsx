@@ -46,7 +46,7 @@ export class HighScoreList extends Component {
                   data-index={index}
                   onClick={this.props.setSelectedMoveId}
                 >
-                  MOVES: {move._id}
+                  MOVES: {move.name}
                 </h1>
               );
             }

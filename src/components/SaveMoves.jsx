@@ -29,63 +29,63 @@ const MyTypography = styled(Typography)({
   fontWeight: "300"
 });
 
-class SimpleModal extends Component {
+class SaveMoves extends Component {
   constructor(props) {
     super(props);
     this.fileInputRef = React.createRef();
     this.state = {
       setOpen: true,
-      title: "",
-
-      file: {},
-      code: "",
-      error: ""
+      danceName: "",
+      saved: false,
+      error: true,
+      errorDescription: ""
     };
   }
   handleClose = () => {
     this.setState({ setOpen: false });
   };
 
-  clickInputRef = () => {
-    this.fileInputRef.current.click();
+  setDanceName = event => {
+    this.setState({ danceName: event.target.value });
   };
 
-  setSongUrl = event => {
-    this.setState({ code: event.target.value });
-  };
-
-  saveSongData = () => {
-    if (!this.state.code.startsWith("https://www.youtube.com")) {
-      this.setState({
-        error: "Please enter valid Song URL. We accept only Youtube URLs"
-      });
+  save = () => {
+    if (this.state.danceName === "") {
+      console.log("error");
+      this.setState({ errorDescription: "Dance name cannot be blank" });
     } else {
-      const songCode = this.state.code.substring(
-        this.state.code.indexOf("=") + 1
-      );
-
       axios
-        .get(
-          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
-            process.env.REACT_APP_YOUTUBE_API_KEY
-          }`
-        )
+        .post("https://boogie-banana.herokuapp.com/api/moves", {
+          songcode: this.props.newSong.code,
+          moves: this.props.newSong.moves,
+          name: this.state.danceName
+        })
         .then(data => {
-          this.props.addSong({
-            title: data.data.items[0].snippet.title,
-            code: songCode
+          console.log("move saved");
+          this.setState({
+            saved: true
           });
+          this.handleClose();
+          this.props.onsaveSuccessful();
         })
         .catch(err => {
-          this.props.addSong({
-            title: "unknown",
-            code: this.state.code.substring(this.state.code.indexOf("=") + 1)
+          this.setState({
+            error: true
           });
+          this.handleClose();
+          this.props.onsaveUnsuccessful();
         });
 
-      this.handleClose();
+      axios
+        .post("https://boogie-banana.herokuapp.com/api/songs", {
+          code: this.props.newSong.code,
+          title: this.props.newSong.title
+          //   artist: this.props.newSong.artist
+        })
+        .then(data => console.log("song saved"));
     }
   };
+
   render() {
     return (
       <div>
@@ -103,6 +103,11 @@ class SimpleModal extends Component {
               <Close />
             </Avatar>
           </div>
+          {this.state.errorDescription.length > 0 && (
+            <MyTypography variant="body1" component="h2">
+              {this.state.errorDescription}
+            </MyTypography>
+          )}
           <div
             id="dialog"
             style={{
@@ -121,31 +126,30 @@ class SimpleModal extends Component {
                 justifyContent: "center"
               }}
             >
-              {this.state.error.length > 0 && (
+              {/* {this.state.error.length > 0 && (
                 <MyTypography variant="body1" component="h2">
                   {this.state.error}
                 </MyTypography>
-              )}
+              )} */}
 
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                name="youtube"
-                label="youtube URL"
-                type="youtube"
-                id="youtube"
-                onChange={this.setSongUrl}
+                name="How would you like to call your dance?"
+                label="Dance Name"
+                type="danceName"
+                id="danceName"
+                onChange={this.setDanceName}
               />
-
               <MyButton
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={this.saveSongData}
+                onClick={this.save}
               >
-                Start Recording
+                Save
               </MyButton>
             </form>
           </div>
@@ -156,7 +160,9 @@ class SimpleModal extends Component {
 }
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    newSong: state.newSong
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -173,4 +179,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SimpleModal);
+)(SaveMoves);
