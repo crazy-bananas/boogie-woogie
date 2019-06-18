@@ -872,12 +872,6 @@ const mapDispatchToProps = dispatch => {
         payload: moves
       });
     },
-    setSelectedMoveId: key => {
-      dispatch({
-        type: "SELECTED_MOVEID",
-        payload: key
-      });
-    }
   };
 };
 
