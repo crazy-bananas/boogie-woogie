@@ -805,11 +805,15 @@ export class VideoWindow extends Component {
 
             <Grid item xs={2}>
               <div>
-                <div className="current_score">Score</div>
-                <div className="score_num">
-                  {this.state.score}{" "}
-                  <span className="score_max">/{this.props.maxScore}</span>
-                </div>
+                {!this.props.isRecording && (
+                  <div>
+                    <div className="current_score">Score</div>
+                    <div className="score_num">
+                      {this.state.score}{" "}
+                      <span className="score_max">/{this.props.maxScore}</span>
+                    </div>
+                  </div>
+                )}
                 {this.props.isCountdownFinished && <Timer />}
                 <Retry />
               </div>
