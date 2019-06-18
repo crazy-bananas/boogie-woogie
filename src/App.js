@@ -27,15 +27,16 @@ class App extends Component {
           .then(userInfo => {
             // Update state
             this.props.userAuthInfo(userInfo);
+            console.log(userInfo);
           })
           .catch(err => {
-            console.log("Please Login")
+            console.log("Please Login");
           });
       } catch (err) {
         throw err;
       }
-    }else{
-      console.log("please login")
+    } else {
+      console.log("please login");
     }
   }
 
@@ -67,6 +68,8 @@ class App extends Component {
           !this.props.isDanceFinished &&
           this.props.moveSelected.length !== 0 && <DanceWindow />}
 
+        {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
+
         {this.props.isRecording && !this.props.isAudioFinished && (
           <RecordWindow />
         )}
@@ -74,8 +77,6 @@ class App extends Component {
         {this.props.isRecording && this.props.isAudioFinished && (
           <FinishRecording />
         )}
-
-        {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
       </div>
 
       ////////

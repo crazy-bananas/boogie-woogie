@@ -90,7 +90,6 @@ class SongMenu extends Component {
 
             {this.state.loaded && (
               <List>
-                }
                 {this.state.songList.map((song, index) => {
                   return (
                     <ListItem key={index}>

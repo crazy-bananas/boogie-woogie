@@ -13,12 +13,21 @@ const MyAppBar = styled(AppBar)({
   //  backgroundColor: "#0a1747"
 });
 export class Navbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { authenticated: false };
+  }
   async getUserInfo() {
     return await axios.get("https://dev-boogie-woogie.auth0.com/userinfo", {
       headers: {
         Authorization: `Bearer ${this.props.auth.getAccessToken()}`
       }
     });
+  }
+
+  componentDidMount() {
+    const { isAuthenticated } = this.props.auth;
+    this.setState({ authenticated: isAuthenticated() });
   }
 
   render() {
@@ -41,22 +50,27 @@ export class Navbar extends Component {
                 </h1>
               </Grid>
 
-              <Grid item style={{position:"absolute",right:10}}>
+              <Grid item style={{ position: "absolute", right: 10 }}>
                 {!this.props.auth.isAuthenticated() && (
                   <Button color="inherit" onClick={this.props.auth.login}>
                     Login
                   </Button>
                 )}
-                {this.props.auth.isAuthenticated() && (
+                {this.state.authenticated && (
                   <div>
                     <Button color="inherit" onClick={this.props.auth.logout}>
                       Logout
                     </Button>
 
                     <Button color="inherit">
-                    <Link to="/profile"  style={{textDecoration:"none",color:"white"}} component="button">Profile</Link> 
+                      <Link
+                        to="/profile"
+                        style={{ textDecoration: "none", color: "white" }}
+                        component="button"
+                      >
+                        Profile
+                      </Link>
                     </Button>
-                     
                   </div>
                 )}
               </Grid>
