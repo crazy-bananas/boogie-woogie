@@ -55,7 +55,6 @@ class Navbar extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     userAuthInfo: state.userAuthInfo,
     songList: state.songList,
