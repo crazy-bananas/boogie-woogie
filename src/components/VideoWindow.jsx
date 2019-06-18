@@ -328,12 +328,17 @@ export class VideoWindow extends Component {
   };
 
   componentDidMount() {
+    console.log("I mounted a windwo")
     bindPage().then(response => {
       this.setState({
         loaded: true
       });
     });
-    if (!this.props.isRecording) {
+    if(this.props.recordedMoves){
+      console.log("Recorded moves", this.props.recordedMoves)
+      this.setState({ correctPoses: this.props.recordedMoves });
+    } else if (!this.props.isRecording) {
+      console.log("Im here")
       axios
         .get(
           `https://boogie-banana.herokuapp.com/api/moves/${
@@ -389,7 +394,7 @@ export class VideoWindow extends Component {
         if (!this.props.isUserReady) {
           this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
-        } else if (!this.props.isRecording) {
+        } else if (!this.props.isRecording || this.props.recordedMoves) {
           this.drawCurrentDancePose();
         }
 
@@ -553,25 +558,7 @@ export class VideoWindow extends Component {
     } else {
       this.setState({ leftWristMatched: false });
     }
-    // if (
-    //   isPositionWithinMargin(
-    //     playersPosition.rightAnkle,
-    //     startPosition.rightAnkle
-    //   )
-    // ) {
-    //   this.setState({ rightAnkleMatched: true });
-    //   matchStatus++;
-    // } else {
-    //   this.setState({ rightAnkleMatched: false });
-    // }
-    // if (
-    //   isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
-    // ) {
-    //   this.setState({ leftAnkleMatched: true });
-    //   matchStatus++;
-    // } else {
-    //   this.setState({ leftAnkleMatched: false });
-    // }
+    
     if (matchStatus >= 2) {
       this.props.userIsReady();
       this.clearPositionStatus();

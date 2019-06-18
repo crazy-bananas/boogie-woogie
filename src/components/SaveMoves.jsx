@@ -39,7 +39,6 @@ class SaveMoves extends Component {
       saved: false,
       error: true,
       errorDescription: "",
-      replayRecording: false
     };
   }
   handleClose = () => {

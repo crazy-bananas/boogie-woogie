@@ -2,8 +2,14 @@ import React, { Component } from "react";
 import "../styles/scoreCard.css";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
+import { styled } from "@material-ui/styles";
 import SaveMoves from "./SaveMoves";
 import LoadingRecordResult from "./animation/LoadingRecordResult";
+import { VideoWindow } from "./VideoWindow";
+
+const MyButton = styled(Button)({
+  marginTop: "20px"
+});
 
 class FinishRecording extends Component {
   constructor(props) {
@@ -11,7 +17,8 @@ class FinishRecording extends Component {
     this.state = {
       saved: false,
       showModal: false,
-      loadingRecordResult: true
+      loadingRecordResult: true,
+      replayRecording: false
     };
   }
 
@@ -66,7 +73,7 @@ class FinishRecording extends Component {
             {this.state.saved && (
               <div>
                 <h1>
-                  Your moves are saved. Please go back to home page if you want
+                  Your moves are saved. Please go back to the top page if you want
                   to play against these moves!
                 </h1>
                 <Button
@@ -80,6 +87,15 @@ class FinishRecording extends Component {
                 </Button>
               </div>
             )}
+            <MyButton
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={() => this.setState({replayRecording: true})}
+            >
+              Replay
+            </MyButton>
+            {this.state.replayRecording && <VideoWindow recordedMoves={this.props.newSong}/>}
           </div>
         )}
       </div>
