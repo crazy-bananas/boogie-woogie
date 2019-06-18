@@ -6,22 +6,18 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { connect } from "react-redux";
 import logo from "../images/logo.svg";
-import axios from "axios";
-import {Link} from "react-router-dom";
-import Avatar from '@material-ui/core/Avatar';
-import "../styles/navbar.css"
+import "../styles/navbar.css";
+import AppBars from "./AppBar";
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #E91E63 20%, #9C27B0 50%, #673AB7 90%)"
 });
 class Navbar extends Component {
-
   componentDidMount() {
     const { isAuthenticated } = this.props.auth;
     this.setState({ authenticated: isAuthenticated() });
   }
 
   render() {
-   
     return (
       <div id="navbar">
         <MyAppBar position="static" className="navbar">
@@ -37,31 +33,17 @@ class Navbar extends Component {
                 </h1>
               </Grid>
 
-              <Grid item style={{position:"absolute",right:10 }}>
+              <Grid item style={{ position: "absolute", right: 10 }}>
                 {!this.props.auth.isAuthenticated() && (
                   <Button color="inherit" onClick={this.props.auth.login}>
                     Login
                   </Button>
                 )}
                 {this.props.auth.isAuthenticated() && (
-                  <div style={{display:"flex"}}>
-                    
-                    <Button color="inherit" onClick={this.props.auth.logout}>
-                      Logout
-                    </Button>
-
-                    <Button color="inherit">
-                      <Link
-                        to="/profile"
-                        style={{ textDecoration: "none", color: "white" }}
-                        component="button"
-                      >
-                        Profile
-                      </Link>
-                    </Button>
-                    <Avatar alt="Profile Picture" src={this.props.userAuthInfo.picture}/>
-                     
-                  </div>
+                  <AppBars
+                    auth={this.props.auth}
+                    picture={this.props.userAuthInfo.picture}
+                  />
                 )}
               </Grid>
             </Grid>
@@ -73,23 +55,13 @@ class Navbar extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state)
+  console.log(state);
   return {
     userAuthInfo: state.userAuthInfo,
     songList: state.songList,
     indexOfSelectedSong: state.songSelected
   };
 };
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     resetState: () => {
-//       dispatch({
-//         type: "RESET_STATE"
-//       });
-//     }
-//   };
-// };
 
 export default connect(
   mapStateToProps,

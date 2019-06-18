@@ -5,3 +5,7 @@
 .heading {
   text-shadow: 2px 2px #d3d3d3;
 }
+#navbar{
+  font-weight: 400;
+  line-height: 1.43;
+}

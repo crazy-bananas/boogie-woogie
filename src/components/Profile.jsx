@@ -7,7 +7,7 @@ import TextField from "@material-ui/core/TextField";
 // import Checkbox from "@material-ui/core/Checkbox";
 // import Link from "@material-ui/core/Link";
 // import Grid from "@material-ui/core/Grid";
-import Fab from '@material-ui/core/Fab';
+import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
 //import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -24,8 +24,8 @@ import axios from "axios";
 import Loading from "./Loading";
 import { connect } from "react-redux";
 import "../styles/profile.css";
-import backIcon from '../images/backArrow.png'
-import Navbar from "./Navbar"
+import backIcon from "../images/backArrow.png";
+import Navbar from "./Navbar";
 
 class Profile extends Component {
   constructor(props) {
@@ -35,54 +35,34 @@ class Profile extends Component {
       data: 0
     };
   }
-  // getUserAuth = () => {
-  //   axios
-  //     .get(
-  //       `
-  //     https://boogie-banana.herokuapp.com/api/users/auth0%7C5d044ea240040b0d55201f6f`
-  //     )
-  //     .then(data => {
-  //       this.setState({
-  //         data: data.data
-  //       });
-  //     });
+  // getUserScore = () => {
+  //   axios.get(``).then(data => {
+  //     //this.setState({});
+  //   });
   // };
-  getUserScore = () => {
-    axios.get(``).then(data => {
-      //this.setState({});
-    });
-  };
-  getUserFriends = () => {
-    axios.get(``).then(data => {
-      //this.setState({});
-    });
-  };
+  // getUserFriends = () => {
+  //   axios.get(``).then(data => {
+  //     //this.setState({});
+  //   });
+  // };
   componentDidMount() {
-    //this.getUserAuth();
-    console.log(this.props)
-    this.getUserScore();
-    this.getUserFriends();
+    //this.getUserScore();
+    //this.getUserFriends();
   }
   isUserDataFetched = () => {
     if (this.props.userAuthInfo) {
       return (
         <div>
-           <Fab
-            size="medium"
-            color="secondary"
-            aria-label="Add"
-            className="fab"
-          >
+          <Fab size="medium" color="secondary" aria-label="Add" className="fab">
             <a href="/">
-            <img src={backIcon} alt="back arrow icon" /></a>
+              <img src={backIcon} alt="back arrow icon" />
+            </a>
           </Fab>
           <Avatar
-            alt="Remy Sharp"
+            alt="Profile Picture"
             src={this.props.userAuthInfo.picture}
             className="bigAvatar"
           />
-         
-
           <Typography variant="h6" gutterBottom>
             {this.props.userAuthInfonickname}
           </Typography>
@@ -114,59 +94,58 @@ class Profile extends Component {
 
   render() {
     return (
-     <div>
-      <Navbar auth={this.props.auth}/>
-      <Container className="wrapper">
-        
-        <Box flexDirection="col">{this.isUserDataFetched()}</Box>
-        <Card className="myCard">
-          <CardContent className="cardBox">
-            <TextField
-              id="filled-name"
-              label="Song PLayed"
-              className="textField"
-              value="Different songs that the user has played"
-            />
-            <TextField
-              id="filled-name"
-              label="Rank"
-              className="textField"
-              value="Display ranking position"
-              margin="normal"
-            />
-            <TextField
-              id="filled-name"
-              label="Other data"
-              className="textField"
-              value=".................................."
-              margin="normal"
-            />
-            <TextField
-              id="filled-name"
-              label="Other data"
-              className="textField"
-              value=".................................."
-              margin="normal"
-            />
-            <TextField
-              id="filled-name"
-              label="Other Data"
-              className="textField"
-              value=".................................."
-              margin="normal"
-            />
-          </CardContent>
-        </Card>
-        <footer className="friends">
-          <Card className="card">
-            <CardContent>
-              <Box display="flex" flexDirection="row">
-                {this.dummyFriendsCreator()}
-              </Box>
+      <div>
+        <Navbar auth={this.props.auth} />
+        <Container className="wrapper">
+          <Box flexDirection="col">{this.isUserDataFetched()}</Box>
+          <Card className="myCard">
+            <CardContent className="cardBox">
+              <TextField
+                id="filled-name"
+                label="Song PLayed"
+                className="textField"
+                value="Different songs that the user has played"
+              />
+              <TextField
+                id="filled-name"
+                label="Rank"
+                className="textField"
+                value="Display ranking position"
+                margin="normal"
+              />
+              <TextField
+                id="filled-name"
+                label="Other data"
+                className="textField"
+                value=".................................."
+                margin="normal"
+              />
+              <TextField
+                id="filled-name"
+                label="Other data"
+                className="textField"
+                value=".................................."
+                margin="normal"
+              />
+              <TextField
+                id="filled-name"
+                label="Other Data"
+                className="textField"
+                value=".................................."
+                margin="normal"
+              />
             </CardContent>
           </Card>
-        </footer>
-      </Container>
+          <footer className="friends">
+            <Card className="card">
+              <CardContent>
+                <Box display="flex" flexDirection="row">
+                  {this.dummyFriendsCreator()}
+                </Box>
+              </CardContent>
+            </Card>
+          </footer>
+        </Container>
       </div>
     );
   }
