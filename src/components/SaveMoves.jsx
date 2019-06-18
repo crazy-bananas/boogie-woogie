@@ -50,7 +50,7 @@ class SaveMoves extends Component {
   };
 
   save = () => {
-    if (this.state.danceName === "") {
+    if (!this.state.danceName) {
       console.log("error");
       this.setState({ errorDescription: "Dance name cannot be blank" });
     } else {
