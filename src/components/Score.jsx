@@ -6,7 +6,7 @@ import HighScore from "./HighScore";
 import HighScoreList from "./HighScoreList";
 import "../styles/scores.css";
 import axios from "axios";
-import LoadingScore from "./LoadingScore";
+import LoadingScore from "./animation/LoadingScore";
 
 import "../styles/scores.css";
 

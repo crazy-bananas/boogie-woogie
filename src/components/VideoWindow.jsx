@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Timer } from "./Timer.jsx";
-import Combo from "./gamification/Combo.jsx";
+import Combo from "./animation/Combo.jsx";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import Grid from "@material-ui/core/Grid";
@@ -18,7 +18,7 @@ import Retry from "../components/Retry";
 import axios from "axios";
 import anime from "animejs";
 
-import {drawHand, drawShoes} from "./canvasDrawings"
+import { drawHand, drawShoes } from "./canvasDrawings";
 import Loading from "../components/Loading";
 export class VideoWindow extends Component {
   constructor(props) {
@@ -99,7 +99,7 @@ export class VideoWindow extends Component {
         y: 357
       },
       // The elbows are only used to calculate
-      // the angle of the hands. They are not 
+      // the angle of the hands. They are not
       // used to see if player is in starting position.
       leftElbow: {
         x: 459,
@@ -120,12 +120,18 @@ export class VideoWindow extends Component {
     };
   }
 
-  drawHand = (...arg) =>{
+  drawHand = (...arg) => {
     drawHand(this.ctx, ...arg);
-  }
+  };
 
   drawShoes = (leftAnkle, rightAnkle) => {
-    drawShoes(this.ctx, leftAnkle, this.leftShoeRef.current, rightAnkle, this.rightShoeRef.current)
+    drawShoes(
+      this.ctx,
+      leftAnkle,
+      this.leftShoeRef.current,
+      rightAnkle,
+      this.rightShoeRef.current
+    );
   };
 
   drawStartPosition = () => {
@@ -319,8 +325,8 @@ export class VideoWindow extends Component {
   componentDidMount() {
     bindPage().then(response => {
       this.setState({
-        loaded:true
-      })
+        loaded: true
+      });
     });
     if (!this.props.isRecording) {
       axios
@@ -561,7 +567,7 @@ export class VideoWindow extends Component {
     // } else {
     //   this.setState({ leftAnkleMatched: false });
     // }
-    if (matchStatus === 2) {
+    if (matchStatus >= 2) {
       this.props.userIsReady();
       this.clearPositionStatus();
     }
@@ -776,28 +782,27 @@ export class VideoWindow extends Component {
               </ul>
             </Grid>
             <Grid item xs={8}>
-             <video
+              <video
                 id="video"
                 ref={this.videoRef}
                 width="800px"
                 height="600px"
                 autoPlay="1"
-             />
-              
+              />
+
               <canvas
                 id="canvas"
                 ref={this.canvasRef}
                 width="800px"
                 height="600px"
               >
-                 
                 Your browser do not support the HTML5 element canvas. Please try
                 to user another browswer
               </canvas>
-              {!this.state.loaded && <Loading/>}
+              {!this.state.loaded && <Loading />}
               {this.props.combo > 4 && <Combo />}
             </Grid>
-            
+
             <Grid item xs={2}>
               <div>
                 <div className="current_score">Score</div>
