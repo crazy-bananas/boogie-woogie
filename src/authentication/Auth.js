@@ -1,6 +1,11 @@
 import auth0 from "auth0-js";
-import history from "../history";
+import history from "../history"
+import dotenv from "dotenv";
+dotenv.config();
 
+const REACT_APP_AUTH_REDIRECT_LINK = process.env.REACT_APP_AUTH_REDIRECT_LINK || "https://user-login.d22dsl66lm2rw9.amplifyapp.com/";
+const REDIRECT_SUB = REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length -1] === "/" ? "login" : "/login";
+//
 export default class Auth {
   accessToken;
   idToken;

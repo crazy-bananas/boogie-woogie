@@ -39,12 +39,8 @@ export class Navbar extends Component {
               <Grid item>
                 <img alt="logo" src={logo} style={{ height: 50, width: 50 }} />
               </Grid>
-              <Grid item>
-                {/* After MVP 
-                <IconButton edge="start" color="inherit" aria-label="Menu">
-                <MenuIcon />
-                </IconButton> */}
 
+              <Grid item>
                 <h1 style={{ fontFamily: "Gloria Hallelujah" }}>
                   Boogie Woogie
                 </h1>
