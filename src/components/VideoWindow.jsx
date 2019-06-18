@@ -247,7 +247,7 @@ export class VideoWindow extends Component {
     );
   };
 
-  displayCorrectPoses = () => {
+  startIncremenrtingCorrectPose = () => {
     return setInterval(() => {
       this.savePose = true;
       if (!this.props.isRecording) {
@@ -321,7 +321,7 @@ export class VideoWindow extends Component {
 
   componentDidUpdate = () => {
     if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
-      this.danceIntervalStopValue = this.displayCorrectPoses();
+      this.danceIntervalStopValue = this.startIncremenrtingCorrectPose();
     }
 
     return null;
