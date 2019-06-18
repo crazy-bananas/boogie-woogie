@@ -37,7 +37,8 @@ class ScoreCard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.username !== "") {
+    console.log("username", this.props.username);
+    if (this.props.username !== undefined) {
       axios.post("https://boogie-banana.herokuapp.com/api/scores", {
         songId: this.props.songSelected,
         moveId: this.props.moveSelected,
