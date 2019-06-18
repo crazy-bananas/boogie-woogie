@@ -1,25 +1,30 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
 import { Timer } from "./Timer.jsx";
 import Combo from "./animation/Combo.jsx";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import Grid from "@material-ui/core/Grid";
-import { connect } from "react-redux";
-import leftHandImg from "../images/leftHand.png";
-import rightHandImg from "../images/rightHand.svg";
-import nose from "../images/glasses.svg";
-import rightShoe from "../images/leftShoe.png";
-import leftShoe from "../images/rightShoe.png";
-import leftDown from "../images/body/leftDown.png";
-import leftUpper from "../images/body/leftUpper.png";
-import rightDown from "../images/body/rightDown.png";
-import rightUpper from "../images/body/rightUpper.png";
-import Retry from "../components/Retry";
 import axios from "axios";
 import anime from "animejs";
 
 import { drawHand, drawShoes } from "./canvasDrawings";
+
+import Retry from "../components/Retry";
 import Loading from "../components/Loading";
+
+// Images for the body
+import nose from "../images/body/glasses.png";
+import leftHandImg from "../images/body/leftHand.png";
+import rightHandImg from "../images/body/rightHand.png";
+import leftShoe from "../images/body/rightShoe.png";
+import rightShoe from "../images/body/leftShoe.png";
+import leftDown from "../images/body/leftDown.png";
+import leftUpper from "../images/body/leftUpper.png";
+import rightDown from "../images/body/rightDown.png";
+import rightUpper from "../images/body/rightUpper.png";
+
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);

@@ -3,12 +3,9 @@ import { connect } from "react-redux";
 import ScoreCard from "./ScoreCard";
 import Retry from "./Retry";
 import HighScore from "./HighScore";
-import HighScoreList from "./HighScoreList";
-import "../styles/scores.css";
-import axios from "axios";
-import LoadingScore from "./animation/LoadingScore";
 
 import "../styles/scores.css";
+import LoadingScore from "./animation/LoadingScore";
 
 class Score extends Component {
   constructor(props) {
@@ -24,12 +21,12 @@ class Score extends Component {
   componentDidMount() {
     console.log("DID MOUNT", this.props.currentScore);
     this.startLoading();
-    axios.post("https://boogie-banana.herokuapp.com/api/scores", {
-      songId: this.props.songSelected,
-      moveId: this.props.moveSelected,
-      user: "Anonymous",
-      score: this.props.currentScore
-    });
+    // axios.post("https://boogie-banana.herokuapp.com/api/scores", {
+    //   songId: this.props.songSelected,
+    //   moveId: this.props.moveSelected,
+    //   user: "Anonymous",
+    //   score: this.props.currentScore
+    // });
   }
   render() {
     return (
@@ -53,7 +50,9 @@ const mapStateToProps = state => {
   return {
     currentScore: state.totalScore,
     songSelected: state.songSelected,
-    moveSelected: state.moveSelected
+    moveSelected: state.moveSelected,
+    username: state.userAuthInfo.nickname,
+    userpic: state.userAuthInfo.picture
   };
 };
 
