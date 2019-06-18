@@ -45,6 +45,8 @@ body{
 }
 .friends{
   overflow: auto;
+  margin-left: 210px;
+  width:77%
 }
 .textField{
   background-color: rgba(231, 99, 213, 0.11);

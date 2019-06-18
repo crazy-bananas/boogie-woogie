@@ -13,10 +13,10 @@ const initialState = {
   moveSelected: "",
   totalScore: 0,
   maxScore: 0,
-
+  combo: 0,
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: true,
+  isUserReady: false,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
@@ -29,7 +29,6 @@ const initialState = {
 };
 
 const appReducer = (state = initialState, action) => {
-  console.log(action.type);
   switch (action.type) {
     case "SELECT_SONG": {
       const newState = { ...state };
@@ -64,6 +63,12 @@ const appReducer = (state = initialState, action) => {
     case "UPDATE_MAXSCORE": {
       const newState = { ...state };
       newState.maxScore = action.maxScore;
+      return newState;
+    }
+
+    case "UPDATE_COMBO": {
+      const newState = { ...state };
+      newState.combo = action.combo;
       return newState;
     }
 

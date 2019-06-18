@@ -26,8 +26,8 @@ class App extends Component {
           })
           .then(userInfo => {
             // Update state
-            console.log(userInfo);
             this.props.userAuthInfo(userInfo);
+            console.log(userInfo);
           })
           .catch(err => {
             console.log("Please Login");
