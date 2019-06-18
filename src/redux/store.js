@@ -9,7 +9,7 @@ const initialState = {
   combo: 0,
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: false,
+  isUserReady: true,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
