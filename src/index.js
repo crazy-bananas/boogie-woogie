@@ -25,7 +25,15 @@ const initialState = {
     moves: []
   },
   isRecording: false,
-  userAuthInfo: {}
+  userAuthInfo: {
+    email: "",
+    email_verified: false,
+    name: "",
+    nickname: "",
+    picture: "",
+    sub: "",
+    updated_at: ""
+  }
 };
 
 const appReducer = (state = initialState, action) => {

@@ -7,7 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import red from "@material-ui/core/colors/red";
+import axios from "axios";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import Trophy from "../images/trophy.png";
@@ -19,14 +19,10 @@ const MyCard = styled(Card)({
   maxWidth: 345
 });
 
-// const MyMedia = styled(media)({
-//   height: 0,
-//   paddingTop: "56.25%"
-// });
-
-// const MyAvatar = styled(Avatar)({
-//   backgroundColor: red[500]
-// });
+const MyMedia = styled(CardMedia)({
+  height: 0,
+  paddingTop: "56.25%"
+});
 
 const MyTypography = styled(Typography)({
   fontSize: 30,
@@ -34,29 +30,30 @@ const MyTypography = styled(Typography)({
   color: "orange"
 });
 
-// const useStyles = makeStyles(theme => ({
-//   card: {
-//     maxWidth: 345
-//   },
-//   media: {
-//     height: 0,
-//     paddingTop: "56.25%" // 16:9
-//   },
-
-//   avatar: {
-//     backgroundColor: red[500]
-//   },
-//   scoreText: {
-//     fontSize: 30,
-//     fontWeight: 800,
-//     color: "orange"
-//   }
-// }));
-
 class ScoreCard extends Component {
   constructor(props) {
     super(props);
     this.userScore = Math.floor((this.props.score / this.props.maxScore) * 100);
+  }
+
+  componentDidMount() {
+    if (this.props.username !== "") {
+      axios.post("http://localhost:4000/api/scores", {
+        songId: this.props.songSelected,
+        moveId: this.props.moveSelected,
+        user: this.props.username,
+        score: this.props.score,
+        pic: this.props.userpic
+      });
+    } else {
+      axios.post("http://localhost:4000/api/scores", {
+        songId: this.props.songSelected,
+        moveId: this.props.moveSelected,
+        user: "Anonymous",
+        score: this.props.score,
+        pic: "https://dummyimage.com/600x400/000/fff"
+      });
+    }
   }
   render() {
     return (
@@ -64,7 +61,7 @@ class ScoreCard extends Component {
         <MyCard>
           <CardHeader title={this.props.title} />
           <div id="trophy">
-            <CardMedia image={Trophy} title="Song Score" />
+            <MyMedia image={Trophy} title="Song Score" />
           </div>
           <CardContent>
             <MyTypography variant="body2" color="textSecondary" component="p">
@@ -89,7 +86,11 @@ class ScoreCard extends Component {
 const mapStateToProps = state => {
   return {
     score: state.totalScore,
-    maxScore: state.maxScore
+    maxScore: state.maxScore,
+    songSelected: state.songSelected,
+    moveSelected: state.moveSelected,
+    username: state.userAuthInfo.nickname,
+    userpic: state.userAuthInfo.picture
   };
 };
 
