@@ -4,21 +4,23 @@ import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import routing from "./routes"
+import routing from "./routes";
 
 const initialState = {
+  userAuthInfo:"",
   isSongSelected: false,
   songSelected: "",
   moveSelected: "",
   totalScore: 0,
   maxScore: 0,
+  combo: 0,
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: true,
+  isUserReady: false,
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
-    artist: "",
+    //   artist: "",
     title: "",
     code: "",
     moves: []
@@ -27,7 +29,6 @@ const initialState = {
 };
 
 const appReducer = (state = initialState, action) => {
-  console.log(action.type);
   switch (action.type) {
     case "SELECT_SONG": {
       const newState = { ...state };
@@ -65,6 +66,12 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
+    case "UPDATE_COMBO": {
+      const newState = { ...state };
+      newState.combo = action.combo;
+      return newState;
+    }
+
     case "AUDIO_FINISHED": {
       const newState = { ...state };
       newState.isAudioFinished = true;
@@ -84,7 +91,6 @@ const appReducer = (state = initialState, action) => {
     }
     case "ADD_NEW_SONG": {
       const newState = { ...state };
-      console.log(action.payload);
       newState.newSong.artist = action.payload.artist;
       newState.newSong.title = action.payload.title;
       newState.newSong.code = action.payload.code;
@@ -106,6 +112,13 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
+    case "USER_AUTH_INFO": {
+      const newState = { ...state };
+      newState.userAuthInfo = action.payload;
+      console.log(state)
+      return newState;
+    }
+
     default:
       return state;
   }
@@ -113,9 +126,7 @@ const appReducer = (state = initialState, action) => {
 const store = createStore(appReducer);
 
 ReactDOM.render(
-  <Provider store={store}>
-    {routing()}
-  </Provider>,
+  <Provider store={store}>{routing()}</Provider>,
   document.getElementById("root")
 );
 

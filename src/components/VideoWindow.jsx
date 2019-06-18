@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Timer } from "./Timer.jsx";
+import Combo from "./gamification/Combo.jsx";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import Grid from "@material-ui/core/Grid";
@@ -9,13 +10,16 @@ import rightHandImg from "../images/rightHand.svg";
 import nose from "../images/glasses.svg";
 import rightShoe from "../images/leftShoe.png";
 import leftShoe from "../images/rightShoe.png";
-// import dancing from "../images/score/dancing.png";
-// import music from "../images/score/music.png";
+import leftDown from "../images/body/leftDown.png";
+import leftUpper from "../images/body/leftUpper.png";
+import rightDown from "../images/body/rightDown.png";
+import rightUpper from "../images/body/rightUpper.png";
 import Retry from "../components/Retry";
 import axios from "axios";
+import anime from "animejs";
 
 import {drawHand, drawShoes} from "./canvasDrawings"
-
+import Loading from "../components/Loading";
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +37,12 @@ export class VideoWindow extends Component {
     this.noseRef = new React.createRef();
     this.leftShoeRef = new React.createRef();
     this.rightShoeRef = new React.createRef();
+    this.leftUpperRef = new React.createRef();
+    this.leftDownRef = new React.createRef();
+    this.rightUpperRef = new React.createRef();
+    this.rightDownRef = new React.createRef();
 
+    this.loaded = false;
     this.ctx = "";
     this.danceIntervalStopValue = 0;
     this.indexCorrectP = 0;
@@ -74,9 +83,6 @@ export class VideoWindow extends Component {
       combo: 0
     };
 
-    //  this.maxScore = 0;
-
-    // to check user's standing at right position before dancing
     this.startPosition = {
       nose: {
         x: 404,
@@ -173,11 +179,60 @@ export class VideoWindow extends Component {
       this.state.correctPoses[this.indexCorrectP]["rightElbow"],
       this.rightHandRef.current
     );
+
+    // upper arm
+    this.drawLimb(
+      this.state.correctPoses[this.indexCorrectP]["leftShoulder"],
+      this.state.correctPoses[this.indexCorrectP]["leftElbow"],
+      this.leftUpperRef.current
+    );
+    this.drawLimb(
+      this.state.correctPoses[this.indexCorrectP]["rightShoulder"],
+      this.state.correctPoses[this.indexCorrectP]["rightElbow"],
+      this.rightUpperRef.current
+    );
+
+    // bottom arm
+    this.drawLimb(
+      this.state.correctPoses[this.indexCorrectP]["leftElbow"],
+      this.state.correctPoses[this.indexCorrectP]["leftWrist"],
+      this.leftDownRef.current
+    );
+    this.drawLimb(
+      this.state.correctPoses[this.indexCorrectP]["rightElbow"],
+      this.state.correctPoses[this.indexCorrectP]["rightWrist"],
+      this.rightDownRef.current
+    );
+
     this.drawNose(this.state.correctPoses[this.indexCorrectP]["nose"]);
 
     this.drawShoes(
       this.state.correctPoses[this.indexCorrectP]["leftAnkle"],
       this.state.correctPoses[this.indexCorrectP]["rightAnkle"]
+    );
+
+    // upper leg
+    this.drawLimb(
+      this.state.correctPoses[this.indexCorrectP]["rightHip"],
+      this.state.correctPoses[this.indexCorrectP]["rightKnee"],
+      this.rightUpperRef.current
+    );
+    this.drawLimb(
+      this.state.correctPoses[this.indexCorrectP]["leftHip"],
+      this.state.correctPoses[this.indexCorrectP]["leftKnee"],
+      this.leftUpperRef.current
+    );
+
+    // bottom leg
+    this.drawLimb(
+      this.state.correctPoses[this.indexCorrectP]["rightKnee"],
+      this.state.correctPoses[this.indexCorrectP]["rightAnkle"],
+      this.rightDownRef.current
+    );
+    this.drawLimb(
+      this.state.correctPoses[this.indexCorrectP]["leftKnee"],
+      this.state.correctPoses[this.indexCorrectP]["leftAnkle"],
+      this.leftDownRef.current
     );
   };
 
@@ -221,9 +276,9 @@ export class VideoWindow extends Component {
 
   matchedPositions = (body, boolean) => {
     if (boolean) {
-      this.setState({ combo: this.state.combo + 1 });
+      this.props.updateCombo(this.props.combo + 1);
     } else {
-      this.setState({ combo: 0 });
+      this.props.updateCombo(0);
     }
 
     switch (body) {
@@ -262,6 +317,11 @@ export class VideoWindow extends Component {
   };
 
   componentDidMount() {
+    bindPage().then(response => {
+      this.setState({
+        loaded:true
+      })
+    });
     if (!this.props.isRecording) {
       axios
         .get(
@@ -270,15 +330,25 @@ export class VideoWindow extends Component {
           }`
         )
         .then(poses => {
-          console.log(poses);
           this.setState({ correctPoses: poses.data[0].moves });
           let maxScore = Math.floor(
             (this.state.correctPoses.length * this.bodyParts.length) / 10
           );
           this.props.updateMaxScore(maxScore);
-          console.log(this.state.correctPoses);
         });
     }
+
+    anime.timeline({ loop: false }).add({
+      targets: ".matchposition",
+      scale: [15, 1],
+      opacity: [0.5, 1],
+      easing: "easeOutCirc",
+      direction: "alternate",
+      duration: 1000,
+      delay: function(el, i) {
+        return 1000 * i;
+      }
+    });
 
     this.ctx = this.canvasRef.current.getContext("2d");
     const detectPoseInRealTime = (video, net) => {
@@ -332,8 +402,6 @@ export class VideoWindow extends Component {
 
       detectPoseInRealTime(video, net);
     }
-
-    bindPage();
 
     const setupCamera = async () => {
       const video = this.videoRef.current;
@@ -474,26 +542,26 @@ export class VideoWindow extends Component {
     } else {
       this.setState({ leftWristMatched: false });
     }
-    if (
-      isPositionWithinMargin(
-        playersPosition.rightAnkle,
-        startPosition.rightAnkle
-      )
-    ) {
-      this.setState({ rightAnkleMatched: true });
-      matchStatus++;
-    } else {
-      this.setState({ rightAnkleMatched: false });
-    }
-    if (
-      isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
-    ) {
-      this.setState({ leftAnkleMatched: true });
-      matchStatus++;
-    } else {
-      this.setState({ leftAnkleMatched: false });
-    }
-    if (matchStatus === 4) {
+    // if (
+    //   isPositionWithinMargin(
+    //     playersPosition.rightAnkle,
+    //     startPosition.rightAnkle
+    //   )
+    // ) {
+    //   this.setState({ rightAnkleMatched: true });
+    //   matchStatus++;
+    // } else {
+    //   this.setState({ rightAnkleMatched: false });
+    // }
+    // if (
+    //   isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
+    // ) {
+    //   this.setState({ leftAnkleMatched: true });
+    //   matchStatus++;
+    // } else {
+    //   this.setState({ leftAnkleMatched: false });
+    // }
+    if (matchStatus === 2) {
       this.props.userIsReady();
       this.clearPositionStatus();
     }
@@ -522,12 +590,21 @@ export class VideoWindow extends Component {
     return angle;
   }
 
+  getDistance(a, b) {
+    const distX = a.x - b.x;
+    const distY = a.y - b.y;
+    return Math.sqrt(distX ** 2 + distY ** 2);
+  }
+
   drawHand = (wrist, elbow, hand) => {
+    if (wrist.score < 0.7 || elbow.score < 0.7) return;
     if (!hand) return;
-    const spacingX = 50;
-    const spacingY = 50;
+
     const wristX = wrist.x;
     const wristY = wrist.y;
+
+    let distanceH = this.getDistance(wrist, elbow);
+    let distanceW = (hand.width * distanceH) / hand.height;
 
     this.ctx.save();
     this.ctx.translate(wristX, wristY); // change origin
@@ -536,7 +613,31 @@ export class VideoWindow extends Component {
     this.ctx.rotate(rotationAngle);
     this.ctx.translate(-wristX - 25, -wristY - 50);
 
-    this.ctx.drawImage(hand, wristX, wristY, spacingX, spacingY);
+    this.ctx.drawImage(hand, wristX, wristY, distanceW, distanceH);
+    this.ctx.restore();
+  };
+
+  drawLimb = (part1, part2, image) => {
+    if (part1.score < 0.7 || part2.score < 0.7) {
+      return;
+    }
+    const limb = image;
+    if (!limb) return;
+
+    let c = this.getDistance(part1, part2);
+    let d = Math.sqrt(
+      Math.pow(part1.x - part2.x, 2) + Math.pow(part1.y + c - part2.y, 2)
+    );
+    let rotation = Math.acos(1 - Math.pow(d, 2) / (2 * Math.pow(c, 2)));
+    if (part2.x > part1.x) {
+      rotation *= -1;
+    }
+
+    let w = (limb.width * c) / limb.height;
+    this.ctx.save();
+    this.ctx.translate(part1.x, part1.y);
+    this.ctx.rotate(rotation);
+    this.ctx.drawImage(limb, 0, 0, w, c);
     this.ctx.restore();
   };
 
@@ -586,6 +687,30 @@ export class VideoWindow extends Component {
           <img id="nose" ref={this.noseRef} src={nose} alt="nose" />
           <img id="lShoe" ref={this.leftShoeRef} src={leftShoe} alt="lshoe" />
           <img id="rShoe" ref={this.rightShoeRef} src={rightShoe} alt="rshoe" />
+          <img
+            id="leftUpper"
+            ref={this.leftUpperRef}
+            src={leftUpper}
+            alt="leftUp"
+          />
+          <img
+            id="leftDown"
+            ref={this.leftDownRef}
+            src={leftDown}
+            alt="leftDown"
+          />
+          <img
+            id="rightUpper"
+            ref={this.rightUpperRef}
+            src={rightUpper}
+            alt="rightUp"
+          />
+          <img
+            id="rightDown"
+            ref={this.rightDownRef}
+            src={rightDown}
+            alt="rightDown"
+          />
         </div>
         <div id="grid">
           <Grid container>
@@ -618,7 +743,7 @@ export class VideoWindow extends Component {
                   }`}
                 >
                   <span role="img" aria-label="lefthand">
-                    Left 🤚
+                    Right 🤚
                   </span>
                 </li>
                 <li
@@ -627,7 +752,7 @@ export class VideoWindow extends Component {
                   }`}
                 >
                   <span role="img" aria-label="righthand">
-                    Right ✋
+                    Left ✋
                   </span>
                 </li>
                 <li
@@ -636,7 +761,7 @@ export class VideoWindow extends Component {
                   }`}
                 >
                   <span role="img" aria-label="leftankle">
-                    Left 👟
+                    Right 👟
                   </span>
                 </li>
                 <li
@@ -645,33 +770,34 @@ export class VideoWindow extends Component {
                   }`}
                 >
                   <span role="img" aria-label="rightankle">
-                    Right 👟
+                    Left 👟
                   </span>
                 </li>
-                {this.state.combo > 1 && (
-                  <li className="matched">Combo: {this.state.combo}</li>
-                )}
               </ul>
             </Grid>
             <Grid item xs={8}>
-              <video
+             <video
                 id="video"
                 ref={this.videoRef}
                 width="800px"
                 height="600px"
                 autoPlay="1"
-              />
+             />
+              
               <canvas
                 id="canvas"
                 ref={this.canvasRef}
                 width="800px"
                 height="600px"
-                className={`${this.state.combo > 1 ? "combo" : ""}`}
               >
+                 
                 Your browser do not support the HTML5 element canvas. Please try
                 to user another browswer
               </canvas>
+              {!this.state.loaded && <Loading/>}
+              {this.props.combo > 4 && <Combo />}
             </Grid>
+            
             <Grid item xs={2}>
               <div>
                 <div className="current_score">Score</div>
@@ -700,7 +826,8 @@ const mapStateToProps = state => {
     isRecording: state.isRecording,
     songSelected: state.songSelected,
     moveSelected: state.moveSelected,
-    maxScore: state.maxScore
+    maxScore: state.maxScore,
+    combo: state.combo
   };
 };
 
@@ -726,6 +853,12 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: "UPDATE_TOTAL_SCORE",
         payload: { userScore: score }
+      });
+    },
+    updateCombo: combo => {
+      dispatch({
+        type: "UPDATE_COMBO",
+        combo
       });
     },
     addNewMoves: moves => {

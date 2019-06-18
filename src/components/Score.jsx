@@ -36,11 +36,9 @@ class Score extends Component {
         {this.state.loadingScore ? (
           <LoadingScore />
         ) : (
-          <div>
+          <div id="scores">
             <ScoreCard />
-
-            <HighScoreList scoreList={this.state.scoreList.data} />
-            <HighScore scoreList={this.state.scoreList.data} />
+            <HighScore/>
             <Retry />
           </div>
         )}
