@@ -34,7 +34,7 @@ export default function MenuAppBar(props) {
     <div className={classes.root}>
       <div>
         <Avatar
-           onClick={handleMenu}
+          onClick={handleMenu}
           style={{
             textDecoration: "none",
             color: "white",
@@ -74,7 +74,8 @@ export default function MenuAppBar(props) {
           </MenuItem>
           <MenuItem onClick={props.auth.logout}>
             <Button>
-              <Link to="#"
+              <Link
+                to="#"
                 style={{
                   textDecoration: "none",
                   marginLeft: 30
