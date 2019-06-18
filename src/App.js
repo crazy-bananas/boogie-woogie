@@ -25,7 +25,14 @@ class App extends Component {
             return responseWithUserInfo.data;
           })
           .then(userInfo => {
-            // Update state
+            axios.post("https://boogie-banana.herokuapp.com/api/users", {
+              userId: userInfo.sub,
+              email: userInfo.email,
+              name: userInfo.name,
+              nickname: userInfo.nickname,
+              picture: userInfo.picture,
+              updated_at: userInfo.updated_at
+            });
             this.props.userAuthInfo(userInfo);
             console.log(userInfo);
           })

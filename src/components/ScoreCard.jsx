@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -7,74 +7,94 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import red from "@material-ui/core/colors/red";
+import axios from "axios";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import Trophy from "../images/trophy.png";
 import "../styles/scoreCard.css";
 import { connect } from "react-redux";
+import { styled } from "@material-ui/styles";
 
-const useStyles = makeStyles(theme => ({
-  card: {
-    maxWidth: 345
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%" // 16:9
-  },
+const MyCard = styled(Card)({
+  maxWidth: 345
+});
 
-  avatar: {
-    backgroundColor: red[500]
-  },
-  scoreText: {
-    fontSize: 30,
-    fontWeight: 800,
-    color: "orange"
+const MyMedia = styled(CardMedia)({
+  height: 0,
+  paddingTop: "56.25%"
+});
+
+const MyTypography = styled(Typography)({
+  fontSize: 30,
+  fontWeight: 800,
+  color: "orange"
+});
+
+class ScoreCard extends Component {
+  constructor(props) {
+    super(props);
+    this.userScore = Math.floor((this.props.score / this.props.maxScore) * 100);
   }
-}));
 
-function ScoreCard(props) {
-  const classes = useStyles();
-  const userScore = Math.floor((props.score / props.maxScore) * 100);
-  return (
-    <div id="card">
-      <Card className={classes.card}>
-        <CardHeader title={props.title} />
-        <div id="trophy">
-          <CardMedia
-            className={classes.media}
-            image={Trophy}
-            title="Song Score"
-          />
-        </div>
-        <CardContent>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="p"
-            className={classes.scoreText}
-          >
-            Your Score: {`${userScore}%`}
-            {`(${props.score}/${props.maxScore})`}
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton>
-        </CardActions>
-      </Card>
-    </div>
-  );
+  componentDidMount() {
+    console.log("username", this.props.username);
+    if (this.props.username !== undefined) {
+      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
+        songId: this.props.songSelected,
+        moveId: this.props.moveSelected,
+        user: this.props.username,
+        score: this.props.score,
+        pic: this.props.userpic,
+        userId: this.props.userId
+      });
+    } else {
+      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
+        songId: this.props.songSelected,
+        moveId: this.props.moveSelected,
+        user: "Anonymous",
+        score: this.props.score,
+        pic: "https://dummyimage.com/600x400/000/fff",
+        userId: "default"
+      });
+    }
+  }
+  render() {
+    return (
+      <div id="card">
+        <MyCard>
+          <CardHeader title={this.props.title} />
+          <div id="trophy">
+            <MyMedia image={Trophy} title="Song Score" />
+          </div>
+          <CardContent>
+            <MyTypography variant="body2" color="textSecondary" component="p">
+              Your Score: {`${this.userScore}%`}
+              {`(${this.props.score}/${this.props.maxScore})`}
+            </MyTypography>
+          </CardContent>
+          <CardActions disableSpacing>
+            <IconButton aria-label="Add to favorites">
+              <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="Share">
+              <ShareIcon />
+            </IconButton>
+          </CardActions>
+        </MyCard>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => {
   return {
     score: state.totalScore,
-    maxScore: state.maxScore
+    maxScore: state.maxScore,
+    songSelected: state.songSelected,
+    moveSelected: state.moveSelected,
+    username: state.userAuthInfo.nickname,
+    userpic: state.userAuthInfo.picture,
+    userId: state.userAuthInfo.sub
   };
 };
 
