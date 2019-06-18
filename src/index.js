@@ -20,12 +20,12 @@ const initialState = {
   isDanceFinished: false,
   isAudioFinished: false,
   newSong: {
-    //   artist: "",
     title: "",
     code: "",
     moves: []
   },
-  isRecording: false
+  isRecording: false,
+  userAuthInfo: {}
 };
 
 const appReducer = (state = initialState, action) => {
@@ -113,6 +113,13 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
+    case "USER_AUTH_INFO": {
+      const newState = { ...state };
+      console.log(action.payload);
+      newState.userAuthInfo = action.payload;
+      return newState;
+    }
+
     default:
       return state;
   }
@@ -120,10 +127,8 @@ const appReducer = (state = initialState, action) => {
 const store = createStore(appReducer);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Provider store={store}>{routing()}</Provider>,
-    document.getElementById("root")
-  </Provider>,
+  <Provider store={store}>{routing()}</Provider>,
+
   document.getElementById("root")
 );
 
