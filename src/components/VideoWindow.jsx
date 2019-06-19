@@ -271,10 +271,8 @@ export class VideoWindow extends Component {
         loaded: true
       });
     });
-    if(this.props.recordedMoves){
-      console.log("Recorded moves", this.props.recordedMoves)
-      this.setState({ correctPoses: this.props.recordedMoves });
-    } else if (!this.props.isRecording) {
+    
+    if (!this.props.isRecording) {
       console.log("Im here")
       axios
         .get(
@@ -328,10 +326,10 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
-        if (!this.props.isUserReady && !this.props.recordedMoves) {
+        if (!this.props.isUserReady) {
           this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
-        } else if (!this.props.isRecording || this.props.recordedMoves) {
+        } else if (!this.props.isRecording) {
           this.drawCurrentDancePose();
         }
 
