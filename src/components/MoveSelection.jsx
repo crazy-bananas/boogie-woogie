@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { connect } from "react-redux";
 import axios from "axios";
+import Loading from "./Loading"
 
 export class HighScoreList extends Component {
   constructor(props) {
@@ -32,9 +33,10 @@ export class HighScoreList extends Component {
         console.log(data);
       });
   }
-  render() {
-    return (
-      <div>
+  isDataFetched=()=>{
+    if(this.state.moves.length > 0){
+      return(
+        <div>
         <h1>{this.state.title}</h1>
         {this.state.moves.length !== 0 &&
           this.state.moves.map((move, index) => {
@@ -50,6 +52,15 @@ export class HighScoreList extends Component {
             );
           })}
       </div>
+      )
+    }
+    return(
+      <Loading/>
+    )
+  }
+  render() {
+    return (
+     this.isDataFetched()
     );
   }
 }
