@@ -1,5 +1,6 @@
 const drawNose = (ctx, noseCoordinates, references) => {
   if (!references) return;
+  
   const height = 70;
   const width = 70;
   const x = noseCoordinates.x - 30;
@@ -9,6 +10,8 @@ const drawNose = (ctx, noseCoordinates, references) => {
 };
 
 const drawHand = (ctx, wrist, elbow, hand) => {
+  if(!hand) return;
+
   const spacingX = 50;
   const spacingY = 50;
   const wristX = wrist.x;
@@ -36,6 +39,8 @@ function calculateHandRotationAngle(wristPosition, elbowPosition) {
 }
 
 const drawShoes = (ctx, leftAnkle, leftAnkleImg, rightAnkle, rightAnkleImg) => {
+  if(!leftAnkleImg && !rightAnkleImg) return;
+
   const height = 50;
   const width = 75;
   const lX = leftAnkle.x;
