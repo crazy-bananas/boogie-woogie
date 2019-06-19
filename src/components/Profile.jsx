@@ -12,6 +12,8 @@ import Loading from "./Loading";
 import { connect } from "react-redux";
 import backIcon from "../images/backArrow.png";
 import Navbar from "./Navbar";
+import axios from "axios";
+import ProfileTable from "./ProfileTable"
 
 class Profile extends Component {
   constructor(props) {
@@ -20,6 +22,24 @@ class Profile extends Component {
     this.state = {
       data: 0
     };
+  }
+  componentDidMount() {
+    if (this.props.userAuthInfo) {
+      try {
+        axios
+          .get(
+            `https://boogie-banana.herokuapp.com/api/scores/${
+              this.props.userAuthInfo.sub
+            }`
+          )
+          .then(data => {
+            this.setState({ data: data });
+            console.log(data);
+          });
+      } catch (error) {
+        throw error;
+      }
+    }
   }
   isUserDataFetched = () => {
     if (this.props.userAuthInfo) {
@@ -70,11 +90,7 @@ class Profile extends Component {
         <Navbar auth={this.props.auth} />
         <Container className="wrapper">
           <Box flexDirection="col">{this.isUserDataFetched()}</Box>
-          <Card className="myCard">
-            <CardContent className="cardBox">
-              
-            </CardContent>
-          </Card>
+          <ProfileTable data={this.state.data} />
           <footer className="friends">
             <Card className="card">
               <CardContent>
