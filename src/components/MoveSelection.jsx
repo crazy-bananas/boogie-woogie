@@ -5,9 +5,6 @@ import axios from "axios";
 import { styled } from "@material-ui/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import MusicVideo from "@material-ui/icons/MusicVideo";
 import Grid from "@material-ui/core/Grid";
 import "../styles/moveselection.css";
 
@@ -64,17 +61,14 @@ export class HighScoreList extends Component {
               this.state.moves.map((move, index) => {
                 {
                   return (
-                    <MyListItem button>
-                      <ListItemIcon>
-                        <MusicVideo />
-                      </ListItemIcon>
-                      <ListItemText
-                        key={index}
-                        data-key={move._id}
-                        data-index={index}
-                        primary={move.name}
-                        onClick={this.props.setSelectedMoveId}
-                      />
+                    <MyListItem
+                      button
+                      onClick={this.props.setSelectedMoveId}
+                      key={index}
+                      data-key={move._id}
+                      data-index={index}
+                    >
+                      {move.name}
                     </MyListItem>
                   );
                 }
