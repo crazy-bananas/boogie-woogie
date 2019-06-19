@@ -5,6 +5,7 @@ import Paper from "@material-ui/core/Paper";
 
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
@@ -38,8 +39,17 @@ class SongMenu extends Component {
     this.songRef = React.createRef();
     this.state = {
       showModal: false,
-      songList: []
+      songList: [],
+      open: false
     };
+  }
+
+  handleTooltipClose = () => {
+    this.setState({open: false});
+  }
+
+  handleTooltipOpen = () => {
+    this.setState({open: true});
   }
 
   playSong = event => {
@@ -124,6 +134,18 @@ class SongMenu extends Component {
             >
               Record
             </Button>
+                <Tooltip
+                  disableFocusListener
+                  disableTouchListener
+                  title="Please log in to record new dance moves"
+                >
+                  <Button
+                  variant="contained"
+                  color="primary"
+                  >
+                    Record
+                  </Button>
+                </Tooltip>
           </div>
         </Grid>
         <div />
