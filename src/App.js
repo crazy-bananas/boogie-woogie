@@ -68,11 +68,11 @@ class App extends Component {
         <Navbar auth={this.props.auth} />
         {this.showMenu() && <SongMenu />}
         {this.props.isSongSelected &&
-          !this.props.isDanceFinished &&
+          !this.props.isAudioFinished &&
           this.props.moveSelected.length === 0 && <MoveSelection />}
 
         {this.props.isSongSelected &&
-          !this.props.isDanceFinished &&
+          !this.props.isAudioFinished &&
           this.props.moveSelected.length !== 0 && <DanceWindow />}
 
         {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
@@ -85,19 +85,6 @@ class App extends Component {
           <FinishRecording />
         )}
       </div>
-
-      ////////
-      // <div className="App">
-      //   <Navbar />
-      //   {this.showMenu() && <SongMenu />}
-      //   {this.props.isSongSelected && !this.props.isDanceFinished && (
-      //     <DanceWindow />
-      //   )}
-      //   {this.props.isRecording && !this.props.isAudioFinished && (
-      //     <RecordWindow />
-      //   )}
-      //   {this.props.isAudioFinished && <Score />}
-      // </div>
     );
   }
 }
@@ -105,7 +92,6 @@ class App extends Component {
 const mapStateToProps = state => {
   return {
     isSongSelected: state.isSongSelected,
-    isDanceFinished: state.isDanceFinished,
     isRecording: state.isRecording,
     isAudioFinished: state.isAudioFinished,
     isUserLoggedIn: state.isUserLoggedIn,
