@@ -64,17 +64,14 @@ export class HighScoreList extends Component {
               this.state.moves.map((move, index) => {
                 {
                   return (
-                    <MyListItem button>
-                      <ListItemIcon>
-                        <MusicVideo />
-                      </ListItemIcon>
-                      <ListItemText
-                        key={index}
-                        data-key={move._id}
-                        data-index={index}
-                        primary={move.name}
-                        onClick={this.props.setSelectedMoveId}
-                      />
+                    <MyListItem
+                      button
+                      onClick={this.props.setSelectedMoveId}
+                      key={index}
+                      data-key={move._id}
+                      data-index={index}
+                    >
+                      {move.name}
                     </MyListItem>
                   );
                 }
@@ -96,6 +93,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setSelectedMoveId: event => {
+      console.log("selectedMoveId", event.target.dataset);
       dispatch({
         type: "SELECTED_MOVEID",
         payload: event.target.dataset.key
