@@ -87,15 +87,6 @@ class FinishRecording extends Component {
                 </Button>
               </div>
             )}
-            <MyButton
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={() => this.setState({replayRecording: true})}
-            >
-              Replay
-            </MyButton>
-            {this.state.replayRecording && <VideoWindow recordedMoves={this.props.newSong.moves}/>}
           </div>
         )}
       </div>
