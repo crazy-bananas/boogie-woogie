@@ -318,11 +318,6 @@ export class VideoWindow extends Component {
       if (!this.props.isRecording) {
         this.increment();
       }
-      if (this.props.isAudioFinished) {
-        this.props.danceIsFinished();
-        this.props.updateTotalScore(this.score, this.maxScore);
-        clearInterval(this.danceIntervalStopValue);
-      }
     }, 100);
   };
 
@@ -516,6 +511,9 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
+    this.props.updateTotalScore(this.score, this.maxScore);
+    clearInterval(this.danceIntervalStopValue);
+
     if (this.props.isRecording) {
       this.props.addNewMoves(this.recordedPoses);
     }
@@ -885,7 +883,6 @@ export class VideoWindow extends Component {
 const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
-    isDanceFinished: state.isDanceFinished,
     totalScore: state.totalScore,
     isCountdownFinished: state.isCountdownFinished,
     isAudioFinished: state.isAudioFinished,
@@ -902,11 +899,6 @@ const mapDispatchToProps = dispatch => {
     userIsReady: () => {
       dispatch({
         type: "USER_READY"
-      });
-    },
-    danceIsFinished: () => {
-      dispatch({
-        type: "DANCE_FINISHED"
       });
     },
     updateMaxScore: maxScore => {

@@ -9,8 +9,7 @@ const initialState = {
   combo: 0,
   isUserLoggedIn: true,
   isCountdownFinished: false,
-  isUserReady: false,
-  isDanceFinished: false,
+  isUserReady: true,
   isAudioFinished: false,
   newSong: {
     title: "",
@@ -41,12 +40,6 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
-    case "DANCE_FINISHED": {
-      const newState = { ...state };
-      newState.isDanceFinished = true;
-      return newState;
-    }
-
     case "UPDATE_TOTAL_SCORE": {
       const newState = { ...state };
       newState.totalScore = action.payload.userScore;
@@ -66,6 +59,7 @@ const appReducer = (state = initialState, action) => {
     }
 
     case "AUDIO_FINISHED": {
+      console.log("Store: Audio_FINISHED")
       const newState = { ...state };
       newState.isAudioFinished = true;
 
