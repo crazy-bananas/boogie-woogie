@@ -1,5 +1,8 @@
 #timer {
-  color: #46557e;
+  color: #f9f871;
+  text-shadow: #46557e 2px 2px 0, #46557e -2px -2px 0, #46557e -2px 2px 0,
+    #46557e 2px -2px 0, #46557e 0px 2px 0, #46557e 0 -2px 0, #46557e -2px 0 0,
+    #46557e 2px 0 0;
   font-size: 40px;
   position: absolute;
   bottom: 10%;

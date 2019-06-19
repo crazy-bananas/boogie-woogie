@@ -20,12 +20,12 @@ export class HighScoreList extends Component {
         if (data.data.length !== 0) {
           this.setState({ moves: data.data });
           this.setState({
-            title: "Please select which dance would you like to dance on"
+            title: "Please select which movies you like to dance to"
           });
         } else {
           this.setState({
             title:
-              "Sorry no moves are registered for this Song. You can go home and record your own moves"
+              "Sorry no moves are registered for this Song."
           });
         }
 
@@ -38,18 +38,16 @@ export class HighScoreList extends Component {
         <h1>{this.state.title}</h1>
         {this.state.moves.length !== 0 &&
           this.state.moves.map((move, index) => {
-            {
-              return (
-                <h1
-                  key={index}
-                  data-key={move._id}
-                  data-index={index}
-                  onClick={this.props.setSelectedMoveId}
-                >
-                  MOVES: {move.name}
-                </h1>
-              );
-            }
+            return (
+              <h1
+                key={index}
+                data-key={move._id}
+                data-index={index}
+                onClick={this.props.setSelectedMoveId}
+              >
+                MOVES: {move.name}
+              </h1>
+            );
           })}
       </div>
     );

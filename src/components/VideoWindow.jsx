@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { Timer } from "./Timer.jsx";
-import Combo from "./gamification/Combo.jsx";
+import Combo from "./animation/Combo.jsx";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import anime from "animejs";
 
-import {drawHand, drawShoes} from "./canvasDrawings"
+import { drawHand, drawShoes } from "./canvasDrawings";
 
 import Retry from "../components/Retry";
 import Loading from "../components/Loading";
@@ -89,48 +89,75 @@ export class VideoWindow extends Component {
     };
 
     this.startPosition = {
+      // Only nose and wrists are used to check starting position.
+      // Others are used for drawing body and calculate angles.
       nose: {
         x: 404,
         y: 165
       },
       leftWrist: {
         x: 460,
-        // x: 618,
-        y: 350
-        // y: 418
-      },
-      rightWrist: {
-        x: 356,
-        y: 357
-      },
-      // The elbows are only used to calculate
-      // the angle of the hands. They are not 
-      // used to see if player is in starting position.
-      leftElbow: {
-        x: 459,
-        y: 303
-      },
-      rightElbow: {
-        x: 364,
         y: 300
       },
+      rightWrist: {
+        x: 340,
+        y: 300
+      },
+      leftElbow: {
+        x: 443,
+        y: 255
+      },
+      rightElbow: {
+        x: 355,
+        y: 255
+      },
+      leftShoulder: {
+        x: 437,
+        y: 207
+      },
+      rightShoulder: {
+        x: 360,
+        y: 207
+      },
       leftAnkle: {
-        x: 415,
-        y: 535
+        x: 420,
+        y: 565
       },
       rightAnkle: {
-        x: 394,
-        y: 535
+        x: 385,
+        y: 565
+      },
+      leftHip: {
+        x: 423,
+        y: 337
+      },
+      rightHip: {
+        x: 378,
+        y: 337
+      },
+      leftKnee: {
+        x: 425,
+        y: 473
+      },
+      rightKnee: {
+        x: 380,
+        y: 473
       }
     };
   }
 
-  drawHand = (...arg) =>{
+  drawHand = (...arg) => {
     drawHand(this.ctx, ...arg);
-  }
+  };
 
   drawShoes = (leftAnkle, rightAnkle) => {
-    drawShoes(this.ctx, leftAnkle, this.leftShoeRef.current, rightAnkle, this.rightShoeRef.current)
+    drawShoes(
+      this.ctx,
+      leftAnkle,
+      this.leftShoeRef.current,
+      rightAnkle,
+      this.rightShoeRef.current
+    );
   };
 
   drawStartPosition = () => {
@@ -145,13 +172,57 @@ export class VideoWindow extends Component {
       this.startPosition.rightElbow,
       this.rightHandRef.current
     );
+    // bottom arm
+    this.drawLimb(
+      this.startPosition["leftElbow"],
+      this.startPosition["leftWrist"],
+      this.leftDownRef.current
+    );
+    this.drawLimb(
+      this.startPosition["rightElbow"],
+      this.startPosition["rightWrist"],
+      this.rightDownRef.current
+    );
+
+    // upper arm
+    this.drawLimb(
+      this.startPosition["leftShoulder"],
+      this.startPosition["leftElbow"],
+      this.leftUpperRef.current
+    );
+    this.drawLimb(
+      this.startPosition["rightShoulder"],
+      this.startPosition["rightElbow"],
+      this.rightUpperRef.current
+    );
+
+    // upper leg
+    this.drawLimb(
+      this.startPosition["rightHip"],
+      this.startPosition["rightKnee"],
+      this.rightUpperRef.current
+    );
+    this.drawLimb(
+      this.startPosition["leftHip"],
+      this.startPosition["leftKnee"],
+      this.leftUpperRef.current
+    );
+
+    // bottom leg
+    this.drawLimb(
+      this.startPosition["rightKnee"],
+      this.startPosition["rightAnkle"],
+      this.rightDownRef.current
+    );
+    this.drawLimb(
+      this.startPosition["leftKnee"],
+      this.startPosition["leftAnkle"],
+      this.leftDownRef.current
+    );
 
     this.drawNose(this.startPosition.nose);
 
     this.drawShoes(this.startPosition.leftAnkle, this.startPosition.rightAnkle);
-
-    this.drawPoint(this.startPosition.leftElbow, this.ctx);
-    this.drawPoint(this.startPosition.rightElbow, this.ctx);
   };
 
   checkIfUserIsInStartPosition = pose => {
@@ -241,7 +312,7 @@ export class VideoWindow extends Component {
     );
   };
 
-  displayCorrectPoses = () => {
+  startIncremenrtingCorrectPose = () => {
     return setInterval(() => {
       this.savePose = true;
       if (!this.props.isRecording) {
@@ -315,19 +386,24 @@ export class VideoWindow extends Component {
 
   componentDidUpdate = () => {
     if (this.props.isCountdownFinished && this.danceIntervalStopValue === 0) {
-      this.danceIntervalStopValue = this.displayCorrectPoses();
+      this.danceIntervalStopValue = this.startIncremenrtingCorrectPose();
     }
 
     return null;
   };
 
   componentDidMount() {
+    console.log("I mounted a windwo")
     bindPage().then(response => {
       this.setState({
-        loaded:true
-      })
+        loaded: true
+      });
     });
-    if (!this.props.isRecording) {
+    if(this.props.recordedMoves){
+      console.log("Recorded moves", this.props.recordedMoves)
+      this.setState({ correctPoses: this.props.recordedMoves });
+    } else if (!this.props.isRecording) {
+      console.log("Im here")
       axios
         .get(
           `https://boogie-banana.herokuapp.com/api/moves/${
@@ -380,10 +456,10 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
-        if (!this.props.isUserReady) {
+        if (!this.props.isUserReady && !this.props.recordedMoves) {
           this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
-        } else if (!this.props.isRecording) {
+        } else if (!this.props.isRecording || this.props.recordedMoves) {
           this.drawCurrentDancePose();
         }
 
@@ -547,26 +623,8 @@ export class VideoWindow extends Component {
     } else {
       this.setState({ leftWristMatched: false });
     }
-    // if (
-    //   isPositionWithinMargin(
-    //     playersPosition.rightAnkle,
-    //     startPosition.rightAnkle
-    //   )
-    // ) {
-    //   this.setState({ rightAnkleMatched: true });
-    //   matchStatus++;
-    // } else {
-    //   this.setState({ rightAnkleMatched: false });
-    // }
-    // if (
-    //   isPositionWithinMargin(playersPosition.leftAnkle, startPosition.leftAnkle)
-    // ) {
-    //   this.setState({ leftAnkleMatched: true });
-    //   matchStatus++;
-    // } else {
-    //   this.setState({ leftAnkleMatched: false });
-    // }
-    if (matchStatus === 2) {
+    
+    if (matchStatus >= 2) {
       this.props.userIsReady();
       this.clearPositionStatus();
     }
@@ -781,35 +839,38 @@ export class VideoWindow extends Component {
               </ul>
             </Grid>
             <Grid item xs={8}>
-             <video
+              <video
                 id="video"
                 ref={this.videoRef}
                 width="800px"
                 height="600px"
                 autoPlay="1"
-             />
-              
+              />
+
               <canvas
                 id="canvas"
                 ref={this.canvasRef}
                 width="800px"
                 height="600px"
               >
-                 
                 Your browser do not support the HTML5 element canvas. Please try
                 to user another browswer
               </canvas>
-              {!this.state.loaded && <Loading/>}
+              {!this.state.loaded && <Loading />}
               {this.props.combo > 4 && <Combo />}
             </Grid>
-            
+
             <Grid item xs={2}>
               <div>
-                <div className="current_score">Score</div>
-                <div className="score_num">
-                  {this.state.score}{" "}
-                  <span className="score_max">/{this.props.maxScore}</span>
-                </div>
+                {!this.props.isRecording && (
+                  <div id="score_common">
+                    <div className="current_score">Score</div>
+                    <div className="score_num">
+                      {this.state.score}{" "}
+                      <span className="score_max">/{this.props.maxScore}</span>
+                    </div>
+                  </div>
+                )}
                 {this.props.isCountdownFinished && <Timer />}
                 <Retry />
               </div>
@@ -872,12 +933,6 @@ const mapDispatchToProps = dispatch => {
         payload: moves
       });
     },
-    setSelectedMoveId: key => {
-      dispatch({
-        type: "SELECTED_MOVEID",
-        payload: key
-      });
-    }
   };
 };
 

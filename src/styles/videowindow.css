@@ -22,6 +22,9 @@
 
 .matchposition {
   color: #fe61ee;
+  text-shadow: #46557e 3px 3px 0, #46557e -3px -3px 0, #46557e -3px 3px 0,
+    #46557e 3px -3px 0, #46557e 0px 3px 0, #46557e 0 -3px 0, #46557e -3px 0 0,
+    #46557e 3px 0 0;
 }
 
 #grid {
@@ -29,20 +32,26 @@
   flex-grow: 1;
 }
 
+#score_common {
+  color: #f9f871;
+  text-shadow: #46557e 2px 2px 0, #46557e -2px -2px 0, #46557e -2px 2px 0,
+    #46557e 2px -2px 0, #46557e 0px 2px 0, #46557e 0 -2px 0, #46557e -2px 0 0,
+    #46557e 2px 0 0;
+  padding: 0px 5px;
+}
+
 .current_score {
-  font-size: 2em;
+  font-size: 3em;
   font-weight: bold;
-  color: #46557e;
 }
 
 .score_num {
   font-size: 3em;
   font-weight: bold;
-  color: #46557e;
 }
 
 .score_max {
-  font-size: 0.3em;
+  font-size: 0.4em;
 }
 
 .emoji_list {
@@ -52,16 +61,22 @@
 }
 
 .emoji_list li {
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 .unmatched {
   color: #46557e;
+  text-shadow: #f9f871 7px 7px 6px, #f9f871 -7px -7px 6px, #f9f871 -7px 7px 6px,
+    #f9f871 7px -7px 6px, #f9f871 0px 7px 6px, #f9f871 0 -7px 6px,
+    #f9f871 -7px 0 6px, #f9f871 7px 0 6px;
 }
 
 .matched {
   color: #fe61ee;
-  font-size: 1.2em;
+  text-shadow: #46557e 2px 2px 0, #46557e -2px -2px 0, #46557e -2px 2px 0,
+    #46557e 2px -2px 0, #46557e 0px 2px 0, #46557e 0 -2px 0, #46557e -2px 0 0,
+    #46557e 2px 0 0;
+  font-size: 1.4em;
   font-weight: bold;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;

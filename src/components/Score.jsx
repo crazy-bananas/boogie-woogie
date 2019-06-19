@@ -5,10 +5,7 @@ import Retry from "./Retry";
 import HighScore from "./HighScore";
 
 import "../styles/scores.css";
-
-import LoadingScore from "./LoadingScore";
-
-import "../styles/scores.css";
+import LoadingScore from "./animation/LoadingScore";
 
 class Score extends Component {
   constructor(props) {

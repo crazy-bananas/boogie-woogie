@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../styles/loadingscore.css";
+import "../../styles/loadingscore.css";
 import anime from "animejs";
 
 export default class LoadingScore extends Component {
