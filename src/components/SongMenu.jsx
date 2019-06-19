@@ -92,17 +92,18 @@ class SongMenu extends Component {
               <List>
                 {this.state.songList.map((song, index) => {
                   return (
-                    <ListItem key={index}>
+                    <ListItem 
+                      key={index}
+                      button
+                      onClick={() => this.playSong({ songCode: song.code })}
+                    >
                       <ListItemAvatar>
                         <Avatar id="songIcon">
                           <MusicNote />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
-                        key={song.code}
                         primary={song.title}
-                        //secondary={song.artist}
-                        onClick={() => this.playSong({ songCode: song.code })}
                       />
                     </ListItem>
                   );
