@@ -1,3 +1,13 @@
+const drawNose = (ctx, noseCoordinates, references) => {
+  if (!references) return;
+  const height = 70;
+  const width = 70;
+  const x = noseCoordinates.x - 30;
+  const y = noseCoordinates.y - 50;
+
+  ctx.drawImage(references, x, y, height, width);
+};
+
 const drawHand = (ctx, wrist, elbow, hand) => {
   const spacingX = 50;
   const spacingY = 50;
@@ -36,14 +46,34 @@ const drawShoes = (ctx, leftAnkle, leftAnkleImg, rightAnkle, rightAnkleImg) => {
   ctx.drawImage(rightAnkleImg, rX, rY, height, width);
 };
 
-const drawNose = (ctx, noseCoordinates, references) => {
-  if (!references) return;
-  const height = 70;
-  const width = 70;
-  const x = noseCoordinates.x - 30;
-  const y = noseCoordinates.y - 50;
+function getDistance(a, b) {
+  const distX = a.x - b.x;
+  const distY = a.y - b.y;
+  return Math.sqrt(distX ** 2 + distY ** 2);
+}
 
-  ctx.drawImage(references, x, y, height, width);
+const drawLimb = (ctx, elbow, wrist, limb) => {
+  if (elbow.score < 0.7 || wrist.score < 0.7) {
+    return;
+  }
+
+  if (!limb) return;
+
+  let c = getDistance(elbow, wrist);
+  let d = Math.sqrt(
+    Math.pow(elbow.x - wrist.x, 2) + Math.pow(elbow.y + c - wrist.y, 2)
+  );
+  let rotation = Math.acos(1 - Math.pow(d, 2) / (2 * Math.pow(c, 2)));
+  if (wrist.x > elbow.x) {
+    rotation *= -1;
+  }
+
+  let w = (limb.width * c) / limb.height;
+  ctx.save();
+  ctx.translate(elbow.x, elbow.y);
+  ctx.rotate(rotation);
+  ctx.drawImage(limb, 0, 0, w, c);
+  ctx.restore();
 };
 
 const drawPose = (ctx, pose, references) => {
@@ -63,7 +93,6 @@ const drawPose = (ctx, pose, references) => {
     references.rightHandRef.current
   );
 
-  console.log("the pose", pose);
   drawShoes(
     ctx, 
     pose.leftAnkle, 
@@ -72,54 +101,60 @@ const drawPose = (ctx, pose, references) => {
     references.rightShoeRef.current);
 
   // bottom arm
-  // drawLimb(
-  //   pose["leftElbow"],
-  //   pose["leftWrist"],
-  //   references.leftDownRef.current
-  // );
-  // drawLimb(
-  //   pose["rightElbow"],
-  //   pose["rightWrist"],
-  //   references.rightDownRef.current
-  // );
+  drawLimb(
+    ctx,
+    pose.leftElbow,
+    pose.leftWrist,
+    references.leftDownRef.current
+  );
+  drawLimb(
+    ctx,
+    pose.rightElbow,
+    pose.rightWrist,
+    references.rightDownRef.current
+  );
 
   // // upper arm
-  // drawLimb(
-  //   pose["leftShoulder"],
-  //   pose["leftElbow"],
-  //   references.leftUpperRef.current
-  // );
-  // drawLimb(
-  //   pose["rightShoulder"],
-  //   pose["rightElbow"],
-  //   references.rightUpperRef.current
-  // );
+  drawLimb(
+    ctx,
+    pose.leftShoulder,
+    pose.leftElbow,
+    references.leftUpperRef.current
+  );
+  drawLimb(
+    ctx,
+    pose.rightShoulder,
+    pose.rightElbow,
+    references.rightUpperRef.current
+  );
 
-  // // upper leg
-  // drawLimb(
-  //   pose["rightHip"],
-  //   pose["rightKnee"],
-  //   references.rightUpperRef.current
-  // );
-  // drawLimb(
-  //   pose["leftHip"],
-  //   pose["leftKnee"],
-  //   references.leftUpperRef.current
-  // );
+  // upper leg
+  drawLimb(
+    ctx,
+    pose.rightHip,
+    pose.rightKnee,
+    references.rightUpperRef.current
+  );
+  drawLimb(
+    ctx,
+    pose.leftHip,
+    pose.leftKnee,
+    references.leftUpperRef.current
+  );
 
-  // // bottom leg
-  // drawLimb(
-  //   pose["rightKnee"],
-  //   pose["rightAnkle"],
-  //   references.rightDownRef.current
-  // );
-  // drawLimb(
-  //   pose["leftKnee"],
-  //   pose["leftAnkle"],
-  //   references.leftDownRef.current
-  // );
-
-
+  // bottom leg
+  drawLimb(
+    ctx,
+    pose.rightKnee,
+    pose.rightAnkle,
+    references.rightDownRef.current
+  );
+  drawLimb(
+    ctx,
+    pose.leftKnee,
+    pose.leftAnkle,
+    references.leftDownRef.current
+  );
 };
 
 module.exports = {drawHand, drawShoes, drawPose}

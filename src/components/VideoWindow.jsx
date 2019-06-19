@@ -174,68 +174,6 @@ export class VideoWindow extends Component {
 
     }
     drawPose(this.ctx, this.startPosition, bodyPartReferences)
-    // this.drawHand(
-    //   this.startPosition.leftWrist,
-    //   this.startPosition.leftElbow,
-    //   this.leftHandRef.current
-    // );
-
-    // this.drawHand(
-    //   this.startPosition.rightWrist,
-    //   this.startPosition.rightElbow,
-    //   this.rightHandRef.current
-    // );
-    // // bottom arm
-    // this.drawLimb(
-    //   this.startPosition["leftElbow"],
-    //   this.startPosition["leftWrist"],
-    //   this.leftDownRef.current
-    // );
-    // this.drawLimb(
-    //   this.startPosition["rightElbow"],
-    //   this.startPosition["rightWrist"],
-    //   this.rightDownRef.current
-    // );
-
-    // // upper arm
-    // this.drawLimb(
-    //   this.startPosition["leftShoulder"],
-    //   this.startPosition["leftElbow"],
-    //   this.leftUpperRef.current
-    // );
-    // this.drawLimb(
-    //   this.startPosition["rightShoulder"],
-    //   this.startPosition["rightElbow"],
-    //   this.rightUpperRef.current
-    // );
-
-    // // upper leg
-    // this.drawLimb(
-    //   this.startPosition["rightHip"],
-    //   this.startPosition["rightKnee"],
-    //   this.rightUpperRef.current
-    // );
-    // this.drawLimb(
-    //   this.startPosition["leftHip"],
-    //   this.startPosition["leftKnee"],
-    //   this.leftUpperRef.current
-    // );
-
-    // // bottom leg
-    // this.drawLimb(
-    //   this.startPosition["rightKnee"],
-    //   this.startPosition["rightAnkle"],
-    //   this.rightDownRef.current
-    // );
-    // this.drawLimb(
-    //   this.startPosition["leftKnee"],
-    //   this.startPosition["leftAnkle"],
-    //   this.leftDownRef.current
-    // );
-
-    // this.drawNose(this.startPosition.nose);
-
-    // this.drawShoes(this.startPosition.leftAnkle, this.startPosition.rightAnkle);
   };
 
   checkIfUserIsInStartPosition = pose => {
