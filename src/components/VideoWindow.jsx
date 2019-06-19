@@ -244,7 +244,6 @@ export class VideoWindow extends Component {
       console.log("drawCurrentDancePose was called to many times");
       return;
     }
-    console.log(this.state.correctPoses[this.indexCorrectP]);
 
     this.drawHand(
       this.state.correctPoses[this.indexCorrectP]["leftWrist"],
