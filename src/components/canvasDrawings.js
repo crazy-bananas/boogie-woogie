@@ -36,4 +36,90 @@ const drawShoes = (ctx, leftAnkle, leftAnkleImg, rightAnkle, rightAnkleImg) => {
   ctx.drawImage(rightAnkleImg, rX, rY, height, width);
 };
 
-module.exports = {drawHand, drawShoes}
+const drawNose = (ctx, noseCoordinates, references) => {
+  if (!references) return;
+  const height = 70;
+  const width = 70;
+  const x = noseCoordinates.x - 30;
+  const y = noseCoordinates.y - 50;
+
+  ctx.drawImage(references, x, y, height, width);
+};
+
+const drawPose = (ctx, pose, references) => {
+  drawNose(ctx, pose.nose, references.noseRef.current);
+
+  drawHand(
+    ctx,
+    pose.leftWrist,
+    pose.leftElbow,
+    references.leftHandRef.current
+  );
+
+  drawHand(
+    ctx,
+    pose.rightWrist,
+    pose.rightElbow,
+    references.rightHandRef.current
+  );
+
+  console.log("the pose", pose);
+  drawShoes(
+    ctx, 
+    pose.leftAnkle, 
+    references.leftShoeRef.current, 
+    pose.rightAnkle, 
+    references.rightShoeRef.current);
+
+  // bottom arm
+  // drawLimb(
+  //   pose["leftElbow"],
+  //   pose["leftWrist"],
+  //   references.leftDownRef.current
+  // );
+  // drawLimb(
+  //   pose["rightElbow"],
+  //   pose["rightWrist"],
+  //   references.rightDownRef.current
+  // );
+
+  // // upper arm
+  // drawLimb(
+  //   pose["leftShoulder"],
+  //   pose["leftElbow"],
+  //   references.leftUpperRef.current
+  // );
+  // drawLimb(
+  //   pose["rightShoulder"],
+  //   pose["rightElbow"],
+  //   references.rightUpperRef.current
+  // );
+
+  // // upper leg
+  // drawLimb(
+  //   pose["rightHip"],
+  //   pose["rightKnee"],
+  //   references.rightUpperRef.current
+  // );
+  // drawLimb(
+  //   pose["leftHip"],
+  //   pose["leftKnee"],
+  //   references.leftUpperRef.current
+  // );
+
+  // // bottom leg
+  // drawLimb(
+  //   pose["rightKnee"],
+  //   pose["rightAnkle"],
+  //   references.rightDownRef.current
+  // );
+  // drawLimb(
+  //   pose["leftKnee"],
+  //   pose["leftAnkle"],
+  //   references.leftDownRef.current
+  // );
+
+
+};
+
+module.exports = {drawHand, drawShoes, drawPose}

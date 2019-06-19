@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import anime from "animejs";
 
-import { drawHand, drawShoes } from "./canvasDrawings";
+import { drawHand, drawShoes, drawPose } from "./canvasDrawings";
 
 import Retry from "../components/Retry";
 import Loading from "../components/Loading";
@@ -161,68 +161,81 @@ export class VideoWindow extends Component {
   };
 
   drawStartPosition = () => {
-    this.drawHand(
-      this.startPosition.leftWrist,
-      this.startPosition.leftElbow,
-      this.leftHandRef.current
-    );
+    const bodyPartReferences = {
+      leftHandRef: this.leftHandRef,
+      rightHandRef: this.rightHandRef,
+      leftDownRef: this.leftDownRef,
+      rightDownRef: this.rightDownRef,
+      leftUpperRef: this.leftUpperRef,
+      rightUpperRef: this.rightUpperRef,
+      noseRef: this.noseRef,
+      leftShoeRef: this.leftShoeRef,
+      rightShoeRef: this.rightShoeRef
 
-    this.drawHand(
-      this.startPosition.rightWrist,
-      this.startPosition.rightElbow,
-      this.rightHandRef.current
-    );
-    // bottom arm
-    this.drawLimb(
-      this.startPosition["leftElbow"],
-      this.startPosition["leftWrist"],
-      this.leftDownRef.current
-    );
-    this.drawLimb(
-      this.startPosition["rightElbow"],
-      this.startPosition["rightWrist"],
-      this.rightDownRef.current
-    );
+    }
+    drawPose(this.ctx, this.startPosition, bodyPartReferences)
+    // this.drawHand(
+    //   this.startPosition.leftWrist,
+    //   this.startPosition.leftElbow,
+    //   this.leftHandRef.current
+    // );
 
-    // upper arm
-    this.drawLimb(
-      this.startPosition["leftShoulder"],
-      this.startPosition["leftElbow"],
-      this.leftUpperRef.current
-    );
-    this.drawLimb(
-      this.startPosition["rightShoulder"],
-      this.startPosition["rightElbow"],
-      this.rightUpperRef.current
-    );
+    // this.drawHand(
+    //   this.startPosition.rightWrist,
+    //   this.startPosition.rightElbow,
+    //   this.rightHandRef.current
+    // );
+    // // bottom arm
+    // this.drawLimb(
+    //   this.startPosition["leftElbow"],
+    //   this.startPosition["leftWrist"],
+    //   this.leftDownRef.current
+    // );
+    // this.drawLimb(
+    //   this.startPosition["rightElbow"],
+    //   this.startPosition["rightWrist"],
+    //   this.rightDownRef.current
+    // );
 
-    // upper leg
-    this.drawLimb(
-      this.startPosition["rightHip"],
-      this.startPosition["rightKnee"],
-      this.rightUpperRef.current
-    );
-    this.drawLimb(
-      this.startPosition["leftHip"],
-      this.startPosition["leftKnee"],
-      this.leftUpperRef.current
-    );
+    // // upper arm
+    // this.drawLimb(
+    //   this.startPosition["leftShoulder"],
+    //   this.startPosition["leftElbow"],
+    //   this.leftUpperRef.current
+    // );
+    // this.drawLimb(
+    //   this.startPosition["rightShoulder"],
+    //   this.startPosition["rightElbow"],
+    //   this.rightUpperRef.current
+    // );
 
-    // bottom leg
-    this.drawLimb(
-      this.startPosition["rightKnee"],
-      this.startPosition["rightAnkle"],
-      this.rightDownRef.current
-    );
-    this.drawLimb(
-      this.startPosition["leftKnee"],
-      this.startPosition["leftAnkle"],
-      this.leftDownRef.current
-    );
+    // // upper leg
+    // this.drawLimb(
+    //   this.startPosition["rightHip"],
+    //   this.startPosition["rightKnee"],
+    //   this.rightUpperRef.current
+    // );
+    // this.drawLimb(
+    //   this.startPosition["leftHip"],
+    //   this.startPosition["leftKnee"],
+    //   this.leftUpperRef.current
+    // );
 
-    this.drawNose(this.startPosition.nose);
+    // // bottom leg
+    // this.drawLimb(
+    //   this.startPosition["rightKnee"],
+    //   this.startPosition["rightAnkle"],
+    //   this.rightDownRef.current
+    // );
+    // this.drawLimb(
+    //   this.startPosition["leftKnee"],
+    //   this.startPosition["leftAnkle"],
+    //   this.leftDownRef.current
+    // );
 
-    this.drawShoes(this.startPosition.leftAnkle, this.startPosition.rightAnkle);
+    // this.drawNose(this.startPosition.nose);
+
+    // this.drawShoes(this.startPosition.leftAnkle, this.startPosition.rightAnkle);
   };
 
   checkIfUserIsInStartPosition = pose => {
