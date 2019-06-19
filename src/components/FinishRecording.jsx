@@ -95,7 +95,7 @@ class FinishRecording extends Component {
             >
               Replay
             </MyButton>
-            {this.state.replayRecording && <VideoWindow recordedMoves={this.props.newSong}/>}
+            {this.state.replayRecording && <VideoWindow recordedMoves={this.props.newSong.moves}/>}
           </div>
         )}
       </div>

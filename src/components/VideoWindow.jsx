@@ -391,7 +391,7 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
-        if (!this.props.isUserReady) {
+        if (!this.props.isUserReady && !this.props.recordedMoves) {
           this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
         } else if (!this.props.isRecording || this.props.recordedMoves) {
