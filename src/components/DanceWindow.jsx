@@ -10,16 +10,9 @@ class DanceWindow extends Component {
     super(props);
     this.audioPlayerRef = new React.createRef();
   }
-
-  // startLevel = () => {
-  //   this.audioPlayerRef.current.play();
-  // };
-
-  // componentDidUpdate() {
-  //   if (this.props.isCountdownFinished) {
-  //     this.startLevel();
-  //   }
-  // }
+  getTimeLeft = event => {
+    console.log("GET TIME", event.target.getDuration());
+  };
 
   render() {
     return (
@@ -38,6 +31,7 @@ class DanceWindow extends Component {
               height: "1",
               width: "1"
             }}
+            onStateChange={this.getTimeLeft}
             onEnd={this.props.audioFinished}
             muted={false}
           />
