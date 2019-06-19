@@ -38,7 +38,7 @@ class SaveMoves extends Component {
       danceName: "",
       saved: false,
       error: true,
-      errorDescription: ""
+      errorDescription: "",
     };
   }
   handleClose = () => {
@@ -50,7 +50,7 @@ class SaveMoves extends Component {
   };
 
   save = () => {
-    if (this.state.danceName === "") {
+    if (!this.state.danceName) {
       console.log("error");
       this.setState({ errorDescription: "Dance name cannot be blank" });
     } else {
@@ -126,18 +126,12 @@ class SaveMoves extends Component {
                 justifyContent: "center"
               }}
             >
-              {/* {this.state.error.length > 0 && (
-                <MyTypography variant="body1" component="h2">
-                  {this.state.error}
-                </MyTypography>
-              )} */}
-
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                name="How would you like to call your dance?"
+                name="What would you like to call your dance?"
                 label="Dance Name"
                 type="danceName"
                 id="danceName"
