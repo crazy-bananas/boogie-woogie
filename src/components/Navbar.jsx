@@ -6,25 +6,12 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { connect } from "react-redux";
 import logo from "../images/logo.svg";
-import axios from "axios";
-import { Route, Link, Router } from "react-router-dom";
+import "../styles/navbar.css";
+import AppBars from "./AppBar";
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #E91E63 20%, #9C27B0 50%, #673AB7 90%)"
-  //  backgroundColor: "#0a1747"
 });
-export class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { authenticated: false };
-  }
-  async getUserInfo() {
-    return await axios.get("https://dev-boogie-woogie.auth0.com/userinfo", {
-      headers: {
-        Authorization: `Bearer ${this.props.auth.getAccessToken()}`
-      }
-    });
-  }
-
+class Navbar extends Component {
   componentDidMount() {
     const { isAuthenticated } = this.props.auth;
     this.setState({ authenticated: isAuthenticated() });
@@ -32,7 +19,7 @@ export class Navbar extends Component {
 
   render() {
     return (
-      <div>
+      <div id="navbar">
         <MyAppBar position="static" className="navbar">
           <Toolbar>
             <Grid alignItems="center" container>
@@ -52,36 +39,11 @@ export class Navbar extends Component {
                     Login
                   </Button>
                 )}
-                {this.state.authenticated && (
-                  <div>
-                    <Button color="inherit" onClick={this.props.auth.logout}>
-                      Logout
-                    </Button>
-
-                    <Button color="inherit">
-                      <Link
-                        to="/profile"
-                        style={{ textDecoration: "none", color: "white" }}
-                        component="button"
-                      >
-                        Profile
-                      </Link>
-                    </Button>
-                  </div>
-                )}
-              </Grid>
-
-              <Grid item>
                 {this.props.auth.isAuthenticated() && (
-                  <Button
-                    color="inherit"
-                    onClick={async () => {
-                      const userInfo = await this.getUserInfo();
-                      console.log(userInfo.data);
-                    }}
-                  >
-                    Console Log User Info
-                  </Button>
+                  <AppBars
+                    auth={this.props.auth}
+                    picture={this.props.userAuthInfo.picture}
+                  />
                 )}
               </Grid>
             </Grid>
@@ -89,28 +51,18 @@ export class Navbar extends Component {
         </MyAppBar>
       </div>
     );
-    document.getElementById("root");
   }
 }
 
 const mapStateToProps = state => {
   return {
+    userAuthInfo: state.userAuthInfo,
     songList: state.songList,
     indexOfSelectedSong: state.songSelected
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    resetState: () => {
-      dispatch({
-        type: "RESET_STATE"
-      });
-    }
-  };
-};
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(Navbar);

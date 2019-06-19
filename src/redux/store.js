@@ -101,7 +101,7 @@ const appReducer = (state = initialState, action) => {
 
     case "SELECTED_MOVEID": {
       const newState = { ...state };
-      console.log(action.payload);
+      console.log("SELECTED_MOVE_ID", action.payload);
       newState.moveSelected = action.payload;
       return newState;
     }

@@ -43,12 +43,11 @@ export class HighScoreList extends Component {
         if (data.data.length !== 0) {
           this.setState({ moves: data.data });
           this.setState({
-            title: "Please select which dance would you like to dance on"
+            title: "Please select which movies you like to dance to"
           });
         } else {
           this.setState({
-            title:
-              "Sorry no moves are registered for this Song. You can go home and record your own moves"
+            title: "Sorry no moves are registered for this Song."
           });
         }
 
