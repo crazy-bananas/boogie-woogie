@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../styles/scoreCard.css";
+import "../styles/finishrecording.css";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import SaveMoves from "./SaveMoves";
@@ -42,7 +43,7 @@ class FinishRecording extends Component {
       <div>
         {this.state.loadingRecordResult && <LoadingRecordResult />}
         {!this.state.loadingRecordResult && (
-          <div id="card">
+          <div id="save-move">
             {!this.state.saved && (
               <div>
                 <h1>
