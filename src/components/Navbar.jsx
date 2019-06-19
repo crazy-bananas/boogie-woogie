@@ -9,9 +9,18 @@ import logo from "../images/logo.svg";
 import Retry from "./Retry"
 import "../styles/navbar.css";
 import AppBars from "./AppBar";
+import { Link } from "@material-ui/core";
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #E91E63 20%, #9C27B0 50%, #673AB7 90%)"
 });
+
+const HomeButton = styled(Button)({
+  fontFamily: "Gloria Hallelujah",
+  fontSize:"25px",
+  color:"#FFF",
+  fontWeight: "1000"
+});
+
 class Navbar extends Component {
   componentDidMount() {
     const { isAuthenticated } = this.props.auth;
@@ -29,9 +38,9 @@ class Navbar extends Component {
               </Grid>
 
               <Grid item>
-                <h1 style={{ fontFamily: "Gloria Hallelujah" }}>
+                <HomeButton>
                   Boogie Woogie
-                </h1>
+                </HomeButton>
               </Grid>
 
               <Grid item style={{ position: "absolute", right: 10 }}>

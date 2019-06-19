@@ -67,7 +67,7 @@ export class HighScoreList extends Component {
                 this.state.moves.map((move, index) => {
                   return (
                     <MyListItem>
-                      <ListItemIcon >
+                      <ListItemIcon>
                         <MusicVideo />
                       </ListItemIcon>
                       <ListItem
