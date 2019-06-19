@@ -89,38 +89,59 @@ export class VideoWindow extends Component {
     };
 
     this.startPosition = {
+      // Only nose and wrists are used to check starting position.
+      // Others are used for drawing body and calculate angles.
       nose: {
         x: 404,
         y: 165
       },
       leftWrist: {
         x: 460,
-        // x: 618,
-        y: 350
-        // y: 418
+        y: 300
       },
       rightWrist: {
-        x: 356,
-        y: 350
+        x: 340,
+        y: 300
       },
-      // The elbows are only used to calculate
-      // the angle of the hands. They are not
-      // used to see if player is in starting position.
       leftElbow: {
-        x: 459,
-        y: 303
+        x: 443,
+        y: 255
       },
       rightElbow: {
-        x: 364,
-        y: 303
+        x: 355,
+        y: 255
+      },
+      leftShoulder: {
+        x: 437,
+        y: 207
+      },
+      rightShoulder: {
+        x: 360,
+        y: 207
       },
       leftAnkle: {
-        x: 415,
-        y: 535
+        x: 420,
+        y: 565
       },
       rightAnkle: {
-        x: 394,
-        y: 535
+        x: 385,
+        y: 565
+      },
+      leftHip: {
+        x: 423,
+        y: 337
+      },
+      rightHip: {
+        x: 378,
+        y: 337
+      },
+      leftKnee: {
+        x: 425,
+        y: 473
+      },
+      rightKnee: {
+        x: 380,
+        y: 473
       }
     };
   }
@@ -151,13 +172,57 @@ export class VideoWindow extends Component {
       this.startPosition.rightElbow,
       this.rightHandRef.current
     );
+    // bottom arm
+    this.drawLimb(
+      this.startPosition["leftElbow"],
+      this.startPosition["leftWrist"],
+      this.leftDownRef.current
+    );
+    this.drawLimb(
+      this.startPosition["rightElbow"],
+      this.startPosition["rightWrist"],
+      this.rightDownRef.current
+    );
+
+    // upper arm
+    this.drawLimb(
+      this.startPosition["leftShoulder"],
+      this.startPosition["leftElbow"],
+      this.leftUpperRef.current
+    );
+    this.drawLimb(
+      this.startPosition["rightShoulder"],
+      this.startPosition["rightElbow"],
+      this.rightUpperRef.current
+    );
+
+    // upper leg
+    this.drawLimb(
+      this.startPosition["rightHip"],
+      this.startPosition["rightKnee"],
+      this.rightUpperRef.current
+    );
+    this.drawLimb(
+      this.startPosition["leftHip"],
+      this.startPosition["leftKnee"],
+      this.leftUpperRef.current
+    );
+
+    // bottom leg
+    this.drawLimb(
+      this.startPosition["rightKnee"],
+      this.startPosition["rightAnkle"],
+      this.rightDownRef.current
+    );
+    this.drawLimb(
+      this.startPosition["leftKnee"],
+      this.startPosition["leftAnkle"],
+      this.leftDownRef.current
+    );
 
     this.drawNose(this.startPosition.nose);
 
     this.drawShoes(this.startPosition.leftAnkle, this.startPosition.rightAnkle);
-
-    this.drawPoint(this.startPosition.leftElbow, this.ctx);
-    this.drawPoint(this.startPosition.rightElbow, this.ctx);
   };
 
   checkIfUserIsInStartPosition = pose => {
