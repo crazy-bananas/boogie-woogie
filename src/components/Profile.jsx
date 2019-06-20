@@ -13,7 +13,9 @@ import { connect } from "react-redux";
 import backIcon from "../images/backArrow.png";
 import Navbar from "./Navbar";
 import axios from "axios";
-import ProfileTable from "./ProfileTable"
+import ProfileTable from "./ProfileTable";
+import { Link } from "react-router-dom";
+import { isArray } from "util";
 
 class Profile extends Component {
   constructor(props) {
@@ -41,14 +43,23 @@ class Profile extends Component {
       }
     }
   }
+  getOverallScore = data => {
+    let score = 0;
+    if (data.length === 0) return score;
+
+    for (let i = 0; i < data.length; i++) {
+      score += data[i].score;
+    }
+    return Math.round(score / data.length);
+  };
   isUserDataFetched = () => {
-    if (this.props.userAuthInfo) {
+    if (this.props.userAuthInfo && this.state.data !== 0) {
       return (
         <div>
           <Fab size="medium" color="secondary" aria-label="Add" className="fab">
-            <a href="/">
+            <Link to="/">
               <img src={backIcon} alt="back arrow icon" />
-            </a>
+            </Link>
           </Fab>
           <Avatar
             alt="Profile Picture"
@@ -61,27 +72,14 @@ class Profile extends Component {
           <Typography variant="body2" gutterBottom>
             Email: {this.props.userAuthInfo.email}
           </Typography>
-          <p className="p"> Overall Score : {this.state.data.score} Points</p>
+          <p className="p">
+            {" "}
+            Overall Score : {this.getOverallScore(this.state.data.data)} Points
+          </p>
         </div>
       );
     }
     return <Loading />;
-  };
-  dummyFriendsCreator = () => {
-    const friend = (
-      <Card className="card">
-        <CardContent className="cardBox">
-          <Box className="friendBox">
-            <Avatar alt="Friend Picture" src={bananaImage} className="avatar" />
-          </Box>
-          <p>Jhonny Banana</p>
-        </CardContent>
-      </Card>
-    );
-    for (let i = 0; i < 10; i++) {
-      this.dummyFriendList.push(friend);
-    }
-    return this.dummyFriendList;
   };
 
   render() {
@@ -91,15 +89,6 @@ class Profile extends Component {
         <Container className="wrapper">
           <Box flexDirection="col">{this.isUserDataFetched()}</Box>
           <ProfileTable data={this.state.data} />
-          <footer className="friends">
-            <Card className="card">
-              <CardContent>
-                <Box display="flex" flexDirection="row">
-                  {this.dummyFriendsCreator()}
-                </Box>
-              </CardContent>
-            </Card>
-          </footer>
         </Container>
       </div>
     );

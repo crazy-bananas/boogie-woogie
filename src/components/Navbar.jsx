@@ -6,6 +6,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { connect } from "react-redux";
 import logo from "../images/logo.svg";
+import Retry from "./Retry"
 import "../styles/navbar.css";
 import AppBars from "./AppBar";
 import { Link } from "@material-ui/core";
@@ -54,6 +55,11 @@ class Navbar extends Component {
                     picture={this.props.userAuthInfo.picture}
                   />
                 )}
+                </Grid>
+                <Grid item style={{position:"absolute",right:100}}>
+                {this.props.indexOfSelectedSong !== "" && this.props.moveSelected !== "" &&(
+                  <Retry/>
+                )}
               </Grid>
             </Grid>
           </Toolbar>
@@ -67,7 +73,8 @@ const mapStateToProps = state => {
   return {
     userAuthInfo: state.userAuthInfo,
     songList: state.songList,
-    indexOfSelectedSong: state.songSelected
+    indexOfSelectedSong: state.songSelected,
+    moveSelected:state.moveSelected
   };
 };
 

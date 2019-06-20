@@ -86,6 +86,20 @@ export default function MenuAppBar(props) {
               </Link>
             </Button>
           </MenuItem>
+          {/* <MenuItem>
+            <Button>
+              <Link
+                to="/highscore"
+                style={{
+                  textDecoration: "none",
+                  marginLeft: 30
+                }}
+                component="button"
+              >
+                Highscore
+              </Link>
+            </Button>
+          </MenuItem> */}
         </Menu>
       </div>
     </div>

@@ -126,6 +126,7 @@ export default function CustomPaginationActionsTable(props) {
     if (props.data === 0) {
       return <Loading />;
     }
+
     const emptyRows =
       rowsPerPage -
       Math.min(rowsPerPage, props.data.length - page * rowsPerPage);
@@ -158,7 +159,7 @@ export default function CustomPaginationActionsTable(props) {
               {props.data.data
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => (
-                  <TableRow key={row.name}>
+                  <TableRow>
                     <TableCell component="th" scope="row">
                       {row.user}
                     </TableCell>

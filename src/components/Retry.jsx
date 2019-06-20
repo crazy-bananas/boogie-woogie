@@ -3,11 +3,10 @@ import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "../styles/retry.css";
-import homeIcon from "../images/home.png";
-import retryDanceIcon from "../images/retrydance.png";
+import homeIcon from "../images/home2.png";
+import retryDanceIcon from "../images/balckRetry.png";
 const useStyles = makeStyles(theme => ({
   buttons:{
-    backgroundColor:"#FA7F2D",
   },
   button: {
     margin: theme.spacing(1)
@@ -31,21 +30,17 @@ function Retry(props) {
           onClick={() => {
             retry();
           }}
-          variant="contained"
           className={classes.buttons}
         >
-          <img src={retryDanceIcon} alt="retryIcon" title="retry this dance" />
+          <img  style={{width:30,height:30}} src={retryDanceIcon} alt="retryIcon" title="retry this dance" />
         </Button>
-      </div>
-      <div id="home">
         <Button
           onClick={() => {
             home();
           }}
-          variant="contained"
           className={classes.buttons}
         >
-          <img src={homeIcon} alt="home icon" title="return home"/>
+          <img style={{width:30,height:30}} src={homeIcon} alt="home icon" title="return home"/>
         </Button>
       </div>
     </div>
