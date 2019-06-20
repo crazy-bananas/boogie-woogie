@@ -4,7 +4,6 @@ import App from "./App";
 import AuthCallback from "./components/AuthCallback/AuthCallback";
 import Auth from "./authentication/Auth";
 import Profile from "./components/Profile";
-import HighScore from "./components/HighScore"
 
 import history from "./history";
 
@@ -30,11 +29,6 @@ export default () => {
           path="/profile"
           render={props => <Profile auth={auth} {...props} />}
         />
-        {/* <Route
-          exact
-          path="/highscore"
-          render={props => <HighScore auth={auth} {...props} />}
-        /> */}
         <Route
           path="/login"
           render={props => {
