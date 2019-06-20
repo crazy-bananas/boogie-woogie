@@ -103,7 +103,7 @@ const appReducer = (state = initialState, action) => {
 
     case "USER_AUTH_INFO": {
       const newState = { ...state };
-      console.log(action.payload);
+      console.log("USER AUTH", action.payload);
       newState.userAuthInfo = action.payload;
       return newState;
     }

@@ -1,10 +1,15 @@
 import auth0 from "auth0-js";
-import history from "../history"
+import history from "../history";
 import dotenv from "dotenv";
 dotenv.config();
 
-const REACT_APP_AUTH_REDIRECT_LINK = process.env.REACT_APP_AUTH_REDIRECT_LINK || "https://user-login.d22dsl66lm2rw9.amplifyapp.com/";
-const REDIRECT_SUB = REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length -1] === "/" ? "login" : "/login";
+const REACT_APP_AUTH_REDIRECT_LINK =
+  process.env.REACT_APP_AUTH_REDIRECT_LINK ||
+  "https://user-login.d22dsl66lm2rw9.amplifyapp.com/";
+const REDIRECT_SUB =
+  REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length - 1] === "/"
+    ? "login"
+    : "/login";
 //
 export default class Auth {
   accessToken;
@@ -59,6 +64,8 @@ export default class Auth {
 
     // Set the time that the Access Token will expire at
     let expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
+    localStorage.setItem("expireAt", expiresAt);
+
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
@@ -90,6 +97,10 @@ export default class Auth {
 
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("expireAt");
+    localStorage.removeItem("user");
+    localStorage.removeItem("picture");
+    localStorage.removeItem("email");
 
     this.auth0.logout({
       returnTo: window.location.origin
@@ -102,7 +113,7 @@ export default class Auth {
   isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
-    let expiresAt = this.expiresAt;
+    let expiresAt = localStorage.getItem("expireAt");
     console.log(expiresAt);
     return new Date().getTime() < expiresAt;
   }
