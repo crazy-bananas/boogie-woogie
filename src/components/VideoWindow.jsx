@@ -178,7 +178,7 @@ export class VideoWindow extends Component {
 
   drawCurrentDancePose = () => {
     if (this.indexCorrectP >= this.state.correctPoses.length - 1) {
-      console.log("drawCurrentDancePose was called to many times");
+      console.log("drawCurrentDancePose was called too many times");
       return;
     }
 
@@ -265,7 +265,6 @@ export class VideoWindow extends Component {
   };
 
   componentDidMount() {
-    console.log("I mounted a windwo")
     bindPage().then(response => {
       this.setState({
         loaded: true
@@ -273,7 +272,6 @@ export class VideoWindow extends Component {
     });
     
     if (!this.props.isRecording) {
-      console.log("Im here")
       axios
         .get(
           `https://boogie-banana.herokuapp.com/api/moves/${
