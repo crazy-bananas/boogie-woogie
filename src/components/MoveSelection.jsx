@@ -51,8 +51,6 @@ export class HighScoreList extends Component {
             title: "Sorry no moves are registered for this Song."
           });
         }
-
-        console.log(data);
       });
   }
 
@@ -104,7 +102,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setSelectedMoveId: event => {
-      console.log(event.target.dataset.key);
       dispatch({
         type: "SELECTED_MOVEID",
         payload: event.target.dataset.key
