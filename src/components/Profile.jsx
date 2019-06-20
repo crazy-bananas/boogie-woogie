@@ -36,7 +36,6 @@ class Profile extends Component {
           )
           .then(data => {
             this.setState({ data: data });
-            console.log(data);
           });
       } catch (error) {
         throw error;
