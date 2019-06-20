@@ -59,7 +59,6 @@ const appReducer = (state = initialState, action) => {
     }
 
     case "AUDIO_FINISHED": {
-      console.log("Store: Audio_FINISHED")
       const newState = { ...state };
       newState.isAudioFinished = true;
 
@@ -67,7 +66,6 @@ const appReducer = (state = initialState, action) => {
     }
 
     case "RESET_STATE": {
-      console.log("RESETTING STATE");
       return { ...initialState };
     }
     case "RETRY_DANCE": {
@@ -78,8 +76,6 @@ const appReducer = (state = initialState, action) => {
     }
     case "ADD_NEW_SONG": {
       const newState = { ...state };
-      console.log(action.payload);
-      //   newState.newSong.artist = action.payload.artist;
       newState.newSong.title = action.payload.title;
       newState.newSong.code = action.payload.code;
 
@@ -95,14 +91,12 @@ const appReducer = (state = initialState, action) => {
 
     case "SELECTED_MOVEID": {
       const newState = { ...state };
-      console.log("SELECTED_MOVE_ID", action.payload);
       newState.moveSelected = action.payload;
       return newState;
     }
 
     case "USER_AUTH_INFO": {
       const newState = { ...state };
-      console.log(action.payload);
       newState.userAuthInfo = action.payload;
       return newState;
     }
