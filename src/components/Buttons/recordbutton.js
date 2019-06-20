@@ -8,7 +8,7 @@ class RecordButton extends Component {
       <div>
         {this.props.auth.isAuthenticated() && <Button
           onClick={() => {
-            this.switchModal();
+            this.props.switchModal();
           }}
           variant="contained"
           color="primary"

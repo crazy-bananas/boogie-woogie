@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { Timer } from "./Timer.jsx";
 import Combo from "./animation/Combo.jsx";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
@@ -57,7 +56,7 @@ export class VideoWindow extends Component {
       noseRef: this.noseRef,
       leftShoeRef: this.leftShoeRef,
       rightShoeRef: this.rightShoeRef
-    }
+    };
 
     this.loaded = false;
     this.ctx = "";
@@ -159,7 +158,7 @@ export class VideoWindow extends Component {
   }
 
   drawStartPosition = () => {
-    drawPose(this.ctx, this.startPosition, this.bodyPartReferences)
+    drawPose(this.ctx, this.startPosition, this.bodyPartReferences);
   };
 
   checkIfUserIsInStartPosition = pose => {
@@ -183,8 +182,8 @@ export class VideoWindow extends Component {
     }
 
     drawPose(
-      this.ctx, 
-      this.state.correctPoses[this.indexCorrectP], 
+      this.ctx,
+      this.state.correctPoses[this.indexCorrectP],
       this.bodyPartReferences
     );
   };
@@ -271,17 +270,9 @@ export class VideoWindow extends Component {
         loaded: true
       });
     });
-<<<<<<< HEAD
-    if (this.props.recordedMoves) {
-      console.log("Recorded moves", this.props.recordedMoves);
-      this.setState({ correctPoses: this.props.recordedMoves });
-    } else if (!this.props.isRecording) {
-      console.log("Im here");
-=======
-    
+
     if (!this.props.isRecording) {
-      console.log("Im here")
->>>>>>> d68ee351fd1de59f516e8b9f7986e7a667e2c4e5
+      console.log("Im here");
       axios
         .get(
           `https://boogie-banana.herokuapp.com/api/moves/${
@@ -661,12 +652,8 @@ export class VideoWindow extends Component {
                     </div>
                   </div>
                 )}
-<<<<<<< HEAD
                 {this.props.isCountdownFinished}
                 <Retry />
-=======
-                {this.props.isCountdownFinished && <Timer />}
->>>>>>> d68ee351fd1de59f516e8b9f7986e7a667e2c4e5
               </div>
             </Grid>
           </Grid>

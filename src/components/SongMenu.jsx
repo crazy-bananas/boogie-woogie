@@ -117,7 +117,7 @@ class SongMenu extends Component {
             <Typography component="h1" variant="h5">
               Record your dance
             </Typography>
-            <RecordButton auth={this.props.auth} />
+            <RecordButton auth={this.props.auth} switchModal={this.switchModal} />
           </div>
         </Grid>
         <div />
