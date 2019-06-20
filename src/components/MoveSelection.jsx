@@ -50,8 +50,6 @@ export class HighScoreList extends Component {
             title: "Sorry no moves are registered for this Song."
           });
         }
-
-        console.log(data);
       });
   }
 

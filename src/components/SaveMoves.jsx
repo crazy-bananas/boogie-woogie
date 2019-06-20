@@ -51,7 +51,6 @@ class SaveMoves extends Component {
 
   save = () => {
     if (!this.state.danceName) {
-      console.log("error");
       this.setState({ errorDescription: "Dance name cannot be blank" });
     } else {
       axios
@@ -61,7 +60,6 @@ class SaveMoves extends Component {
           name: this.state.danceName
         })
         .then(data => {
-          console.log("move saved");
           this.setState({
             saved: true
           });
@@ -80,9 +78,7 @@ class SaveMoves extends Component {
         .post("https://boogie-banana.herokuapp.com/api/songs", {
           code: this.props.newSong.code,
           title: this.props.newSong.title
-          //   artist: this.props.newSong.artist
-        })
-        .then(data => console.log("song saved"));
+        }) // TODO: We need error check here, and message to user on success.
     }
   };
 

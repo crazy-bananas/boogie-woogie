@@ -12,14 +12,12 @@ class  HighShcore extends Component {
     }
   }
   fetchUsersScores=()=>{
-    console.log(this.props)
     axios
     .get(`
       https://boogie-banana.herokuapp.com/api/scores/${this.props.songSelected}/${this.props.moveSelected}/`
     )
     .then(data => {
       this.setState({ scoreList: data.data });
-      console.log(this.state.scoreList)
     });
   }
   componentDidMount() {
