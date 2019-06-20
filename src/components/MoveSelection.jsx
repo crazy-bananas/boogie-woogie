@@ -44,7 +44,7 @@ export class HighScoreList extends Component {
         if (data.data.length !== 0) {
           this.setState({
             moves: data.data,
-            title: "Please select which movies you like to dance to"
+            title: "Please select which move you like to dance to"
           });
         } else {
           this.setState({
