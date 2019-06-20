@@ -10,7 +10,6 @@ import anime from "animejs";
 
 import { drawPose } from "./canvasDrawings";
 
-import Retry from "../components/Retry";
 import Loading from "../components/Loading";
 
 // Images for the body
