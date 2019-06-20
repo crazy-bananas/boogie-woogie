@@ -60,7 +60,6 @@ class Combo extends Component {
 
   render() {
     if (this.props.combo > 4) {
-      console.log("animateCombo");
       this.animateCombo();
     }
     return (

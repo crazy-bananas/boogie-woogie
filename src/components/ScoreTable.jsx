@@ -59,7 +59,6 @@ export default function CustomizedTables(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {console.log(props)}
           {props.scoreList.map(row => (
             <StyledTableRow key={row.name}>
               <StyledTableCell align="left">

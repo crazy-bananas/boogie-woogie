@@ -72,6 +72,5 @@ export function saveObject(file) {
       }
     );
   });
-  console.log("object", saveObject);
   return saveObject;
 }

@@ -40,8 +40,6 @@ class App extends Component {
       } catch (err) {
         throw err;
       }
-    } else {
-      console.log("please login");
     }
   }
 

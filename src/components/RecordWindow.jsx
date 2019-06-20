@@ -18,7 +18,6 @@ class RecordWindow extends Component {
       <div>
         <VideoWindow />
         <Counter />
-        {console.log(this.props.newSong)}
         {this.props.isCountdownFinished && (
           <YouTube
             videoId={this.props.newSong.code}

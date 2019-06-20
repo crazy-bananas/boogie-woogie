@@ -39,7 +39,6 @@ export default class Auth {
         this.setSession(authResult);
       } else if (err) {
         history.replace("/failedlogin");
-        console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
     });
@@ -68,13 +67,11 @@ export default class Auth {
   }
 
   renewSession(check) {
-    console.log(check);
     this.auth0.checkSession({}, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
       } else if (err) {
         this.logout();
-        console.log(err);
         alert(
           `Could not get a new token (${err.error}: ${err.error_description}).`
         );
@@ -103,7 +100,6 @@ export default class Auth {
     // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = this.expiresAt;
-    console.log(expiresAt);
     return new Date().getTime() < expiresAt;
   }
 }
