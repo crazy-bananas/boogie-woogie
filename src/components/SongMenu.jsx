@@ -125,7 +125,7 @@ class SongMenu extends Component {
             <Typography component="h1" variant="h5">
               Record your dance
             </Typography>
-            <Button
+            {this.props.auth.isAuthenticated() && <Button
               onClick={() => {
                 this.switchModal();
               }}
@@ -133,7 +133,8 @@ class SongMenu extends Component {
               color="primary"
             >
               Record
-            </Button>
+            </Button>}
+            {!this.props.auth.isAuthenticated() && 
                 <Tooltip
                   disableFocusListener
                   disableTouchListener
@@ -145,7 +146,7 @@ class SongMenu extends Component {
                   >
                     Record
                   </Button>
-                </Tooltip>
+                </Tooltip>}
           </div>
         </Grid>
         <div />
