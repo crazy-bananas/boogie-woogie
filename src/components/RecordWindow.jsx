@@ -10,7 +10,9 @@ class RecordWindow extends Component {
     super(props);
     this.audioPlayerRef = new React.createRef();
   }
-
+  getTimeLeft = event => {
+    console.log("GET TIME", event.target.getDuration());
+  };
   render() {
     return (
       <div>
@@ -29,6 +31,7 @@ class RecordWindow extends Component {
               height: "1",
               width: "1"
             }}
+            onReady={this.getTimeLeft}
             muted={false}
           />
         )}

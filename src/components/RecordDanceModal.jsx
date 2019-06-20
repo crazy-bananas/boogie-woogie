@@ -77,10 +77,11 @@ class SimpleModal extends Component {
           });
         })
         .catch(err => {
-          this.props.addSong({
-            title: "unknown",
-            code: this.state.code.substring(this.state.code.indexOf("=") + 1)
-          });
+          {
+            this.setState({
+              error: "Couldn't get title of youtube video. Please try again"
+            });
+          }
         });
 
       this.handleClose();
