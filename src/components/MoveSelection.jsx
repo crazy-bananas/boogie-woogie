@@ -65,10 +65,13 @@ export class HighScoreList extends Component {
               {this.state.moves.length !== 0 &&
                 this.state.moves.map((move, index) => {
                   return (
-                    <MyListItem>
+                   <List style ={{display:"inline-flex"}}>
+                     <MyListItem>
                       <ListItemIcon>
                         <MusicVideo />
                       </ListItemIcon>
+                      </MyListItem>
+                      <MyListItem>
                       <ListItem
                         style={{ margin: 0, padding: 0 }}
                         key={index}
@@ -78,7 +81,8 @@ export class HighScoreList extends Component {
                       >
                         {move.name}
                       </ListItem>
-                    </MyListItem>
+                      </MyListItem>
+                   </List>
                   );
                 })}
             </MyList>
