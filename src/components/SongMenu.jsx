@@ -22,6 +22,7 @@ import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
 
 import axios from "axios";
+import RecordButton from "./Buttons/recordbutton";
 
 const MyPaper = styled(Paper)({
   display: "flex",
@@ -125,29 +126,7 @@ class SongMenu extends Component {
             <Typography component="h1" variant="h5">
               Record your dance
             </Typography>
-            {this.props.auth.isAuthenticated() && <Button
-              onClick={() => {
-                this.switchModal();
-              }}
-              variant="contained"
-              color="primary"
-            >
-              Record
-            </Button>}
-            {!this.props.auth.isAuthenticated() && 
-                <Tooltip
-                  disableFocusListener
-                  disableTouchListener
-                  title="Please log in to record new dance moves"
-                >
-                  <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.props.auth.login}
-                  >
-                    Record
-                  </Button>
-                </Tooltip>}
+            <RecordButton auth={this.props.auth} />
           </div>
         </Grid>
         <div />
