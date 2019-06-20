@@ -20,7 +20,7 @@ const MyListItem = styled(ListItem)({
   width: "50vh"
 });
 
-export class HighScoreList extends Component {
+export class MoveSelection extends Component {
   constructor(props) {
     super(props);
     // add song name or make song name global.
@@ -63,19 +63,15 @@ export class HighScoreList extends Component {
               {this.state.moves.length !== 0 &&
                 this.state.moves.map((move, index) => {
                   return (
-                    <MyListItem>
+                    <MyListItem 
+                      onClick={e => this.props.setSelectedMoveId(e)}
+                      key={index}
+                      data-key={move._id}
+                    >
                       <ListItemIcon>
                         <MusicVideo />
                       </ListItemIcon>
-                      <ListItem
-                        style={{ margin: 0, padding: 0 }}
-                        key={index}
-                        data-key={move._id}
-                        data-index={index}
-                        onClick={e => this.props.setSelectedMoveId(e)}
-                      >
-                        {move.name}
-                      </ListItem>
+                      {move.name}
                     </MyListItem>
                   );
                 })}
@@ -112,4 +108,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(HighScoreList);
+)(MoveSelection);

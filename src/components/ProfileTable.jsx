@@ -14,7 +14,6 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import Loading from "./Loading";
 import TableHead from "@material-ui/core/TableHead";
-import { fontWeight } from "@material-ui/system";
 
 const useStyles1 = makeStyles(theme => ({
   root: {
