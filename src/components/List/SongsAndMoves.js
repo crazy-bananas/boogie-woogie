@@ -19,8 +19,11 @@ class SongsAndMoves extends Component {
       moves: []
     }
   }
-  handleClick() {
-    console.log("clicked");
+  handleClick(index) {
+    const newState = [...this.state.moves];
+    console.log("new", newState);
+    newState[index] = !newState[index];
+    this.setState({moves: newState});
   }
 
   render(){
@@ -37,14 +40,14 @@ class SongsAndMoves extends Component {
       {this.props.songList.map((song, index) => {
         return (
           <div>
-          <ListItem button onClick={this.handleClick}>
+          <ListItem key={index} button onClick={() => this.handleClick(index)}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
             <ListItemText primary="Inbox" />
-            {true ? <ExpandLess /> : <ExpandMore />}
+            {!!this.state.moves[index] ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          <Collapse in={true} timeout="auto" unmountOnExit>
+          <Collapse in={!!this.state.moves[index]} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItem button>
                 <ListItemIcon>
