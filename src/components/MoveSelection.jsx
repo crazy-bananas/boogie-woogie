@@ -10,6 +10,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import MusicVideo from "@material-ui/icons/MusicVideo";
 import Grid from "@material-ui/core/Grid";
 import "../styles/moveselection.css";
+import Fab from "@material-ui/core/Fab";
+import backIcon from "../images/backArrow.png";
+import Link from "@material-ui/core/Link";
 
 const MyList = styled(List)({
   background: "rgba(218, 218, 218, 0.7)"
@@ -63,24 +66,38 @@ export class HighScoreList extends Component {
               {this.state.moves.length !== 0 &&
                 this.state.moves.map((move, index) => {
                   return (
-                   <List style ={{display:"inline-flex"}}>
-                     <MyListItem>
-                      <ListItemIcon>
-                        <MusicVideo />
-                      </ListItemIcon>
-                      </MyListItem>
-                      <MyListItem>
-                      <ListItem
-                        style={{ margin: 0, padding: 0 }}
-                        key={index}
-                        data-key={move._id}
-                        data-index={index}
-                        onClick={e => this.props.setSelectedMoveId(e)}
-                      >
-                        {move.name}
-                      </ListItem>
-                      </MyListItem>
-                   </List>
+                    <div>
+                      <div style={{ position: "absolute", left: 30, top: 100 }}>
+                        <Fab
+                          size="medium"
+                          color="secondary"
+                          aria-label="Add"
+                          className="fab"
+                        >
+                          <Link href="/">
+                            <img src={backIcon} alt="back arrow icon" />
+                          </Link>
+                        </Fab>
+                      </div>
+                      <List style={{ display: "inline-flex" }}>
+                        <MyListItem>
+                          <ListItemIcon>
+                            <MusicVideo />
+                          </ListItemIcon>
+                        </MyListItem>
+                        <MyListItem>
+                          <ListItem
+                            style={{ margin: 0, padding: 0 }}
+                            key={index}
+                            data-key={move._id}
+                            data-index={index}
+                            onClick={e => this.props.setSelectedMoveId(e)}
+                          >
+                            {move.name}
+                          </ListItem>
+                        </MyListItem>
+                      </List>
+                    </div>
                   );
                 })}
             </MyList>
