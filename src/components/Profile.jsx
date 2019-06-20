@@ -13,8 +13,9 @@ import { connect } from "react-redux";
 import backIcon from "../images/backArrow.png";
 import Navbar from "./Navbar";
 import axios from "axios";
-import ProfileTable from "./ProfileTable"
-import { Link } from "react-router-dom"
+import ProfileTable from "./ProfileTable";
+import { Link } from "react-router-dom";
+import { isArray } from "util";
 
 class Profile extends Component {
   constructor(props) {
@@ -42,14 +43,15 @@ class Profile extends Component {
       }
     }
   }
-  getOverallScore=(data)=>{
-    let score = 0
+  getOverallScore = data => {
+    let score = 0;
+    if (data.length === 0) return score;
+
     for (let i = 0; i < data.length; i++) {
-        score+=data[i].score
-      
+      score += data[i].score;
     }
-    return Math.round(score/data.length)
-  }
+    return Math.round(score / data.length);
+  };
   isUserDataFetched = () => {
     if (this.props.userAuthInfo && this.state.data !== 0) {
       return (
@@ -57,7 +59,7 @@ class Profile extends Component {
           <Fab size="medium" color="secondary" aria-label="Add" className="fab">
             <Link to="/">
               <img src={backIcon} alt="back arrow icon" />
-           </Link>
+            </Link>
           </Fab>
           <Avatar
             alt="Profile Picture"
@@ -70,13 +72,15 @@ class Profile extends Component {
           <Typography variant="body2" gutterBottom>
             Email: {this.props.userAuthInfo.email}
           </Typography>
-          <p className="p"> Overall Score : {this.getOverallScore(this.state.data.data)} Points</p>
+          <p className="p">
+            {" "}
+            Overall Score : {this.getOverallScore(this.state.data.data)} Points
+          </p>
         </div>
       );
     }
     return <Loading />;
   };
-
 
   render() {
     return (
