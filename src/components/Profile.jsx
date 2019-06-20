@@ -29,7 +29,9 @@ class Profile extends Component {
         .then(data => {
           this.setState({ data: data });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          throw new Error(`Getting user info: ${error.message}`);
+        });
     }
   }
   getOverallScore = data => {
