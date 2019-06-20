@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { Timer } from "./Timer.jsx";
 import Combo from "./animation/Combo.jsx";
 import * as posenet from "@tensorflow-models/posenet";
 import "../styles/videowindow.css";
@@ -11,7 +10,6 @@ import anime from "animejs";
 
 import { drawPose } from "./canvasDrawings";
 
-import Retry from "../components/Retry";
 import Loading from "../components/Loading";
 
 // Images for the body
@@ -57,7 +55,7 @@ export class VideoWindow extends Component {
       noseRef: this.noseRef,
       leftShoeRef: this.leftShoeRef,
       rightShoeRef: this.rightShoeRef
-    }
+    };
 
     this.loaded = false;
     this.ctx = "";
@@ -159,7 +157,7 @@ export class VideoWindow extends Component {
   }
 
   drawStartPosition = () => {
-    drawPose(this.ctx, this.startPosition, this.bodyPartReferences)
+    drawPose(this.ctx, this.startPosition, this.bodyPartReferences);
   };
 
   checkIfUserIsInStartPosition = pose => {
@@ -183,8 +181,8 @@ export class VideoWindow extends Component {
     }
 
     drawPose(
-      this.ctx, 
-      this.state.correctPoses[this.indexCorrectP], 
+      this.ctx,
+      this.state.correctPoses[this.indexCorrectP],
       this.bodyPartReferences
     );
   };
@@ -270,7 +268,7 @@ export class VideoWindow extends Component {
         loaded: true
       });
     });
-    
+
     if (!this.props.isRecording) {
       axios
         .get(
@@ -494,7 +492,7 @@ export class VideoWindow extends Component {
     } else {
       this.setState({ leftWristMatched: false });
     }
-    
+
     if (matchStatus >= 2) {
       this.props.userIsReady();
       this.clearPositionStatus();
@@ -651,7 +649,7 @@ export class VideoWindow extends Component {
                     </div>
                   </div>
                 )}
-                {this.props.isCountdownFinished && <Timer />}
+                {this.props.isCountdownFinished}
               </div>
             </Grid>
           </Grid>
@@ -703,7 +701,7 @@ const mapDispatchToProps = dispatch => {
         type: "ADD_NEW_MOVES",
         payload: moves
       });
-    },
+    }
   };
 };
 

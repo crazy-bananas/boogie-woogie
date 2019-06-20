@@ -17,7 +17,8 @@ const initialState = {
     moves: []
   },
   isRecording: false,
-  userAuthInfo: {}
+  userAuthInfo: {},
+  time: 0
 };
 
 const appReducer = (state = initialState, action) => {
@@ -98,6 +99,13 @@ const appReducer = (state = initialState, action) => {
     case "USER_AUTH_INFO": {
       const newState = { ...state };
       newState.userAuthInfo = action.payload;
+      return newState;
+    }
+
+    case "SET_TIMER": {
+      const newState = { ...state };
+      console.log("TIMER", action.payload);
+      newState.time = action.payload;
       return newState;
     }
 

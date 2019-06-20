@@ -4,7 +4,6 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
@@ -102,12 +101,9 @@ const useStyles2 = makeStyles(theme => ({
   },
   table: {
     width: "100%",
-     overflowX: "auto" 
-    
+    overflowX: "auto"
   },
-  tableWrapper: {
-
-  },
+  tableWrapper: {}
 }));
 
 export default function CustomPaginationActionsTable(props) {
@@ -133,26 +129,26 @@ export default function CustomPaginationActionsTable(props) {
     return (
       <Paper className={classes.root}>
         <Table>
-        <TableHead>
-              <TableRow >
-                <TablePagination
-                  style={{ width: "900px" }}
-                  rowsPerPageOptions={[5, 10, 25]}
-                  colSpan={3}
-                  count={props.data.data.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: { "aria-label": "Rows per page" },
-                    native: true
-                  }}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableHead>
-        </Table >
+          <TableHead>
+            <TableRow>
+              <TablePagination
+                style={{ width: "900px" }}
+                rowsPerPageOptions={[5, 10, 25]}
+                colSpan={3}
+                count={props.data.data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: { "aria-label": "Rows per page" },
+                  native: true
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableHead>
+        </Table>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <TableBody>
@@ -174,7 +170,6 @@ export default function CustomPaginationActionsTable(props) {
                 </TableRow>
               )}
             </TableBody>
-           
           </Table>
         </div>
       </Paper>
