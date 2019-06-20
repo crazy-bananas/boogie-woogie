@@ -30,11 +30,11 @@ export default () => {
           path="/profile"
           render={props => <Profile auth={auth} {...props} />}
         />
-        <Route
+        {/* <Route
           exact
           path="/highscore"
           render={props => <HighScore auth={auth} {...props} />}
-        />
+        /> */}
         <Route
           path="/login"
           render={props => {

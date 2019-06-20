@@ -86,7 +86,7 @@ export default function MenuAppBar(props) {
               </Link>
             </Button>
           </MenuItem>
-          <MenuItem>
+          {/* <MenuItem>
             <Button>
               <Link
                 to="/highscore"
@@ -99,7 +99,7 @@ export default function MenuAppBar(props) {
                 Highscore
               </Link>
             </Button>
-          </MenuItem>
+          </MenuItem> */}
         </Menu>
       </div>
     </div>
