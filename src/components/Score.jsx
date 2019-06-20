@@ -38,7 +38,6 @@ class Score extends Component {
           <div id="scores">
             <ScoreCard />
             <HighScore />
-            <Retry />
           </div>
         )}
       </div>

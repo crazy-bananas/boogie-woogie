@@ -62,7 +62,6 @@ class ScoreCard extends Component {
     return (
       <div id="card">
         <MyCard>
-          <CardHeader title={this.props.title} />
           <div id="trophy">
             <MyMedia image={Trophy} title="Song Score" />
           </div>
@@ -72,14 +71,6 @@ class ScoreCard extends Component {
               {`(${this.props.score}/${this.props.maxScore})`}
             </MyTypography>
           </CardContent>
-          <CardActions disableSpacing>
-            <IconButton aria-label="Add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="Share">
-              <ShareIcon />
-            </IconButton>
-          </CardActions>
         </MyCard>
       </div>
     );

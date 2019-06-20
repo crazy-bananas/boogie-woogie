@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
+import Loading from "./Loading";
 
 import { styled } from "@material-ui/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MusicVideo from "@material-ui/icons/MusicVideo";
 import Grid from "@material-ui/core/Grid";
 import "../styles/moveselection.css";
 
@@ -38,9 +42,9 @@ export class HighScoreList extends Component {
       )
       .then(data => {
         if (data.data.length !== 0) {
-          this.setState({ moves: data.data });
           this.setState({
-            title: "Please select which movies you like to dance to"
+            moves: data.data,
+            title: "Please select which move you like to dance to"
           });
         } else {
           this.setState({
@@ -51,32 +55,42 @@ export class HighScoreList extends Component {
         console.log(data);
       });
   }
-  render() {
-    return (
-      <div id="move-selection">
-        <h1>{this.state.title}</h1>
-        <Grid container justify="center">
-          <MyList component="div">
-            {this.state.moves.length !== 0 &&
-              this.state.moves.map((move, index) => {
-                {
+
+  isDataFetched = () => {
+    if (this.state.moves.length > 0) {
+      return (
+        <div id="move-selection">
+          <h1>{this.state.title}</h1>
+          <Grid container justify="center">
+            <MyList component="div">
+              {this.state.moves.length !== 0 &&
+                this.state.moves.map((move, index) => {
                   return (
-                    <MyListItem
-                      button
-                      onClick={this.props.setSelectedMoveId}
-                      key={index}
-                      data-key={move._id}
-                      data-index={index}
-                    >
-                      {move.name}
+                    <MyListItem>
+                      <ListItemIcon>
+                        <MusicVideo />
+                      </ListItemIcon>
+                      <ListItem
+                        style={{ margin: 0, padding: 0 }}
+                        key={index}
+                        data-key={move._id}
+                        data-index={index}
+                        onClick={e => this.props.setSelectedMoveId(e)}
+                      >
+                        {move.name}
+                      </ListItem>
                     </MyListItem>
                   );
-                }
-              })}
-          </MyList>
-        </Grid>
-      </div>
-    );
+                })}
+            </MyList>
+          </Grid>
+        </div>
+      );
+    }
+    return <Loading />;
+  };
+  render() {
+    return this.isDataFetched();
   }
 }
 
@@ -90,6 +104,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setSelectedMoveId: event => {
+      console.log(event.target.dataset.key);
       dispatch({
         type: "SELECTED_MOVEID",
         payload: event.target.dataset.key
