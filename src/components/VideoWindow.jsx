@@ -654,7 +654,6 @@ export class VideoWindow extends Component {
                   </div>
                 )}
                 {this.props.isCountdownFinished && <Timer />}
-                <Retry />
               </div>
             </Grid>
           </Grid>
