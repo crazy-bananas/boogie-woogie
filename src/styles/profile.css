@@ -1,12 +1,12 @@
-body{
-  height:100vh;
+body {
+  height: 100vh;
 }
-.myCard{
-  height:500px;
-  width:75%
+.myCard {
+  height: 500px;
+  width: 75%;
 }
-.wrapper{
-  margin-top:30px;
+.wrapper {
+  margin-top: 30px;
   display: flex;
   flex-flow: row wrap;
 }
@@ -33,23 +33,30 @@ body{
   min-width: 150px;
   margin: 10px;
   overflow: auto !important;
-  white-space: nowrap 
+  white-space: nowrap;
 }
 .bullet {
   display: inline-block;
   margin: 0.2px;
   transform: scale(0.8px);
 }
-.title{
+.title {
   font-size: 14px;
 }
-.friends{
+.friends {
   overflow: auto;
   margin-left: 210px;
-  width:77%
+  width: 77%;
 }
-.textField{
+.textField {
   background-color: rgba(231, 99, 213, 0.11);
   width: 100%;
-  margin:20px
+  margin: 20px;
+}
+
+.dance-histroy {
+  color: black;
+  text-shadow: #ffffff 1px 1px 0, #ffffff -1px -1px 0, #ffffff -1px 1px 0,
+    #ffffff 1px -1px 0, #ffffff 0px 1px 0, #ffffff 0 -1px 0, #ffffff -1px 0 0,
+    #ffffff 1px 0 0;
 }
