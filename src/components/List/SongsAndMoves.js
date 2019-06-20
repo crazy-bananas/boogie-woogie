@@ -6,10 +6,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
+import MusicNote from "@material-ui/icons/MusicNote";
 
 class SongsAndMoves extends Component {
   constructor(props){
@@ -21,7 +21,6 @@ class SongsAndMoves extends Component {
   }
   handleClick(index) {
     const newState = [...this.state.moves];
-    console.log("new", newState);
     newState[index] = !newState[index];
     this.setState({moves: newState});
   }
@@ -39,24 +38,24 @@ class SongsAndMoves extends Component {
       >
       {this.props.songList.map((song, index) => {
         return (
-          <div>
-          <ListItem key={index} button onClick={() => this.handleClick(index)}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {!!this.state.moves[index] ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={!!this.state.moves[index]} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
-              </ListItem>
-            </List>
-          </Collapse>
+          <div key={index + "div"}>
+            <ListItem key={index} button onClick={() => this.handleClick(index)}>
+              <ListItemIcon>
+                <MusicNote />
+              </ListItemIcon>
+              <ListItemText primary={song.title} />
+              {!!this.state.moves[index] ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={!!this.state.moves[index]} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText primary="Starred" />
+                </ListItem>
+              </List>
+            </Collapse>
           </div>
         )
       })}
