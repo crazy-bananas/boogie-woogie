@@ -1,15 +1,9 @@
 import React, { Component } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
 import Trophy from "../images/trophy.png";
 import "../styles/scoreCard.css";
 import { connect } from "react-redux";
@@ -37,7 +31,6 @@ class ScoreCard extends Component {
   }
 
   componentDidMount() {
-    console.log("username", this.props.username);
     if (this.props.username !== undefined) {
       axios.post("https://boogie-banana.herokuapp.com/api/scores", {
         songId: this.props.songSelected,

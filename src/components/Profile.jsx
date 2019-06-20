@@ -4,9 +4,6 @@ import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import bananaImage from "../images/bananaProfile.jpeg";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import "../styles/profile.css";
 import Loading from "./Loading";
 import { connect } from "react-redux";
@@ -15,7 +12,6 @@ import Navbar from "./Navbar";
 import axios from "axios";
 import ProfileTable from "./ProfileTable";
 import { Link } from "react-router-dom";
-import { isArray } from "util";
 
 class Profile extends Component {
   constructor(props) {
@@ -32,7 +28,6 @@ class Profile extends Component {
         .get(`https://boogie-banana.herokuapp.com/api/scores/${user}`)
         .then(data => {
           this.setState({ data: data });
-          console.log(data);
         })
         .catch(error => console.log(error));
     }

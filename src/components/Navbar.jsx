@@ -9,7 +9,6 @@ import logo from "../images/logo.svg";
 import Retry from "./Retry";
 import "../styles/navbar.css";
 import AppBars from "./AppBar";
-
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #E91E63 20%, #9C27B0 50%, #673AB7 90%)"
 });

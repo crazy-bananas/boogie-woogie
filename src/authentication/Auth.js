@@ -4,8 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const REACT_APP_AUTH_REDIRECT_LINK =
-  process.env.REACT_APP_AUTH_REDIRECT_LINK ||
-  "https://user-login.d22dsl66lm2rw9.amplifyapp.com/";
+  process.env.REACT_APP_AUTH_REDIRECT_LINK || "https://master.amplifyapp.com/";
 const REDIRECT_SUB =
   REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length - 1] === "/"
     ? "login"
@@ -19,7 +18,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: "dev-boogie-woogie.auth0.com",
     clientID: "Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ",
-    redirectUri: "http://localhost:3000/login",
+    redirectUri: REACT_APP_AUTH_REDIRECT_LINK + REDIRECT_SUB,
     responseType: "token id_token",
     scope: "openid profile email"
   });
@@ -44,7 +43,6 @@ export default class Auth {
         this.setSession(authResult);
       } else if (err) {
         history.replace("/failedlogin");
-        console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
     });
@@ -75,13 +73,11 @@ export default class Auth {
   }
 
   renewSession(check) {
-    console.log(check);
     this.auth0.checkSession({}, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
       } else if (err) {
         this.logout();
-        console.log(err);
         alert(
           `Could not get a new token (${err.error}: ${err.error_description}).`
         );

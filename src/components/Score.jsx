@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ScoreCard from "./ScoreCard";
-import Retry from "./Retry";
 import HighScore from "./HighScore";
 
 import "../styles/scores.css";
@@ -19,19 +18,11 @@ class Score extends Component {
     }, 1500);
   };
   componentDidMount() {
-    console.log("DID MOUNT", this.props.currentScore);
     this.startLoading();
-    // axios.post("https://boogie-banana.herokuapp.com/api/scores", {
-    //   songId: this.props.songSelected,
-    //   moveId: this.props.moveSelected,
-    //   user: "Anonymous",
-    //   score: this.props.currentScore
-    // });
   }
   render() {
     return (
       <div>
-        {console.log("DID RENDER", this.props.currentScore)}
         {this.state.loadingScore ? (
           <LoadingScore />
         ) : (

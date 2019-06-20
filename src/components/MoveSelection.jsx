@@ -7,7 +7,6 @@ import { styled } from "@material-ui/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import MusicVideo from "@material-ui/icons/MusicVideo";
 import Grid from "@material-ui/core/Grid";
 import "../styles/moveselection.css";
@@ -51,8 +50,6 @@ export class HighScoreList extends Component {
             title: "Sorry no moves are registered for this Song."
           });
         }
-
-        console.log(data);
       });
   }
 
@@ -104,7 +101,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setSelectedMoveId: event => {
-      console.log(event.target.dataset.key);
       dispatch({
         type: "SELECTED_MOVEID",
         payload: event.target.dataset.key
