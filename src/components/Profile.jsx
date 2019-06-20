@@ -22,20 +22,14 @@ class Profile extends Component {
     };
   }
   componentDidMount() {
-    if (this.props.userAuthInfo) {
-      try {
-        axios
-          .get(
-            `https://boogie-banana.herokuapp.com/api/scores/${
-              this.props.userAuthInfo.sub
-            }`
-          )
-          .then(data => {
-            this.setState({ data: data });
-          });
-      } catch (error) {
-        throw error;
-      }
+    let user = localStorage.getItem("user");
+    if (user) {
+      axios
+        .get(`https://boogie-banana.herokuapp.com/api/scores/${user}`)
+        .then(data => {
+          this.setState({ data: data });
+        })
+        .catch(error => console.log(error));
     }
   }
   getOverallScore = data => {
@@ -58,14 +52,14 @@ class Profile extends Component {
           </Fab>
           <Avatar
             alt="Profile Picture"
-            src={this.props.userAuthInfo.picture}
+            src={localStorage.getItem("picture")}
             className="bigAvatar"
           />
           <Typography variant="h6" gutterBottom>
             {this.props.userAuthInfonickname}
           </Typography>
           <Typography variant="body2" gutterBottom>
-            Email: {this.props.userAuthInfo.email}
+            Email: {localStorage.getItem("email")}
           </Typography>
           <p className="p">
             {" "}
