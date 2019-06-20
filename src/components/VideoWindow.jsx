@@ -11,7 +11,6 @@ import anime from "animejs";
 
 import { drawPose } from "./canvasDrawings";
 
-import Retry from "../components/Retry";
 import Loading from "../components/Loading";
 
 // Images for the body
@@ -57,7 +56,7 @@ export class VideoWindow extends Component {
       noseRef: this.noseRef,
       leftShoeRef: this.leftShoeRef,
       rightShoeRef: this.rightShoeRef
-    }
+    };
 
     this.loaded = false;
     this.ctx = "";
@@ -159,7 +158,7 @@ export class VideoWindow extends Component {
   }
 
   drawStartPosition = () => {
-    drawPose(this.ctx, this.startPosition, this.bodyPartReferences)
+    drawPose(this.ctx, this.startPosition, this.bodyPartReferences);
   };
 
   checkIfUserIsInStartPosition = pose => {
@@ -183,8 +182,8 @@ export class VideoWindow extends Component {
     }
 
     drawPose(
-      this.ctx, 
-      this.state.correctPoses[this.indexCorrectP], 
+      this.ctx,
+      this.state.correctPoses[this.indexCorrectP],
       this.bodyPartReferences
     );
   };
@@ -265,15 +264,15 @@ export class VideoWindow extends Component {
   };
 
   componentDidMount() {
-    console.log("I mounted a windwo")
+    console.log("I mounted a windwo");
     bindPage().then(response => {
       this.setState({
         loaded: true
       });
     });
-    
+
     if (!this.props.isRecording) {
-      console.log("Im here")
+      console.log("Im here");
       axios
         .get(
           `https://boogie-banana.herokuapp.com/api/moves/${
@@ -496,7 +495,7 @@ export class VideoWindow extends Component {
     } else {
       this.setState({ leftWristMatched: false });
     }
-    
+
     if (matchStatus >= 2) {
       this.props.userIsReady();
       this.clearPositionStatus();
@@ -705,7 +704,7 @@ const mapDispatchToProps = dispatch => {
         type: "ADD_NEW_MOVES",
         payload: moves
       });
-    },
+    }
   };
 };
 

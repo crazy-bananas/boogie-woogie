@@ -6,18 +6,17 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { connect } from "react-redux";
 import logo from "../images/logo.svg";
-import Retry from "./Retry"
+import Retry from "./Retry";
 import "../styles/navbar.css";
 import AppBars from "./AppBar";
-import { Link } from "@material-ui/core";
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #E91E63 20%, #9C27B0 50%, #673AB7 90%)"
 });
 
 const HomeButton = styled(Button)({
   fontFamily: "Gloria Hallelujah",
-  fontSize:"25px",
-  color:"#FFF",
+  fontSize: "25px",
+  color: "#FFF",
   fontWeight: "1000"
 });
 
@@ -38,9 +37,7 @@ class Navbar extends Component {
               </Grid>
 
               <Grid item>
-                <HomeButton>
-                  Boogie Woogie
-                </HomeButton>
+                <HomeButton>Boogie Woogie</HomeButton>
               </Grid>
 
               <Grid item style={{ position: "absolute", right: 10 }}>
@@ -55,11 +52,10 @@ class Navbar extends Component {
                     picture={this.props.userAuthInfo.picture}
                   />
                 )}
-                </Grid>
-                <Grid item style={{position:"absolute",right:100}}>
-                {this.props.indexOfSelectedSong !== "" && this.props.moveSelected !== "" &&(
-                  <Retry/>
-                )}
+              </Grid>
+              <Grid item style={{ position: "absolute", right: 100 }}>
+                {this.props.indexOfSelectedSong !== "" &&
+                  this.props.moveSelected !== "" && <Retry />}
               </Grid>
             </Grid>
           </Toolbar>
@@ -74,7 +70,7 @@ const mapStateToProps = state => {
     userAuthInfo: state.userAuthInfo,
     songList: state.songList,
     indexOfSelectedSong: state.songSelected,
-    moveSelected:state.moveSelected
+    moveSelected: state.moveSelected
   };
 };
 
