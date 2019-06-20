@@ -59,8 +59,7 @@ class SongMenu extends Component {
         setTimeout(() => {
           this.setState({ loaded: true, songList: songs.data });
         }, 1000);
-      })
-      .catch(err => console.log(err));
+      }) // TODO: We need to catch this error
   }
 
   render() {
