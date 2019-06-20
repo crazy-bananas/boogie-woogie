@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -14,6 +14,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import Loading from "./Loading";
 import TableHead from "@material-ui/core/TableHead";
+import { fontWeight } from "@material-ui/system";
 
 const useStyles1 = makeStyles(theme => ({
   root: {
@@ -22,6 +23,18 @@ const useStyles1 = makeStyles(theme => ({
     marginLeft: theme.spacing(2.5)
   }
 }));
+
+const StyledTableCell = withStyles(theme => ({
+  head: {
+    background: "#E91E63 20%",
+    color: theme.palette.common.white,
+    fontWeight: "bold",
+    fontSize: "1.3em"
+  },
+  body: {
+    fontSize: "1.2em"
+  }
+}))(TableCell);
 
 function TablePaginationActions(props) {
   const classes = useStyles1();
@@ -95,8 +108,8 @@ TablePaginationActions.propTypes = {
 
 const useStyles2 = makeStyles(theme => ({
   root: {
-    width: "75.3%",
-    height: 400,
+    width: "80%",
+    height: "auto",
     overflowX: "auto"
   },
   table: {
@@ -127,40 +140,21 @@ export default function CustomPaginationActionsTable(props) {
       rowsPerPage -
       Math.min(rowsPerPage, props.data.length - page * rowsPerPage);
     return (
-      <Paper className={classes.root}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TablePagination
-                style={{ width: "900px" }}
-                rowsPerPageOptions={[5, 10, 25]}
-                colSpan={3}
-                count={props.data.data.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: { "aria-label": "Rows per page" },
-                  native: true
-                }}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableHead>
-        </Table>
-        <div className={classes.tableWrapper}>
+      <div className={classes.tableWrapper}>
+        <h2 className="dance-histroy">Your Dance History</h2>
+        <Paper className={classes.root}>
           <Table className={classes.table}>
+            <TableHead>
+              <StyledTableCell align="left">Song Title</StyledTableCell>
+              <StyledTableCell align="left">Points</StyledTableCell>
+            </TableHead>
             <TableBody>
               {props.data.data
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => (
                   <TableRow>
-                    <TableCell component="th" scope="row">
-                      {row.user}
-                    </TableCell>
-                    <TableCell align="right">{row.songId}</TableCell>
-                    <TableCell align="right">{row.score}</TableCell>
+                    <StyledTableCell align="left">{row.title}</StyledTableCell>
+                    <StyledTableCell align="left">{row.score}</StyledTableCell>
                   </TableRow>
                 ))}
 
@@ -171,8 +165,23 @@ export default function CustomPaginationActionsTable(props) {
               )}
             </TableBody>
           </Table>
-        </div>
-      </Paper>
+          <TablePagination
+            style={{ width: "900px" }}
+            rowsPerPageOptions={[5, 10, 25]}
+            colSpan={2}
+            count={props.data.data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            SelectProps={{
+              inputProps: { "aria-label": "Rows per page" },
+              native: true
+            }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
+        </Paper>
+      </div>
     );
   }
   return isDataFetched(props);
