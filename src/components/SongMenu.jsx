@@ -16,7 +16,7 @@ import MusicNote from "@material-ui/icons/MusicNote";
 import List from "@material-ui/core/List";
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
-import dancingPeople from "../images/dancingPeople.jpg";
+import dancingPeople from "../images//WMpic/15809153.jpg";
 import RecordDanceModal from "./RecordDanceModal";
 import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
@@ -86,10 +86,11 @@ class SongMenu extends Component {
           square
         >
           <div>
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5" >
               Select your song
             </Typography>
 
+            {!this.state.loaded && <SongLoading />}
             {this.state.loaded && (
               <List>
                 {this.state.songList.map((song, index) => {
@@ -112,7 +113,6 @@ class SongMenu extends Component {
                 })}
               </List>
             )}
-            {!this.state.loaded && <SongLoading />}
 
             <Typography component="h1" variant="h5">
               Record your dance
