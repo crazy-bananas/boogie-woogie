@@ -77,11 +77,9 @@ class SimpleModal extends Component {
           });
         })
         .catch(err => {
-          {
-            this.setState({
-              error: "Couldn't get title of youtube video. Please try again"
-            });
-          }
+          this.setState({
+            error: "Couldn't get title of youtube video. Please try again"
+          });
         });
 
       this.handleClose();
