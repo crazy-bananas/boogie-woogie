@@ -143,6 +143,7 @@ class SongMenu extends Component {
                   <Button
                   variant="contained"
                   color="primary"
+                  onClick={this.props.auth.login}
                   >
                     Record
                   </Button>
