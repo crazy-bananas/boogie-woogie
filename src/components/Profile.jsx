@@ -65,7 +65,6 @@ class Profile extends Component {
             className="bigAvatar"
           />
           <Typography variant="h6" gutterBottom>
-            {console.log(this.props.userAuthInfonickname)}
             {this.props.userAuthInfonickname}
           </Typography>
           <Typography variant="body2" gutterBottom>
