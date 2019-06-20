@@ -36,6 +36,13 @@ export default () => {
             return <AuthCallback {...props} />;
           }}
         />
+        <Route
+          path="/login/"
+          render={props => {
+            handleAuthentication(props);
+            return <AuthCallback {...props} />;
+          }}
+        />
       </div>
     </Router>
   );
