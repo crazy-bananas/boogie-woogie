@@ -17,7 +17,8 @@ const initialState = {
     moves: []
   },
   isRecording: false,
-  userAuthInfo: {}
+  userAuthInfo: {},
+  time: 0
 };
 
 const appReducer = (state = initialState, action) => {
@@ -59,7 +60,7 @@ const appReducer = (state = initialState, action) => {
     }
 
     case "AUDIO_FINISHED": {
-      console.log("Store: Audio_FINISHED")
+      console.log("Store: Audio_FINISHED");
       const newState = { ...state };
       newState.isAudioFinished = true;
 
@@ -104,6 +105,13 @@ const appReducer = (state = initialState, action) => {
       const newState = { ...state };
       console.log(action.payload);
       newState.userAuthInfo = action.payload;
+      return newState;
+    }
+
+    case "SET_TIMER": {
+      const newState = { ...state };
+      console.log("TIMER", action.payload);
+      newState.time = action.payload;
       return newState;
     }
 

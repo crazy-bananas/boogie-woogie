@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import "../styles/timer.css";
+import { connect } from "react-redux";
 
 export class Timer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       minutes: "00",
-      seconds: "00"
+      seconds: "00",
+      timeLeft: "",
+      totalTime: this.props.time
     };
     this.totalSeconds = 0;
     this.minutesLabel = this.minutesRef;
@@ -31,24 +34,37 @@ export class Timer extends Component {
     }
   };
 
-  timerSet = () => {
-    return setInterval(this.setTime, 1000);
+  getTime = () => {
+    let date = new Date(null);
+    date.setSeconds(this.state.totalTime); // specify value for SECONDS here
+    this.setState({ timeLeft: date.toISOString().substr(11, 8) });
+    this.setState({ totalTime: this.state.totalTime - 1 });
   };
 
-  setTime = () => {
-    ++this.totalSeconds;
-    this.setState({
-      seconds: this.pad(this.totalSeconds % 60),
-      minutes: this.pad(parseInt(this.totalSeconds / 60))
-    });
+  timerSet = () => {
+    return setInterval(this.getTime, 1000);
   };
 
   render() {
     return (
       <div id="timer">
-        <label id="minutes">{this.state.minutes}</label>:
-        <label id="seconds">{this.state.seconds}</label>
+        <label>{this.state.timeLeft}</label>
       </div>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    time: state.time
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Timer);
