@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import anime from "animejs";
 
-import { drawHand, drawShoes } from "./canvasDrawings";
+import { drawPose } from "./canvasDrawings";
 
 import Retry from "../components/Retry";
 import Loading from "../components/Loading";
@@ -46,6 +46,18 @@ export class VideoWindow extends Component {
     this.leftDownRef = new React.createRef();
     this.rightUpperRef = new React.createRef();
     this.rightDownRef = new React.createRef();
+
+    this.bodyPartReferences = {
+      leftHandRef: this.leftHandRef,
+      rightHandRef: this.rightHandRef,
+      leftDownRef: this.leftDownRef,
+      rightDownRef: this.rightDownRef,
+      leftUpperRef: this.leftUpperRef,
+      rightUpperRef: this.rightUpperRef,
+      noseRef: this.noseRef,
+      leftShoeRef: this.leftShoeRef,
+      rightShoeRef: this.rightShoeRef
+    }
 
     this.loaded = false;
     this.ctx = "";
@@ -146,83 +158,8 @@ export class VideoWindow extends Component {
     };
   }
 
-  drawHand = (...arg) => {
-    drawHand(this.ctx, ...arg);
-  };
-
-  drawShoes = (leftAnkle, rightAnkle) => {
-    drawShoes(
-      this.ctx,
-      leftAnkle,
-      this.leftShoeRef.current,
-      rightAnkle,
-      this.rightShoeRef.current
-    );
-  };
-
   drawStartPosition = () => {
-    this.drawHand(
-      this.startPosition.leftWrist,
-      this.startPosition.leftElbow,
-      this.leftHandRef.current
-    );
-
-    this.drawHand(
-      this.startPosition.rightWrist,
-      this.startPosition.rightElbow,
-      this.rightHandRef.current
-    );
-    // bottom arm
-    this.drawLimb(
-      this.startPosition["leftElbow"],
-      this.startPosition["leftWrist"],
-      this.leftDownRef.current
-    );
-    this.drawLimb(
-      this.startPosition["rightElbow"],
-      this.startPosition["rightWrist"],
-      this.rightDownRef.current
-    );
-
-    // upper arm
-    this.drawLimb(
-      this.startPosition["leftShoulder"],
-      this.startPosition["leftElbow"],
-      this.leftUpperRef.current
-    );
-    this.drawLimb(
-      this.startPosition["rightShoulder"],
-      this.startPosition["rightElbow"],
-      this.rightUpperRef.current
-    );
-
-    // upper leg
-    this.drawLimb(
-      this.startPosition["rightHip"],
-      this.startPosition["rightKnee"],
-      this.rightUpperRef.current
-    );
-    this.drawLimb(
-      this.startPosition["leftHip"],
-      this.startPosition["leftKnee"],
-      this.leftUpperRef.current
-    );
-
-    // bottom leg
-    this.drawLimb(
-      this.startPosition["rightKnee"],
-      this.startPosition["rightAnkle"],
-      this.rightDownRef.current
-    );
-    this.drawLimb(
-      this.startPosition["leftKnee"],
-      this.startPosition["leftAnkle"],
-      this.leftDownRef.current
-    );
-
-    this.drawNose(this.startPosition.nose);
-
-    this.drawShoes(this.startPosition.leftAnkle, this.startPosition.rightAnkle);
+    drawPose(this.ctx, this.startPosition, this.bodyPartReferences)
   };
 
   checkIfUserIsInStartPosition = pose => {
@@ -245,70 +182,10 @@ export class VideoWindow extends Component {
       return;
     }
 
-    this.drawHand(
-      this.state.correctPoses[this.indexCorrectP]["leftWrist"],
-      this.state.correctPoses[this.indexCorrectP]["leftElbow"],
-      this.leftHandRef.current
-    );
-    this.drawHand(
-      this.state.correctPoses[this.indexCorrectP]["rightWrist"],
-      this.state.correctPoses[this.indexCorrectP]["rightElbow"],
-      this.rightHandRef.current
-    );
-
-    // upper arm
-    this.drawLimb(
-      this.state.correctPoses[this.indexCorrectP]["leftShoulder"],
-      this.state.correctPoses[this.indexCorrectP]["leftElbow"],
-      this.leftUpperRef.current
-    );
-    this.drawLimb(
-      this.state.correctPoses[this.indexCorrectP]["rightShoulder"],
-      this.state.correctPoses[this.indexCorrectP]["rightElbow"],
-      this.rightUpperRef.current
-    );
-
-    // bottom arm
-    this.drawLimb(
-      this.state.correctPoses[this.indexCorrectP]["leftElbow"],
-      this.state.correctPoses[this.indexCorrectP]["leftWrist"],
-      this.leftDownRef.current
-    );
-    this.drawLimb(
-      this.state.correctPoses[this.indexCorrectP]["rightElbow"],
-      this.state.correctPoses[this.indexCorrectP]["rightWrist"],
-      this.rightDownRef.current
-    );
-
-    this.drawNose(this.state.correctPoses[this.indexCorrectP]["nose"]);
-
-    this.drawShoes(
-      this.state.correctPoses[this.indexCorrectP]["leftAnkle"],
-      this.state.correctPoses[this.indexCorrectP]["rightAnkle"]
-    );
-
-    // upper leg
-    this.drawLimb(
-      this.state.correctPoses[this.indexCorrectP]["rightHip"],
-      this.state.correctPoses[this.indexCorrectP]["rightKnee"],
-      this.rightUpperRef.current
-    );
-    this.drawLimb(
-      this.state.correctPoses[this.indexCorrectP]["leftHip"],
-      this.state.correctPoses[this.indexCorrectP]["leftKnee"],
-      this.leftUpperRef.current
-    );
-
-    // bottom leg
-    this.drawLimb(
-      this.state.correctPoses[this.indexCorrectP]["rightKnee"],
-      this.state.correctPoses[this.indexCorrectP]["rightAnkle"],
-      this.rightDownRef.current
-    );
-    this.drawLimb(
-      this.state.correctPoses[this.indexCorrectP]["leftKnee"],
-      this.state.correctPoses[this.indexCorrectP]["leftAnkle"],
-      this.leftDownRef.current
+    drawPose(
+      this.ctx, 
+      this.state.correctPoses[this.indexCorrectP], 
+      this.bodyPartReferences
     );
   };
 
@@ -317,11 +194,6 @@ export class VideoWindow extends Component {
       this.savePose = true;
       if (!this.props.isRecording) {
         this.increment();
-      }
-      if (this.props.isAudioFinished) {
-        this.props.danceIsFinished();
-        this.props.updateTotalScore(this.score, this.maxScore);
-        clearInterval(this.danceIntervalStopValue);
       }
     }, 100);
   };
@@ -399,11 +271,17 @@ export class VideoWindow extends Component {
         loaded: true
       });
     });
+<<<<<<< HEAD
     if (this.props.recordedMoves) {
       console.log("Recorded moves", this.props.recordedMoves);
       this.setState({ correctPoses: this.props.recordedMoves });
     } else if (!this.props.isRecording) {
       console.log("Im here");
+=======
+    
+    if (!this.props.isRecording) {
+      console.log("Im here")
+>>>>>>> d68ee351fd1de59f516e8b9f7986e7a667e2c4e5
       axios
         .get(
           `https://boogie-banana.herokuapp.com/api/moves/${
@@ -456,10 +334,10 @@ export class VideoWindow extends Component {
           this.savePose = false;
         }
 
-        if (!this.props.isUserReady && !this.props.recordedMoves) {
+        if (!this.props.isUserReady) {
           this.drawStartPosition();
           this.checkIfUserIsInStartPosition(pose);
-        } else if (!this.props.isRecording || this.props.recordedMoves) {
+        } else if (!this.props.isRecording) {
           this.drawCurrentDancePose();
         }
 
@@ -516,6 +394,9 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
+    this.props.updateTotalScore(this.score);
+    clearInterval(this.danceIntervalStopValue);
+
     if (this.props.isRecording) {
       this.props.addNewMoves(this.recordedPoses);
     }
@@ -639,97 +520,6 @@ export class VideoWindow extends Component {
       rightAnkleMatched: false
     });
   }
-
-  calculateHandRotationAngle(wristPosition, elbowPosition) {
-    let diffX = wristPosition.x - elbowPosition.x;
-    let diffY = wristPosition.y - elbowPosition.y;
-    let angleCorrection = Math.PI / 2;
-
-    if (wristPosition.x < elbowPosition.x) {
-      angleCorrection += Math.PI;
-    }
-
-    const angle = Math.atan(diffY / diffX) + angleCorrection;
-    return angle;
-  }
-
-  getDistance(a, b) {
-    const distX = a.x - b.x;
-    const distY = a.y - b.y;
-    return Math.sqrt(distX ** 2 + distY ** 2);
-  }
-
-  drawHand = (wrist, elbow, hand) => {
-    if (wrist.score < 0.7 || elbow.score < 0.7) return;
-    if (!hand) return;
-
-    const wristX = wrist.x;
-    const wristY = wrist.y;
-
-    let distanceH = this.getDistance(wrist, elbow);
-    let distanceW = (hand.width * distanceH) / hand.height;
-
-    this.ctx.save();
-    this.ctx.translate(wristX, wristY); // change origin
-
-    let rotationAngle = this.calculateHandRotationAngle(wrist, elbow);
-    this.ctx.rotate(rotationAngle);
-    this.ctx.translate(-wristX - 25, -wristY - 50);
-
-    this.ctx.drawImage(hand, wristX, wristY, distanceW, distanceH);
-    this.ctx.restore();
-  };
-
-  drawLimb = (part1, part2, image) => {
-    if (part1.score < 0.7 || part2.score < 0.7) {
-      return;
-    }
-    const limb = image;
-    if (!limb) return;
-
-    let c = this.getDistance(part1, part2);
-    let d = Math.sqrt(
-      Math.pow(part1.x - part2.x, 2) + Math.pow(part1.y + c - part2.y, 2)
-    );
-    let rotation = Math.acos(1 - Math.pow(d, 2) / (2 * Math.pow(c, 2)));
-    if (part2.x > part1.x) {
-      rotation *= -1;
-    }
-
-    let w = (limb.width * c) / limb.height;
-    this.ctx.save();
-    this.ctx.translate(part1.x, part1.y);
-    this.ctx.rotate(rotation);
-    this.ctx.drawImage(limb, 0, 0, w, c);
-    this.ctx.restore();
-  };
-
-  drawShoes = (leftAnkle, rightAnkle) => {
-    const lShoe = this.leftShoeRef.current;
-    const rShoe = this.rightShoeRef.current;
-
-    if (!lShoe || !rShoe) return;
-
-    const height = 50;
-    const width = 75;
-    const lX = leftAnkle.x;
-    const lY = leftAnkle.y - 20;
-    const rX = rightAnkle.x - 50;
-    const rY = rightAnkle.y - 20;
-    this.ctx.drawImage(lShoe, lX, lY, height, width);
-    this.ctx.drawImage(rShoe, rX, rY, height, width);
-  };
-
-  drawNose = noseCoordinates => {
-    const nose = this.noseRef.current;
-    if (!nose) return;
-    const height = 70;
-    const width = 70;
-    const x = noseCoordinates.x - 30;
-    const y = noseCoordinates.y - 50;
-
-    this.ctx.drawImage(nose, x, y, height, width);
-  };
 
   render() {
     return (
@@ -871,8 +661,12 @@ export class VideoWindow extends Component {
                     </div>
                   </div>
                 )}
+<<<<<<< HEAD
                 {this.props.isCountdownFinished}
                 <Retry />
+=======
+                {this.props.isCountdownFinished && <Timer />}
+>>>>>>> d68ee351fd1de59f516e8b9f7986e7a667e2c4e5
               </div>
             </Grid>
           </Grid>
@@ -885,12 +679,9 @@ export class VideoWindow extends Component {
 const mapStateToProps = state => {
   return {
     isUserReady: state.isUserReady,
-    isDanceFinished: state.isDanceFinished,
-    totalScore: state.totalScore,
     isCountdownFinished: state.isCountdownFinished,
     isAudioFinished: state.isAudioFinished,
     isRecording: state.isRecording,
-    songSelected: state.songSelected,
     moveSelected: state.moveSelected,
     maxScore: state.maxScore,
     combo: state.combo
@@ -902,11 +693,6 @@ const mapDispatchToProps = dispatch => {
     userIsReady: () => {
       dispatch({
         type: "USER_READY"
-      });
-    },
-    danceIsFinished: () => {
-      dispatch({
-        type: "DANCE_FINISHED"
       });
     },
     updateMaxScore: maxScore => {

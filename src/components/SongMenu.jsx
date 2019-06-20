@@ -5,6 +5,7 @@ import Paper from "@material-ui/core/Paper";
 
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
@@ -21,6 +22,7 @@ import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
 
 import axios from "axios";
+import RecordButton from "./Buttons/recordbutton";
 
 const MyPaper = styled(Paper)({
   display: "flex",
@@ -38,7 +40,7 @@ class SongMenu extends Component {
     this.songRef = React.createRef();
     this.state = {
       showModal: false,
-      songList: []
+      songList: [],
     };
   }
 
@@ -92,17 +94,18 @@ class SongMenu extends Component {
               <List>
                 {this.state.songList.map((song, index) => {
                   return (
-                    <ListItem key={index}>
+                    <ListItem 
+                      key={index}
+                      button
+                      onClick={() => this.playSong({ songCode: song.code })}
+                    >
                       <ListItemAvatar>
                         <Avatar id="songIcon">
                           <MusicNote />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
-                        key={song.code}
                         primary={song.title}
-                        //secondary={song.artist}
-                        onClick={() => this.playSong({ songCode: song.code })}
                       />
                     </ListItem>
                   );
@@ -114,15 +117,7 @@ class SongMenu extends Component {
             <Typography component="h1" variant="h5">
               Record your dance
             </Typography>
-            <Button
-              onClick={() => {
-                this.switchModal();
-              }}
-              variant="contained"
-              color="primary"
-            >
-              Record
-            </Button>
+            <RecordButton auth={this.props.auth} />
           </div>
         </Grid>
         <div />
