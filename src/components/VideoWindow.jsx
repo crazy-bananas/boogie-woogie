@@ -393,17 +393,17 @@ export class VideoWindow extends Component {
   };
 
   componentDidMount() {
-    console.log("I mounted a windwo")
+    console.log("I mounted a windwo");
     bindPage().then(response => {
       this.setState({
         loaded: true
       });
     });
-    if(this.props.recordedMoves){
-      console.log("Recorded moves", this.props.recordedMoves)
+    if (this.props.recordedMoves) {
+      console.log("Recorded moves", this.props.recordedMoves);
       this.setState({ correctPoses: this.props.recordedMoves });
     } else if (!this.props.isRecording) {
-      console.log("Im here")
+      console.log("Im here");
       axios
         .get(
           `https://boogie-banana.herokuapp.com/api/moves/${
@@ -623,7 +623,7 @@ export class VideoWindow extends Component {
     } else {
       this.setState({ leftWristMatched: false });
     }
-    
+
     if (matchStatus >= 2) {
       this.props.userIsReady();
       this.clearPositionStatus();
@@ -871,7 +871,7 @@ export class VideoWindow extends Component {
                     </div>
                   </div>
                 )}
-                {this.props.isCountdownFinished && <Timer />}
+                {this.props.isCountdownFinished}
                 <Retry />
               </div>
             </Grid>
@@ -932,7 +932,7 @@ const mapDispatchToProps = dispatch => {
         type: "ADD_NEW_MOVES",
         payload: moves
       });
-    },
+    }
   };
 };
 
