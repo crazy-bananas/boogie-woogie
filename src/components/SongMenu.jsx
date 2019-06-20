@@ -41,16 +41,7 @@ class SongMenu extends Component {
     this.state = {
       showModal: false,
       songList: [],
-      open: false
     };
-  }
-
-  handleTooltipClose = () => {
-    this.setState({open: false});
-  }
-
-  handleTooltipOpen = () => {
-    this.setState({open: true});
   }
 
   playSong = event => {
