@@ -4,8 +4,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Tooltip from '@material-ui/core/Tooltip';
 
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
