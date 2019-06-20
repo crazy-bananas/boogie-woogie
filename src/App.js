@@ -64,7 +64,7 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar auth={this.props.auth} />
-        {this.showMenu() && <SongMenu />}
+        {this.showMenu() && <SongMenu auth={this.props.auth} />}
         {this.props.isSongSelected &&
           !this.props.isAudioFinished &&
           this.props.moveSelected.length === 0 && <MoveSelection />}
