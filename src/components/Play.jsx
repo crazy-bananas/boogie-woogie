@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import "./App.css";
-import Navbar from "./components/Navbar";
-import SongMenu from "./components/SongMenu";
+import "../App.css";
+import Navbar from "./Navbar";
+import SongMenu from "./SongMenu";
 import { connect } from "react-redux";
-import DanceWindow from "./components/DanceWindow";
-import RecordWindow from "./components/RecordWindow";
-import FinishRecording from "./components/FinishRecording";
-import Score from "./components/Score";
-import MoveSelection from "./components/MoveSelection";
-import Home from "./components/Home";
+import DanceWindow from "./DanceWindow";
+import RecordWindow from "./RecordWindow";
+import FinishRecording from "./FinishRecording";
+import Score from "./Score";
+import MoveSelection from "./MoveSelection";
+import Home from "./Home";
 import axios from "axios";
 
 class App extends Component {
@@ -62,7 +62,24 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar auth={this.props.auth} />
-        <Home />
+        {this.showMenu() && <SongMenu auth={this.props.auth} />}
+        {this.props.isSongSelected &&
+          !this.props.isAudioFinished &&
+          this.props.moveSelected.length === 0 && <MoveSelection />}
+
+        {this.props.isSongSelected &&
+          !this.props.isAudioFinished &&
+          this.props.moveSelected.length !== 0 && <DanceWindow />}
+
+        {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
+
+        {this.props.isRecording && !this.props.isAudioFinished && (
+          <RecordWindow />
+        )}
+
+        {this.props.isRecording && this.props.isAudioFinished && (
+          <FinishRecording />
+        )}
       </div>
     );
   }
