@@ -90,7 +90,7 @@ class SelectSongsAndMoves extends Component {
                 ) : (
                   this.state.moves[songIndex].map((move, moveIndex) => {
                     return (
-                      <List component="div" disablePadding>
+                      <List key={moveIndex} component="div" disablePadding>
                         <ListItem button>
                           <ListItemIcon>
                             <StarBorder />
