@@ -13,9 +13,12 @@ import star from "../images/star.png"
 
 const StyledTableCell = withStyles(theme => ({
   head: {
+    background: "#E91E63",
+    fontWeight: "bold",
+    fontSize: "1.3em",
+    color: theme.palette.common.white,
     position:"sticky",
     top:0,
-    color: theme.palette.common.black
   },
   body: {
     fontSize: 14
@@ -37,7 +40,8 @@ const useStyles = makeStyles(theme => ({
     height: 500,
     backgroundImage: `url(${podium})`,
     backgroundPositionY: 50,
-    backgroundRepeat:"no-repeat"
+    backgroundRepeat:"no-repeat",
+    zIndex:2,
   },
   bigAvatar: {
     margin: 10,
@@ -58,9 +62,9 @@ export default function CustomizedTables(props) {
       <Table className={classes.table}>
         <TableHead >
           <TableRow>
-            <StyledTableCell style={{backgroundColor:"#E91E63", position:"sticky",top:0, zIndex: 2}} align="left"/>
-            <StyledTableCell style={{backgroundColor:"#E91E63", position:"sticky",top:0, zIndex: 2,fontWeight:"bold"}}>Name</StyledTableCell>
-            <StyledTableCell style={{backgroundColor:"#E91E63" , position:"sticky",top:0,  zIndex: 2,fontWeight:"bold"}}>Score</StyledTableCell>
+            <StyledTableCell align="left"/>
+            <StyledTableCell >Name</StyledTableCell>
+            <StyledTableCell >Score</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -74,7 +78,7 @@ export default function CustomizedTables(props) {
                   className={classes.bigAvatar}
                 />
               </StyledTableCell>
-              <StyledTableCell align="left">{row.user}</StyledTableCell>
+              <StyledTableCell stylealign="left" style={{fontSize:"1.3em"}}>{row.user}</StyledTableCell>
               <StyledTableCell align="left">
                 <Fab
                   size="medium"
