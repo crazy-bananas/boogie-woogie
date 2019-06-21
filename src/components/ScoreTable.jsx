@@ -68,39 +68,46 @@ export default function CustomizedTables(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.scoreList.map(row => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell align="left">
-                <Avatar
-                  style={{ zIndex: 1 }}
-                  alt="Profile Picture"
-                  src={row.pic}
-                  className={classes.bigAvatar}
-                />
-              </StyledTableCell>
-              <StyledTableCell stylealign="left" style={{ fontSize: "1.3em" }}>
-                {row.user}
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                <Fab
-                  size="medium"
-                  style={{
-                    zIndex: 1,
-                    backgroundImage: `url(${star})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "contain",
-                    fontStyle: "inherit",
-                    backgroundColor: "transparent",
-                    boxShadow: "none"
-                  }}
-                  aria-label="Add"
-                  className="fab"
+          {props.scoreList
+            .sort((a, b) => {
+              return b.score - a.score;
+            })
+            .map(row => (
+              <StyledTableRow key={row.name}>
+                <StyledTableCell align="left">
+                  <Avatar
+                    style={{ zIndex: 1 }}
+                    alt="Profile Picture"
+                    src={row.pic}
+                    className={classes.bigAvatar}
+                  />
+                </StyledTableCell>
+                <StyledTableCell
+                  stylealign="left"
+                  style={{ fontSize: "1.3em" }}
                 >
-                  {row.score}
-                </Fab>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+                  {row.user}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  <Fab
+                    size="medium"
+                    style={{
+                      zIndex: 1,
+                      backgroundImage: `url(${star})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "contain",
+                      fontStyle: "inherit",
+                      backgroundColor: "transparent",
+                      boxShadow: "none"
+                    }}
+                    aria-label="Add"
+                    className="fab"
+                  >
+                    {row.score}
+                  </Fab>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
         </TableBody>
       </Table>
     </Paper>
