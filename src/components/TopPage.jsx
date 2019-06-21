@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-
 import { Link } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
-
+import Paper from "@material-ui/core/Paper";
 import "../styles/songmenu.css";
-
 import { makeStyles } from "@material-ui/core/styles";
 import ButtonBase from "@material-ui/core/ButtonBase";
-import About from "./About";
 
 const images = [
   {
@@ -86,7 +83,7 @@ const useStyles = makeStyles(theme => ({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: "#e1bee7",
     opacity: 0.4,
     transition: theme.transitions.create("opacity")
   },
@@ -94,12 +91,13 @@ const useStyles = makeStyles(theme => ({
     position: "relative",
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${theme.spacing(1) +
       6}px`,
-    fontSize: "40px"
+    fontSize: "40px",
+    color: "#4c00a4"
   },
   imageMarked: {
     height: 3,
     width: 18,
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: "theme.palette.common.white",
     position: "absolute",
     bottom: -2,
     left: "calc(50% - 9px)",
@@ -111,26 +109,33 @@ export default function ButtonBases() {
   const classes = useStyles();
 
   return (
-    <div>
-      {/* <div
+    <div
+      style={{
+        background:
+          "linear-gradient(45deg, #f7dafa 20%, #ddfada 50%, #dafaf7 90%)",
+        display: "flex",
+        height: "100vh"
+      }}
+    >
+      <div
         style={{
           width: "100%",
           height: "50vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center"
-          // backgroundImage:
-          //   "url(https://image.shutterstock.com/image-vector/detailed-vector-illustration-silhouettes-expressive-260nw-759480409.jpg)"
         }}
       >
-        <Typography className={classes.title} variant="h5" component="h2">
-          Boogie Woogie
-        </Typography>
-        <Typography color="textSecondary" gutterBottom className={classes.pos}>
-          Boogie woogie is dancing app. If you want to dance click on dance. If
-          you want to record your moves click on record
-        </Typography>
-      </div> */}
+        <Paper style={{ padding: "20px" }}>
+          <Typography variant="h5" component="h3">
+            This is a sheet of paper.
+          </Typography>
+          <Typography component="p">
+            Paper can be used to build surface or other elements for your
+            application.
+          </Typography>
+        </Paper>
+      </div>
       <div className={classes.root}>
         {images.map(image => (
           <Link
