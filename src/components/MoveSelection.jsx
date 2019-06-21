@@ -68,16 +68,13 @@ export class MoveSelection extends Component {
                     style ={{display:"inline-flex"}}
                     key={index}
                     button
+                    onClick={() => this.props.setSelectedMoveId(move._id)}
                   >
                     <ListItemIcon>
                       <MusicVideo />
                     </ListItemIcon>
                     <MyListItem
                       style={{ margin: 0, padding: 0 }}
-                      key={index}
-                      data-key={move._id}
-                      data-index={index}
-                      onClick={e => this.props.setSelectedMoveId(e)}
                     >
                       {move.name}
                     </MyListItem>
@@ -106,10 +103,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSelectedMoveId: event => {
+    setSelectedMoveId: id => {
       dispatch({
         type: "SELECTED_MOVEID",
-        payload: event.target.dataset.key
+        payload: id
       });
     }
   };
