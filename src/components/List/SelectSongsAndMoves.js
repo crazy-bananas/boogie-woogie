@@ -39,10 +39,14 @@ class SelectSongsAndMoves extends Component {
             this.setState({ moves: newMovesSet });
           })
           .catch(err => {
-            console.error(err);
+            throw new Error(err.message);
           });
       }
     }
+  }
+
+  componentWillMount(){
+    // TODO: Make this cancel all axios calls!
   }
 
   render() {

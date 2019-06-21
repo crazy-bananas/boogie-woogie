@@ -7,7 +7,6 @@ import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
-import MoveSelection from "./components/MoveSelection";
 import axios from "axios";
 
 class App extends Component {
@@ -62,9 +61,6 @@ class App extends Component {
       <div className="App">
         <Navbar auth={this.props.auth} />
         {this.showMenu() && <SongMenu auth={this.props.auth} />}
-        {this.props.isSongSelected &&
-          !this.props.isAudioFinished &&
-          this.props.moveSelected.length === 0 && <MoveSelection />}
 
         {this.props.isSongSelected &&
           !this.props.isAudioFinished &&
