@@ -38,9 +38,7 @@ export class MoveSelection extends Component {
   componentDidMount() {
     axios
       .get(
-        `https://boogie-banana.herokuapp.com/api/moves/${
-          this.props.songSelected
-        }
+        `https://boogie-banana.herokuapp.com/api/moves/${this.props.songSelected}
         `
       )
       .then(data => {
@@ -76,27 +74,24 @@ export class MoveSelection extends Component {
           <h1>{this.state.title}</h1>
           <Grid container justify="center">
             <MyList>
-            {this.state.moves.length !== 0 &&
-              this.state.moves.map((move, index) => {
-                return (
-                  <ListItem 
-                    style ={{display:"inline-flex"}}
-                    key={index}
-                    button
-                    onClick={() => this.props.setSelectedMoveId(move._id)}
-                  >
-                    <ListItemIcon>
-                      <MusicVideo />
-                    </ListItemIcon>
-                    <MyListItem
-                      style={{ margin: 0, padding: 0 }}
+              {this.state.moves.length !== 0 &&
+                this.state.moves.map((move, index) => {
+                  return (
+                    <ListItem
+                      style={{ display: "inline-flex" }}
+                      key={index}
+                      button
+                      onClick={() => this.props.setSelectedMoveId(move._id)}
                     >
-                      {move.name}
-                    </MyListItem>
-                  </ListItem>
-                );
-                })
-              }
+                      <ListItemIcon>
+                        <MusicVideo />
+                      </ListItemIcon>
+                      <MyListItem style={{ margin: 0, padding: 0 }}>
+                        {move.name}
+                      </MyListItem>
+                    </ListItem>
+                  );
+                })}
             </MyList>
           </Grid>
         </div>

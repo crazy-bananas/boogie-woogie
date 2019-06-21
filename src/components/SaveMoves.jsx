@@ -38,7 +38,7 @@ class SaveMoves extends Component {
       danceName: "",
       saved: false,
       error: true,
-      errorDescription: "",
+      errorDescription: ""
     };
   }
   handleClose = () => {
@@ -74,11 +74,10 @@ class SaveMoves extends Component {
           this.props.onsaveUnsuccessful();
         });
 
-      axios
-        .post("https://boogie-banana.herokuapp.com/api/songs", {
-          code: this.props.newSong.code,
-          title: this.props.newSong.title
-        }) // TODO: We need error check here, and message to user on success.
+      axios.post("https://boogie-banana.herokuapp.com/api/songs", {
+        code: this.props.newSong.code,
+        title: this.props.newSong.title
+      }); // TODO: We need error check here, and message to user on success.
     }
   };
 

@@ -66,9 +66,7 @@ class SimpleModal extends Component {
 
       axios
         .get(
-          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
-            process.env.REACT_APP_YOUTUBE_API_KEY
-          }`
+          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
         )
         .then(data => {
           this.props.addSong({
