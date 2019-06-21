@@ -23,12 +23,6 @@ const initialState = {
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SELECT_SONG": {
-      const newState = { ...state };
-      newState.isSongSelected = true;
-      newState.songSelected = action.payload;
-      return newState;
-    }
     case "COUNTDOWN_FINISHED": {
       const newState = { ...state };
       newState.isCountdownFinished = true;
@@ -87,12 +81,6 @@ const appReducer = (state = initialState, action) => {
       const newState = { ...state };
       newState.newSong.moves = action.payload;
 
-      return newState;
-    }
-
-    case "SELECTED_MOVE_ID": {
-      const newState = { ...state };
-      newState.moveSelected = action.payload;
       return newState;
     }
 

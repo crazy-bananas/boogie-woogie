@@ -37,10 +37,6 @@ class SongMenu extends Component {
     };
   }
 
-  playSong = songCode => {
-    this.props.playSong(songCode);
-  };
-
   switchModal = () => {
     this.setState({ showModal: !this.state.showModal });
   };
@@ -108,18 +104,6 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    playSong: songCode => {
-      dispatch({
-        type: "SELECT_SONG",
-        payload: songCode
-      });
-    }
-  };
-};
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
 )(SongMenu);
