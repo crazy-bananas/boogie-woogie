@@ -15,11 +15,12 @@ import backIcon from "../images/backArrow.png";
 import Link from "@material-ui/core/Link";
 
 const MyList = styled(List)({
-  background: "rgba(218, 218, 218, 0.7)"
+  background: "rgba(218, 218, 218, 0.7)",
+  maxWidth: "50%",
+  minWidth: "25%"
 });
 
 const MyListItem = styled(ListItem)({
-  background: "rgba(242, 242, 242, 0.5);",
   width: "50vh"
 });
 
@@ -60,45 +61,42 @@ export class MoveSelection extends Component {
     if (this.state.moves.length > 0) {
       return (
         <div id="move-selection">
+          <div style={{ position: "absolute", left: 30, top: 100 }}>
+            <Fab
+              size="medium"
+              color="secondary"
+              aria-label="Add"
+              className="fab"
+            >
+              <Link href="/">
+                <img src={backIcon} alt="back arrow icon" />
+              </Link>
+            </Fab>
+          </div>
           <h1>{this.state.title}</h1>
           <Grid container justify="center">
-            <MyList component="div">
-              {this.state.moves.length !== 0 &&
-                this.state.moves.map((move, index) => {
-                  return (
-                    <div>
-                      <div style={{ position: "absolute", left: 30, top: 100 }}>
-                        <Fab
-                          size="medium"
-                          color="secondary"
-                          aria-label="Add"
-                          className="fab"
-                        >
-                          <Link href="/">
-                            <img src={backIcon} alt="back arrow icon" />
-                          </Link>
-                        </Fab>
-                      </div>
-                      <List style={{ display: "inline-flex" }}>
-                        <MyListItem>
-                          <ListItemIcon>
-                            <MusicVideo />
-                          </ListItemIcon>
-                        </MyListItem>
-                        <MyListItem>
-                          <ListItem
-                            style={{ margin: 0, padding: 0 }}
-                            key={index}
-                            data-key={move._id}
-                            onClick={e => this.props.setSelectedMoveId(e)}
-                          >
-                            {move.name}
-                          </ListItem>
-                        </MyListItem>
-                      </List>
-                    </div>
-                  );
-                })}
+            <MyList>
+            {this.state.moves.length !== 0 &&
+              this.state.moves.map((move, index) => {
+                return (
+                  <ListItem 
+                    style ={{display:"inline-flex"}}
+                    key={index}
+                    button
+                    onClick={() => this.props.setSelectedMoveId(move._id)}
+                  >
+                    <ListItemIcon>
+                      <MusicVideo />
+                    </ListItemIcon>
+                    <MyListItem
+                      style={{ margin: 0, padding: 0 }}
+                    >
+                      {move.name}
+                    </MyListItem>
+                  </ListItem>
+                );
+                })
+              }
             </MyList>
           </Grid>
         </div>
@@ -120,10 +118,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSelectedMoveId: event => {
+    setSelectedMoveId: id => {
       dispatch({
         type: "SELECTED_MOVEID",
-        payload: event.target.dataset.key
+        payload: id
       });
     }
   };
