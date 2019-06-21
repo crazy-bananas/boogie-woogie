@@ -1,11 +1,11 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
   progress: {
-    margin: theme.spacing(2),
-  },
+    margin: theme.spacing(2)
+  }
 }));
 
 export default function CircularDeterminate() {
@@ -31,7 +31,13 @@ export default function CircularDeterminate() {
         variant="determinate"
         value={progress}
         color="secondary"
-        style={{position:"absolute",width:200,height:200,top:"35%",left:"43%"}}
+        style={{
+          position: "absolute",
+          width: 200,
+          height: 200,
+          top: "35%",
+          left: "43%"
+        }}
       />
     </div>
   );
