@@ -10,6 +10,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import MusicVideo from "@material-ui/icons/MusicVideo";
 import Grid from "@material-ui/core/Grid";
 import "../styles/moveselection.css";
+import Fab from "@material-ui/core/Fab";
+import backIcon from "../images/backArrow.png";
+import Link from "@material-ui/core/Link";
 
 const MyList = styled(List)({
   background: "rgba(218, 218, 218, 0.7)",
@@ -58,6 +61,18 @@ export class MoveSelection extends Component {
     if (this.state.moves.length > 0) {
       return (
         <div id="move-selection">
+          <div style={{ position: "absolute", left: 30, top: 100 }}>
+            <Fab
+              size="medium"
+              color="secondary"
+              aria-label="Add"
+              className="fab"
+            >
+              <Link href="/">
+                <img src={backIcon} alt="back arrow icon" />
+              </Link>
+            </Fab>
+          </div>
           <h1>{this.state.title}</h1>
           <Grid container justify="center">
             <MyList>

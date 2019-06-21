@@ -12,11 +12,11 @@ import Navbar from "./Navbar";
 import axios from "axios";
 import ProfileTable from "./ProfileTable";
 import { Link } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
 
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.dummyFriendList = [];
     this.state = {
       data: 0
     };
@@ -34,15 +34,22 @@ class Profile extends Component {
         });
     }
   }
-  getOverallScore = data => {
+  getTotalScore = data => {
     let score = 0;
     if (data.length === 0) return score;
 
     for (let i = 0; i < data.length; i++) {
       score += data[i].score;
     }
-    return Math.round(score / data.length);
+    return score;
   };
+
+  getAverageScore = data => {
+    if (data.length === 0) return 0;
+    let overAllScore = this.getTotalScore(data);
+    return Math.round(overAllScore / data.length);
+  };
+
   isUserDataFetched = () => {
     if (this.props.userAuthInfo && this.state.data !== 0) {
       return (
@@ -62,11 +69,16 @@ class Profile extends Component {
           </Typography>
           <Typography variant="body2" gutterBottom>
             Email: {localStorage.getItem("email")}
+            <p className="p">
+              {" "}
+              Total Score : {this.getTotalScore(this.state.data.data)} Points
+            </p>
+            <p className="p">
+              {" "}
+              Average Score : {this.getAverageScore(this.state.data.data)}{" "}
+              Points
+            </p>
           </Typography>
-          <p className="p">
-            {" "}
-            Overall Score : {this.getOverallScore(this.state.data.data)} Points
-          </p>
         </div>
       );
     }
@@ -78,8 +90,12 @@ class Profile extends Component {
       <div>
         <Navbar auth={this.props.auth} />
         <Container className="wrapper">
-          <Box flexDirection="col">{this.isUserDataFetched()}</Box>
-          <ProfileTable data={this.state.data} />
+          <Grid item xs={3} justify="center">
+            <Box flexDirection="col">{this.isUserDataFetched()}</Box>
+          </Grid>
+          <Grid item xs={9} justify="center">
+            <ProfileTable data={this.state.data} />
+          </Grid>
         </Container>
       </div>
     );
