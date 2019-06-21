@@ -43,8 +43,8 @@ class SongMenu extends Component {
     };
   }
 
-  playSong = event => {
-    this.props.playSong(event);
+  playSong = songCode => {
+    this.props.playSong(songCode);
   };
 
   switchModal = () => {
@@ -96,7 +96,7 @@ class SongMenu extends Component {
                     <ListItem
                       key={index}
                       button
-                      onClick={() => this.playSong({ songCode: song.code })}
+                      onClick={() => this.playSong(song.code)}
                     >
                       <ListItemAvatar>
                         <Avatar id="songIcon">
@@ -134,10 +134,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    playSong: song => {
+    playSong: songCode => {
       dispatch({
         type: "SELECT_SONG",
-        payload: song.songCode
+        payload: songCode
       });
     }
   };
