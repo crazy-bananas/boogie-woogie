@@ -104,7 +104,6 @@ const appReducer = (state = initialState, action) => {
 
     case "SET_TIMER": {
       const newState = { ...state };
-      console.log("TIMER", action.payload);
       newState.time = action.payload;
       return newState;
     }
