@@ -11,7 +11,7 @@ import { styled } from "@material-ui/styles";
 
 const MyCard = styled(Card)({
   width: 350,
-  height:500,
+  height: 500
 });
 
 const MyMedia = styled(CardMedia)({
@@ -57,11 +57,16 @@ class ScoreCard extends Component {
       <div id="card">
         <MyCard>
           <div id="trophy">
-            <MyMedia image={Trophy} style={{height: 150}} title="Song Score" />
+            <MyMedia
+              image={Trophy}
+              style={{ height: 150 }}
+              title="Song Score"
+            />
           </div>
           <CardContent>
             <MyTypography variant="body2" color="textSecondary" component="p">
-              Your Score: {`${this.userScore}%`}<br/>
+              Your Score: {`${this.userScore}%`}
+              <br />
               {`(${this.props.score}/${this.props.maxScore})`}
             </MyTypography>
           </CardContent>

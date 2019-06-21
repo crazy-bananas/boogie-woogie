@@ -18,7 +18,7 @@ import dancingPeople from "../images//WMpic/15809153.jpg";
 import RecordDanceModal from "./RecordDanceModal";
 import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
-import SongsAndMoves from "./List/SongsAndMoves"
+import SongsAndMoves from "./List/SongsAndMoves";
 
 import axios from "axios";
 import RecordButton from "./Buttons/recordbutton";
@@ -39,7 +39,7 @@ class SongMenu extends Component {
     this.songRef = React.createRef();
     this.state = {
       showModal: false,
-      songList: [],
+      songList: []
     };
   }
 
@@ -52,13 +52,11 @@ class SongMenu extends Component {
   };
 
   componentDidMount() {
-    axios
-      .get("https://boogie-banana.herokuapp.com/api/songs")
-      .then(songs => {
-        setTimeout(() => {
-          this.setState({ loaded: true, songList: songs.data });
-        }, 1000);
-      }) // TODO: We need to catch this error
+    axios.get("https://boogie-banana.herokuapp.com/api/songs").then(songs => {
+      setTimeout(() => {
+        this.setState({ loaded: true, songList: songs.data });
+      }, 1000);
+    }); // TODO: We need to catch this error
   }
 
   render() {
@@ -84,7 +82,7 @@ class SongMenu extends Component {
           square
         >
           <div>
-            <Typography component="h1" variant="h5" >
+            <Typography component="h1" variant="h5">
               Select your song
             </Typography>
 
@@ -95,7 +93,7 @@ class SongMenu extends Component {
               <List>
                 {this.state.songList.map((song, index) => {
                   return (
-                    <ListItem 
+                    <ListItem
                       key={index}
                       button
                       onClick={() => this.playSong({ songCode: song.code })}
@@ -105,9 +103,7 @@ class SongMenu extends Component {
                           <MusicNote />
                         </Avatar>
                       </ListItemAvatar>
-                      <ListItemText
-                        primary={song.title}
-                      />
+                      <ListItemText primary={song.title} />
                     </ListItem>
                   );
                 })}
@@ -117,7 +113,10 @@ class SongMenu extends Component {
             <Typography component="h1" variant="h5">
               Record your dance
             </Typography>
-            <RecordButton auth={this.props.auth} switchModal={this.switchModal} />
+            <RecordButton
+              auth={this.props.auth}
+              switchModal={this.switchModal}
+            />
           </div>
         </Grid>
         <div />
