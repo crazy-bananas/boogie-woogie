@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import Avatar from "@material-ui/core/Avatar";
 import podium from "../images/podiumTransparent.png";
 import Fab from "@material-ui/core/Fab";
-import star from "../images/star.png"
+import star from "../images/star.png";
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -17,8 +17,8 @@ const StyledTableCell = withStyles(theme => ({
     fontWeight: "bold",
     fontSize: "1.3em",
     color: theme.palette.common.white,
-    position:"sticky",
-    top:0,
+    position: "sticky",
+    top: 0
   },
   body: {
     fontSize: 14
@@ -40,8 +40,8 @@ const useStyles = makeStyles(theme => ({
     height: 500,
     backgroundImage: `url(${podium})`,
     backgroundPositionY: 50,
-    backgroundRepeat:"no-repeat",
-    zIndex:2,
+    backgroundRepeat: "no-repeat",
+    zIndex: 2
   },
   bigAvatar: {
     margin: 10,
@@ -60,45 +60,54 @@ export default function CustomizedTables(props) {
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
-        <TableHead >
+        <TableHead>
           <TableRow>
-            <StyledTableCell align="left"/>
-            <StyledTableCell >Name</StyledTableCell>
-            <StyledTableCell >Score</StyledTableCell>
+            <StyledTableCell align="left" />
+            <StyledTableCell>Name</StyledTableCell>
+            <StyledTableCell>Score</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.scoreList.map(row => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell align="left">
-                <Avatar
-                  style={{ zIndex: 1}}
-                  alt="Profile Picture"
-                  src={row.pic}
-                  className={classes.bigAvatar}
-                />
-              </StyledTableCell>
-              <StyledTableCell stylealign="left" style={{fontSize:"1.3em"}}>{row.user}</StyledTableCell>
-              <StyledTableCell align="left">
-                <Fab
-                  size="medium"
-                  style={{
-                    zIndex:1,
-                    backgroundImage:`url(${star})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "contain",
-                    fontStyle: "inherit",
-                    backgroundColor: "transparent",
-                    boxShadow: "none"
-                  }}
-                  aria-label="Add"
-                  className="fab"
+          {props.scoreList
+            .sort((a, b) => {
+              return b.score - a.score;
+            })
+            .map(row => (
+              <StyledTableRow key={row.name}>
+                <StyledTableCell align="left">
+                  <Avatar
+                    style={{ zIndex: 1 }}
+                    alt="Profile Picture"
+                    src={row.pic}
+                    className={classes.bigAvatar}
+                  />
+                </StyledTableCell>
+                <StyledTableCell
+                  stylealign="left"
+                  style={{ fontSize: "1.3em" }}
                 >
-                  {row.score}
-                </Fab>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+                  {row.user}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  <Fab
+                    size="medium"
+                    style={{
+                      zIndex: 1,
+                      backgroundImage: `url(${star})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "contain",
+                      fontStyle: "inherit",
+                      backgroundColor: "transparent",
+                      boxShadow: "none"
+                    }}
+                    aria-label="Add"
+                    className="fab"
+                  >
+                    {row.score}
+                  </Fab>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
         </TableBody>
       </Table>
     </Paper>
