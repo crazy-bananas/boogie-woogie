@@ -79,24 +79,17 @@ class SelectSongsAndMoves extends Component {
                   <ExpandMore />
                 )}
               </ListItem>
-              {!this.state.moves[songIndex] ? (
-                <Collapse
-                  in={!!this.state.shouldShow[songIndex]}
-                  timeout="auto"
-                  unmountOnExit
-                  key={"SongLoading" + songIndex}
-                >
+              <Collapse
+                in={!!this.state.shouldShow[songIndex]}
+                timeout="auto"
+                unmountOnExit
+                key={"SongLoading" + songIndex}
+              >
+                {!this.state.moves[songIndex] ? (
                   <SongLoading />
-                </Collapse>
-              ) : (
-                this.state.moves[songIndex].map((move, moveIndex) => {
-                  return (
-                    <Collapse
-                      in={!!this.state.shouldShow[songIndex]}
-                      timeout="auto"
-                      unmountOnExit
-                      key={"moveIndex" + moveIndex}
-                    >
+                ) : (
+                  this.state.moves[songIndex].map((move, moveIndex) => {
+                    return (
                       <List component="div" disablePadding>
                         <ListItem button>
                           <ListItemIcon>
@@ -113,10 +106,10 @@ class SelectSongsAndMoves extends Component {
                           />
                         </ListItem>
                       </List>
-                    </Collapse>
-                  );
-                })
-              )}
+                    );
+                  })
+                )}
+              </Collapse>
             </div>
           );
         })}
