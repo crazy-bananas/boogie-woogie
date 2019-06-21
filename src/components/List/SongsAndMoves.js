@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,19 +9,42 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import MusicNote from "@material-ui/icons/MusicNote";
+import axios from "axios";
 
 class SongsAndMoves extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      songs: [],
+      shouldShow: [],
       moves: []
     };
   }
   handleClick(index) {
-    const newState = [...this.state.moves];
+    const newState = [...this.state.shouldShow];
     newState[index] = !newState[index];
-    this.setState({ moves: newState });
+    this.setState({ shouldShow: newState });
+  }
+
+  componentDidUpdate() {
+    if (this.state.moves.length === 0 && this.props.songList.length !== 0) {
+      console.log("Console here", this.props.songList[0].code);
+      for (let i = 0; i < this.props.songList.length; ++i) {
+        axios
+          .get(
+            `https://boogie-banana.herokuapp.com/api/moves/${this.props.songList[i].code}`
+          )
+          .then(reply => {
+            const newMovesSet = [...this.state.moves];
+            newMovesSet[i] = reply.data;
+            this.setState({ moves: newMovesSet });
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      }
+    }
+    console.log("Songlist:", this.props.songList);
+    console.log("Moves:", this.state.moves);
   }
 
   render() {
@@ -36,34 +58,43 @@ class SongsAndMoves extends Component {
           </ListSubheader>
         }
       >
-        {this.props.songList.map((song, index) => {
+        {this.props.songList.map((song, songIndex) => {
           return (
-            <div key={index + "div"}>
+            <div key={songIndex + "div"}>
               <ListItem
-                key={index}
+                key={songIndex}
                 button
-                onClick={() => this.handleClick(index)}
+                onClick={() => this.handleClick(songIndex)}
               >
                 <ListItemIcon>
                   <MusicNote />
                 </ListItemIcon>
                 <ListItemText primary={song.title} />
-                {!!this.state.moves[index] ? <ExpandLess /> : <ExpandMore />}
+                {!!this.state.shouldShow[songIndex] ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
-              <Collapse
-                in={!!this.state.moves[index]}
-                timeout="auto"
-                unmountOnExit
-              >
-                <List component="div" disablePadding>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <StarBorder />
-                    </ListItemIcon>
-                    <ListItemText primary="Starred" />
-                  </ListItem>
-                </List>
-              </Collapse>
+              {!!this.state.moves[songIndex] &&
+                this.state.moves[songIndex].map((move, moveIndex) => {
+                  return (
+                    <Collapse
+                      in={!!this.state.shouldShow[songIndex]}
+                      timeout="auto"
+                      unmountOnExit
+                      key={"moveIndex" + moveIndex}
+                    >
+                      <List component="div" disablePadding>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <StarBorder />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={move.name}
+                            onClick={() => console.log(this.state.songs)}
+                          />
+                        </ListItem>
+                      </List>
+                    </Collapse>
+                  );
+                })}
             </div>
           );
         })}
