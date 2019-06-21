@@ -8,7 +8,7 @@ import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
 import MoveSelection from "./components/MoveSelection";
-import Home from "./components/Home";
+import TopPage from "./components/TopPage";
 import axios from "axios";
 
 class App extends Component {
@@ -62,7 +62,7 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar auth={this.props.auth} />
-        <Home />
+        <TopPage />
       </div>
     );
   }

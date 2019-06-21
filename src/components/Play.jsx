@@ -8,7 +8,7 @@ import RecordWindow from "./RecordWindow";
 import FinishRecording from "./FinishRecording";
 import Score from "./Score";
 import MoveSelection from "./MoveSelection";
-import Home from "./Home";
+
 import axios from "axios";
 
 class App extends Component {

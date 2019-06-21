@@ -112,7 +112,7 @@ export default function ButtonBases() {
 
   return (
     <div>
-      <div
+      {/* <div
         style={{
           width: "100%",
           height: "50vh",
@@ -130,7 +130,7 @@ export default function ButtonBases() {
           Boogie woogie is dancing app. If you want to dance click on dance. If
           you want to record your moves click on record
         </Typography>
-      </div>
+      </div> */}
       <div className={classes.root}>
         {images.map(image => (
           <Link

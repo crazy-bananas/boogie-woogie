@@ -9,15 +9,10 @@ import logo from "../images/logo.svg";
 import Retry from "./Retry";
 import "../styles/navbar.css";
 import AppBars from "./AppBar";
+// import Home from "./Home.jsx";
+
 const MyAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #E91E63 20%, #9C27B0 50%, #673AB7 90%)"
-});
-
-const HomeButton = styled(Button)({
-  fontFamily: "Gloria Hallelujah",
-  fontSize: "25px",
-  color: "#FFF",
-  fontWeight: "1000"
 });
 
 class Navbar extends Component {
@@ -35,10 +30,9 @@ class Navbar extends Component {
               <Grid item>
                 <img alt="logo" src={logo} style={{ height: 50, width: 50 }} />
               </Grid>
-
-              <Grid item>
-                <HomeButton>Boogie Woogie</HomeButton>
-              </Grid>
+              {/* <Grid item>
+                <Home />
+              </Grid> */}
 
               <Grid item style={{ position: "absolute", right: 10 }}>
                 {!this.props.auth.isAuthenticated() && (
@@ -56,6 +50,7 @@ class Navbar extends Component {
                   />
                 )}
               </Grid>
+
               <Grid item style={{ position: "absolute", right: 100 }}>
                 {this.props.indexOfSelectedSong !== "" &&
                   this.props.moveSelected !== "" && <Retry />}

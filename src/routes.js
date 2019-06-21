@@ -30,9 +30,8 @@ export default () => {
           path="/profile"
           render={props => <Profile auth={auth} {...props} />}
         />
-
         <Route
-          path="/login"
+          path="/login/"
           render={props => {
             handleAuthentication(props);
             return <AuthCallback {...props} />;
