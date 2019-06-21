@@ -115,7 +115,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setSelectedMoveId: id => {
       dispatch({
-        type: "SELECTED_MOVEID",
+        type: "SELECTED_MOVE_ID",
         payload: id
       });
     }

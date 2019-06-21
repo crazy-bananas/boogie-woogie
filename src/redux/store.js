@@ -24,6 +24,7 @@ const initialState = {
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SELECT_SONG": {
+      console.log("Selected song:", action.payload)
       const newState = { ...state };
       newState.isSongSelected = true;
       newState.songSelected = action.payload;
@@ -90,9 +91,22 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
-    case "SELECTED_MOVEID": {
+    case "SELECTED_MOVE_ID": {
+      console.log("Selected moves:", action.payload)
       const newState = { ...state };
       newState.moveSelected = action.payload;
+      return newState;
+    }
+
+    case "SELECT_SONG_AND_MOVES": {
+      console.log("Selected song:", action.payload.selectedSong)
+      console.log("Selected moves:", action.payload.selectedMoves)
+      const newState = { ...state };
+      
+      newState.isSongSelected = true;
+      newState.songSelected = action.payload.selectedSong;
+
+      newState.moveSelected = action.payload.selectedMoves;
       return newState;
     }
 

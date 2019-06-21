@@ -18,7 +18,7 @@ import dancingPeople from "../images//WMpic/15809153.jpg";
 import RecordDanceModal from "./RecordDanceModal";
 import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
-import SongsAndMoves from "./List/SongsAndMoves";
+import SongsAndMoves from "./List/SelectSongsAndMoves";
 
 import axios from "axios";
 import RecordButton from "./Buttons/recordbutton";

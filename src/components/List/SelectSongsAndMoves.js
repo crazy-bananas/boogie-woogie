@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -11,7 +12,7 @@ import StarBorder from "@material-ui/icons/StarBorder";
 import MusicNote from "@material-ui/icons/MusicNote";
 import axios from "axios";
 
-class SongsAndMoves extends Component {
+class SelectSongsAndMoves extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +28,6 @@ class SongsAndMoves extends Component {
 
   componentDidUpdate() {
     if (this.state.moves.length === 0 && this.props.songList.length !== 0) {
-      console.log("Console here", this.props.songList[0].code);
       for (let i = 0; i < this.props.songList.length; ++i) {
         axios
           .get(
@@ -43,8 +43,6 @@ class SongsAndMoves extends Component {
           });
       }
     }
-    console.log("Songlist:", this.props.songList);
-    console.log("Moves:", this.state.moves);
   }
 
   render() {
@@ -70,7 +68,11 @@ class SongsAndMoves extends Component {
                   <MusicNote />
                 </ListItemIcon>
                 <ListItemText primary={song.title} />
-                {!!this.state.shouldShow[songIndex] ? <ExpandLess /> : <ExpandMore />}
+                {!!this.state.shouldShow[songIndex] ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )}
               </ListItem>
               {!!this.state.moves[songIndex] &&
                 this.state.moves[songIndex].map((move, moveIndex) => {
@@ -88,7 +90,13 @@ class SongsAndMoves extends Component {
                           </ListItemIcon>
                           <ListItemText
                             primary={move.name}
-                            onClick={() => console.log(this.state.songs)}
+                            onClick={() => {
+                              this.props.playSong({
+                                song: this.props.songList[songIndex].code,
+                                selectedMoves: move._id
+                              })
+                            }
+                            }
                           />
                         </ListItem>
                       </List>
@@ -103,4 +111,18 @@ class SongsAndMoves extends Component {
   }
 }
 
-export default SongsAndMoves;
+const mapDispatchToProps = dispatch => {
+  return {
+    playSong: songAndMoves => {
+      dispatch({
+        type: "SELECT_SONG_AND_MOVES",
+        payload: {
+          selectedSong: songAndMoves.song,
+          selectedMoves: songAndMoves.selectedMoves
+        }
+      });
+    }
+  };
+};
+
+export default connect(null, mapDispatchToProps)(SelectSongsAndMoves);
