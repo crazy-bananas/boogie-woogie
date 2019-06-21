@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import SongLoading from "../SongLoading";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -45,7 +46,7 @@ class SelectSongsAndMoves extends Component {
     }
   }
 
-  componentWillMount(){
+  componentWillMount() {
     // TODO: Make this cancel all axios calls!
   }
 
@@ -78,7 +79,16 @@ class SelectSongsAndMoves extends Component {
                   <ExpandMore />
                 )}
               </ListItem>
-              {!!this.state.moves[songIndex] &&
+              {!this.state.moves[songIndex] ? (
+                <Collapse
+                  in={!!this.state.shouldShow[songIndex]}
+                  timeout="auto"
+                  unmountOnExit
+                  key={"SongLoading" + songIndex}
+                >
+                  <SongLoading />
+                </Collapse>
+              ) : (
                 this.state.moves[songIndex].map((move, moveIndex) => {
                   return (
                     <Collapse
@@ -98,15 +108,15 @@ class SelectSongsAndMoves extends Component {
                               this.props.playSong({
                                 song: this.props.songList[songIndex].code,
                                 selectedMoves: move._id
-                              })
-                            }
-                            }
+                              });
+                            }}
                           />
                         </ListItem>
                       </List>
                     </Collapse>
                   );
-                })}
+                })
+              )}
             </div>
           );
         })}
@@ -129,4 +139,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(SelectSongsAndMoves);
+export default connect(
+  null,
+  mapDispatchToProps
+)(SelectSongsAndMoves);
