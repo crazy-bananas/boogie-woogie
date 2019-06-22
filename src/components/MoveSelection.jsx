@@ -10,13 +10,17 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import MusicVideo from "@material-ui/icons/MusicVideo";
 import Grid from "@material-ui/core/Grid";
 import "../styles/moveselection.css";
+import Fab from "@material-ui/core/Fab";
+import backIcon from "../images/backArrow.png";
+import Link from "@material-ui/core/Link";
 
 const MyList = styled(List)({
-  background: "rgba(218, 218, 218, 0.7)"
+  background: "rgba(218, 218, 218, 0.7)",
+  maxWidth: "50%",
+  minWidth: "25%"
 });
 
 const MyListItem = styled(ListItem)({
-  background: "rgba(242, 242, 242, 0.5);",
   width: "50vh"
 });
 
@@ -34,9 +38,7 @@ export class MoveSelection extends Component {
   componentDidMount() {
     axios
       .get(
-        `https://boogie-banana.herokuapp.com/api/moves/${
-          this.props.songSelected
-        }
+        `https://boogie-banana.herokuapp.com/api/moves/${this.props.songSelected}
         `
       )
       .then(data => {
@@ -57,22 +59,37 @@ export class MoveSelection extends Component {
     if (this.state.moves.length > 0) {
       return (
         <div id="move-selection">
+          <div style={{ position: "absolute", left: 30, top: 100 }}>
+            <Fab
+              size="medium"
+              color="secondary"
+              aria-label="Add"
+              className="fab"
+            >
+              <Link href="/">
+                <img src={backIcon} alt="back arrow icon" />
+              </Link>
+            </Fab>
+          </div>
           <h1>{this.state.title}</h1>
           <Grid container justify="center">
-            <MyList component="div">
+            <MyList>
               {this.state.moves.length !== 0 &&
                 this.state.moves.map((move, index) => {
                   return (
-                    <MyListItem 
-                      onClick={e => this.props.setSelectedMoveId(e)}
+                    <ListItem
+                      style={{ display: "inline-flex" }}
                       key={index}
-                      data-key={move._id}
+                      button
+                      onClick={() => this.props.setSelectedMoveId(move._id)}
                     >
                       <ListItemIcon>
                         <MusicVideo />
                       </ListItemIcon>
-                      {move.name}
-                    </MyListItem>
+                      <MyListItem style={{ margin: 0, padding: 0 }}>
+                        {move.name}
+                      </MyListItem>
+                    </ListItem>
                   );
                 })}
             </MyList>
@@ -96,10 +113,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSelectedMoveId: event => {
+    setSelectedMoveId: id => {
       dispatch({
         type: "SELECTED_MOVEID",
-        payload: event.target.dataset.key
+        payload: id
       });
     }
   };

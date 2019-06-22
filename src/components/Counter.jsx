@@ -38,14 +38,14 @@ class Counter extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isSongSelected: state.isSongSelected,
     isUserReady: state.isUserReady
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     countdownFinished: () => {
       dispatch({

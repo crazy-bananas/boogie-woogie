@@ -1,6 +1,6 @@
 const drawNose = (ctx, noseCoordinates, references) => {
   if (!references) return;
-  
+
   const height = 70;
   const width = 70;
   const x = noseCoordinates.x - 30;
@@ -10,7 +10,7 @@ const drawNose = (ctx, noseCoordinates, references) => {
 };
 
 const drawHand = (ctx, wrist, elbow, hand) => {
-  if(!hand) return;
+  if (!hand) return;
 
   const spacingX = 50;
   const spacingY = 50;
@@ -39,7 +39,7 @@ function calculateHandRotationAngle(wristPosition, elbowPosition) {
 }
 
 const drawShoes = (ctx, leftAnkle, leftAnkleImg, rightAnkle, rightAnkleImg) => {
-  if(!leftAnkleImg && !rightAnkleImg) return;
+  if (!leftAnkleImg && !rightAnkleImg) return;
 
   const height = 50;
   const width = 75;
@@ -84,12 +84,7 @@ const drawLimb = (ctx, elbow, wrist, limb) => {
 const drawPose = (ctx, pose, references) => {
   drawNose(ctx, pose.nose, references.noseRef.current);
 
-  drawHand(
-    ctx,
-    pose.leftWrist,
-    pose.leftElbow,
-    references.leftHandRef.current
-  );
+  drawHand(ctx, pose.leftWrist, pose.leftElbow, references.leftHandRef.current);
 
   drawHand(
     ctx,
@@ -99,19 +94,15 @@ const drawPose = (ctx, pose, references) => {
   );
 
   drawShoes(
-    ctx, 
-    pose.leftAnkle, 
-    references.leftShoeRef.current, 
-    pose.rightAnkle, 
-    references.rightShoeRef.current);
+    ctx,
+    pose.leftAnkle,
+    references.leftShoeRef.current,
+    pose.rightAnkle,
+    references.rightShoeRef.current
+  );
 
   // bottom arm
-  drawLimb(
-    ctx,
-    pose.leftElbow,
-    pose.leftWrist,
-    references.leftDownRef.current
-  );
+  drawLimb(ctx, pose.leftElbow, pose.leftWrist, references.leftDownRef.current);
   drawLimb(
     ctx,
     pose.rightElbow,
@@ -140,12 +131,7 @@ const drawPose = (ctx, pose, references) => {
     pose.rightKnee,
     references.rightUpperRef.current
   );
-  drawLimb(
-    ctx,
-    pose.leftHip,
-    pose.leftKnee,
-    references.leftUpperRef.current
-  );
+  drawLimb(ctx, pose.leftHip, pose.leftKnee, references.leftUpperRef.current);
 
   // bottom leg
   drawLimb(
@@ -154,12 +140,7 @@ const drawPose = (ctx, pose, references) => {
     pose.rightAnkle,
     references.rightDownRef.current
   );
-  drawLimb(
-    ctx,
-    pose.leftKnee,
-    pose.leftAnkle,
-    references.leftDownRef.current
-  );
+  drawLimb(ctx, pose.leftKnee, pose.leftAnkle, references.leftDownRef.current);
 };
 
-module.exports = {drawHand, drawShoes, drawPose}
+module.exports = { drawHand, drawShoes, drawPose };
