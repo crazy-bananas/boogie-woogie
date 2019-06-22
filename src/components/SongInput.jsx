@@ -5,11 +5,8 @@ import { styled } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import RecordWindow from "./RecordWindow";
-import FinishRecording from "./FinishRecording";
-import SongInput from "./SongInput";
+
 import dotenv from "dotenv";
-import Navbar from "./Navbar";
 dotenv.config();
 const MyButton = styled(Button)({
   marginTop: "20px"
@@ -21,7 +18,7 @@ const MyTypography = styled(Typography)({
   fontWeight: "300"
 });
 
-export class Record extends Component {
+export class SongInput extends Component {
   constructor(props) {
     super(props);
     this.fileInputRef = React.createRef();
@@ -75,18 +72,42 @@ export class Record extends Component {
   render() {
     return (
       <div>
-        <Navbar auth={this.props.auth} />
-        {!this.props.isRecording && !this.props.isAudioFinished && (
-          <SongInput />
-        )}
+        <form
+          noValidate
+          style={{
+            width: "70%",
+            marginTop: "20px",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          {this.state.error.length > 0 && (
+            <MyTypography variant="body1" component="h2">
+              {this.state.error}
+            </MyTypography>
+          )}
 
-        {this.props.isRecording && !this.props.isAudioFinished && (
-          <RecordWindow />
-        )}
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="youtube"
+            label="youtube URL"
+            type="youtube"
+            id="youtube"
+            onChange={this.setSongUrl}
+          />
 
-        {this.props.isRecording && this.props.isAudioFinished && (
-          <FinishRecording />
-        )}
+          <MyButton
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={this.saveSongData}
+          >
+            Start Recording
+          </MyButton>
+        </form>
       </div>
     );
   }
@@ -113,4 +134,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Record);
+)(SongInput);

@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import DanceWindow from "./DanceWindow";
 
 import Score from "./Score";
-import MoveSelection from "./MoveSelection";
 
 import axios from "axios";
 
@@ -62,9 +61,9 @@ class App extends Component {
       <div className="App">
         <Navbar auth={this.props.auth} />
         {this.showMenu() && <SongMenu auth={this.props.auth} />}
-        {this.props.isSongSelected &&
+        {/* {this.props.isSongSelected &&
           !this.props.isAudioFinished &&
-          this.props.moveSelected.length === 0 && <MoveSelection />}
+          this.props.moveSelected.length === 0 && <MoveSelection />} */}
 
         {this.props.isSongSelected &&
           !this.props.isAudioFinished &&

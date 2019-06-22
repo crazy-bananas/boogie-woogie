@@ -110,6 +110,14 @@ export default class Auth {
     // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = localStorage.getItem("expireAt");
+    let timenow = new Date();
+    if (timenow.getTime() > expiresAt) {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("expireAt");
+      localStorage.removeItem("user");
+      localStorage.removeItem("picture");
+      localStorage.removeItem("email");
+    }
     return new Date().getTime() < expiresAt;
   }
 }

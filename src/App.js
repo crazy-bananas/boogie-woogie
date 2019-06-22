@@ -7,7 +7,7 @@ import DanceWindow from "./components/DanceWindow";
 import RecordWindow from "./components/RecordWindow";
 import FinishRecording from "./components/FinishRecording";
 import Score from "./components/Score";
-import MoveSelection from "./components/MoveSelection";
+
 import TopPage from "./components/TopPage";
 import axios from "axios";
 
