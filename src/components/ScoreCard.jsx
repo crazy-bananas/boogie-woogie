@@ -32,25 +32,16 @@ class ScoreCard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.username !== undefined) {
-      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
-        songId: this.props.songSelected,
-        moveId: this.props.moveSelected,
-        user: this.props.username,
-        score: this.props.score,
-        pic: this.props.userpic,
-        userId: this.props.userId
-      });
-    } else {
-      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
-        songId: this.props.songSelected,
-        moveId: this.props.moveSelected,
-        user: "Anonymous",
-        score: this.props.score,
-        pic: "https://dummyimage.com/600x400/000/fff",
-        userId: "default"
-      });
-    }
+    axios.post("https://boogie-banana.herokuapp.com/api/scores", {
+      songId: this.props.songSelected,
+      moveId: this.props.moveSelected,
+      user: localStorage.getItem("user-nickname") || "Anonymous",
+      score: this.props.score,
+      pic:
+        localStorage.getItem("user-picture") ||
+        "https://dummyimage.com/600x400/000/fff",
+      userId: localStorage.getItem("user-id") || "default"
+    });
   }
   render() {
     return (
@@ -81,10 +72,7 @@ const mapStateToProps = state => {
     score: state.totalScore,
     maxScore: state.maxScore,
     songSelected: state.songSelected,
-    moveSelected: state.moveSelected,
-    username: state.userAuthInfo.nickname,
-    userpic: state.userAuthInfo.picture,
-    userId: state.userAuthInfo.sub
+    moveSelected: state.moveSelected
   };
 };
 
