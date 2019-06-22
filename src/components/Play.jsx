@@ -4,8 +4,7 @@ import Navbar from "./Navbar";
 import SongMenu from "./SongMenu";
 import { connect } from "react-redux";
 import DanceWindow from "./DanceWindow";
-import RecordWindow from "./RecordWindow";
-import FinishRecording from "./FinishRecording";
+
 import Score from "./Score";
 import MoveSelection from "./MoveSelection";
 
@@ -72,14 +71,6 @@ class App extends Component {
           this.props.moveSelected.length !== 0 && <DanceWindow />}
 
         {this.props.isSongSelected && this.props.isAudioFinished && <Score />}
-
-        {this.props.isRecording && !this.props.isAudioFinished && (
-          <RecordWindow />
-        )}
-
-        {this.props.isRecording && this.props.isAudioFinished && (
-          <FinishRecording />
-        )}
       </div>
     );
   }
