@@ -68,16 +68,18 @@ class Profile extends Component {
             {localStorage.getItem("user-nickname")}
           </Typography>
           <Typography variant="body2" gutterBottom>
-            Email: {localStorage.getItem("user-email")}
-            <p className="p">
-              {" "}
+            <span className="userInfo">
+              E-mail: {localStorage.getItem("user-email")}
+            </span>
+            <br/>
+            <span className="userInfo">
               Total Score : {this.getTotalScore(this.state.usersScores)} Points
-            </p>
-            <p className="p">
-              {" "}
-              Average Score : {this.getAverageScore(this.state.usersScores)}{" "}
+            </span>
+            <br/>
+            <span className="userInfo">
+              Average Score : {this.getAverageScore(this.state.usersScores) + " Points"}
               Points
-            </p>
+            </span>
           </Typography>
         </div>
       );
