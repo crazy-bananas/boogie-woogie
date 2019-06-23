@@ -149,8 +149,8 @@ export default function CustomPaginationActionsTable(props) {
             <TableBody>
               {props.allScores
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(row => (
-                  <TableRow>
+                .map((row, index) => (
+                  <TableRow key={"row-" + index}>
                     <StyledTableCell align="left">{row.title}</StyledTableCell>
                     <StyledTableCell align="left">{row.score}</StyledTableCell>
                   </TableRow>
