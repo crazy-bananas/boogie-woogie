@@ -131,15 +131,14 @@ export default function CustomPaginationActionsTable(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
   function isDataFetched(props) {
-    if (props.data === 0) {
+    if (!props.allScores) {
       return <Loading />;
     }
-
     const emptyRows =
       rowsPerPage -
-      Math.min(rowsPerPage, props.data.length - page * rowsPerPage);
+      Math.min(rowsPerPage, props.allScores.length - page * rowsPerPage);
     return (
-      <div className={classes.tableWrapper}>
+      <span className={classes.tableWrapper}>
         <h2 className="dance-histroy">Your Dance History</h2>
         <Paper className={classes.root}>
           <Table className={classes.table}>
@@ -148,10 +147,10 @@ export default function CustomPaginationActionsTable(props) {
               <StyledTableCell align="left">Points</StyledTableCell>
             </TableHead>
             <TableBody>
-              {props.data.data
+              {props.allScores
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(row => (
-                  <TableRow>
+                .map((row, index) => (
+                  <TableRow key={"row-" + index}>
                     <StyledTableCell align="left">{row.title}</StyledTableCell>
                     <StyledTableCell align="left">{row.score}</StyledTableCell>
                   </TableRow>
@@ -159,7 +158,7 @@ export default function CustomPaginationActionsTable(props) {
 
               {emptyRows > 0 && (
                 <TableRow style={{ height: 48 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={2} />
                 </TableRow>
               )}
             </TableBody>
@@ -168,7 +167,7 @@ export default function CustomPaginationActionsTable(props) {
             style={{ width: "900px" }}
             rowsPerPageOptions={[5, 10, 25]}
             colSpan={2}
-            count={props.data.data.length}
+            count={props.allScores.length}
             rowsPerPage={rowsPerPage}
             page={page}
             SelectProps={{
@@ -180,7 +179,7 @@ export default function CustomPaginationActionsTable(props) {
             ActionsComponent={TablePaginationActions}
           />
         </Paper>
-      </div>
+      </ span>
     );
   }
   return isDataFetched(props);
