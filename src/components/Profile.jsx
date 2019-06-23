@@ -18,7 +18,7 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: 0
+      usersScores: []
     };
   }
   componentDidMount() {
@@ -27,31 +27,31 @@ class Profile extends Component {
       axios
         .get(`https://boogie-banana.herokuapp.com/api/scores/${user}`)
         .then(data => {
-          this.setState({ data: data });
+          this.setState({ usersScores: data.data });
         })
         .catch(error => {
           throw new Error(`Getting user info: ${error.message}`);
         });
     }
   }
-  getTotalScore = data => {
+  getTotalScore = allScores => {
     let score = 0;
-    if (data.length === 0) return score;
+    if (allScores.length === 0) return score;
 
-    for (let i = 0; i < data.length; i++) {
-      score += data[i].score;
+    for (let i = 0; i < allScores.length; i++) {
+      score += allScores[i].score;
     }
     return score;
   };
 
-  getAverageScore = data => {
-    if (data.length === 0) return 0;
-    let overAllScore = this.getTotalScore(data);
-    return Math.round(overAllScore / data.length);
+  getAverageScore = allScores => {
+    if (allScores.length === 0) return 0;
+    let overAllScore = this.getTotalScore(allScores);
+    return Math.round(overAllScore / allScores.length);
   };
 
   isUserDataFetched = () => {
-    if (localStorage.getItem("user-id") && this.state.data !== 0) {
+    if (localStorage.getItem("user-id") && !!this.state.usersScores) {
       return (
         <div>
           <Fab size="medium" color="secondary" aria-label="Add" className="fab">
@@ -71,17 +71,17 @@ class Profile extends Component {
             Email: {localStorage.getItem("user-email")}
             <p className="p">
               {" "}
-              Total Score : {this.getTotalScore(this.state.data.data)} Points
+              Total Score : {this.getTotalScore(this.state.usersScores)} Points
             </p>
             <p className="p">
               {" "}
-              Average Score : {this.getAverageScore(this.state.data.data)}{" "}
+              Average Score : {this.getAverageScore(this.state.usersScores)}{" "}
               Points
             </p>
           </Typography>
         </div>
       );
-    }
+    } 
     return <Loading />;
   };
 
@@ -94,7 +94,7 @@ class Profile extends Component {
             <Box flexDirection="col">{this.isUserDataFetched()}</Box>
           </Grid>
           <Grid item xs={9}>
-            <ProfileTable data={this.state.data} />
+            <ProfileTable allScores={this.state.usersScores} />
           </Grid>
         </Container>
       </div>

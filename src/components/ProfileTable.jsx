@@ -131,13 +131,12 @@ export default function CustomPaginationActionsTable(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
   function isDataFetched(props) {
-    if (props.data === 0) {
+    if (!props.allScores) {
       return <Loading />;
     }
-
     const emptyRows =
       rowsPerPage -
-      Math.min(rowsPerPage, props.data.length - page * rowsPerPage);
+      Math.min(rowsPerPage, props.allScores.length - page * rowsPerPage);
     return (
       <div className={classes.tableWrapper}>
         <h2 className="dance-histroy">Your Dance History</h2>
@@ -148,7 +147,7 @@ export default function CustomPaginationActionsTable(props) {
               <StyledTableCell align="left">Points</StyledTableCell>
             </TableHead>
             <TableBody>
-              {props.data.data
+              {props.allScores
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => (
                   <TableRow>
@@ -168,7 +167,7 @@ export default function CustomPaginationActionsTable(props) {
             style={{ width: "900px" }}
             rowsPerPageOptions={[5, 10, 25]}
             colSpan={2}
-            count={props.data.data.length}
+            count={props.allScores.length}
             rowsPerPage={rowsPerPage}
             page={page}
             SelectProps={{
