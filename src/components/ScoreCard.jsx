@@ -32,25 +32,42 @@ class ScoreCard extends Component {
   }
 
   componentDidMount() {
+    this.axiosCancelSource = axios.CancelToken.source();
     if (this.props.username !== undefined) {
-      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
-        songId: this.props.songSelected,
-        moveId: this.props.moveSelected,
-        user: this.props.username,
-        score: this.props.score,
-        pic: this.props.userpic,
-        userId: this.props.userId
-      });
+      axios.post(
+        "https://boogie-banana.herokuapp.com/api/scores",
+        {
+          songId: this.props.songSelected,
+          moveId: this.props.moveSelected,
+          user: this.props.username,
+          score: this.props.score,
+          pic: this.props.userpic,
+          userId: this.props.userId
+        },
+        {
+          cancelToken: this.axiosCancelSource.token
+        }
+      );
     } else {
-      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
-        songId: this.props.songSelected,
-        moveId: this.props.moveSelected,
-        user: "Anonymous",
-        score: this.props.score,
-        pic: "https://dummyimage.com/600x400/000/fff",
-        userId: "default"
-      });
+      axios.post(
+        "https://boogie-banana.herokuapp.com/api/scores",
+        {
+          songId: this.props.songSelected,
+          moveId: this.props.moveSelected,
+          user: "Anonymous",
+          score: this.props.score,
+          pic: "https://dummyimage.com/600x400/000/fff",
+          userId: "default"
+        },
+        {
+          cancelToken: this.axiosCancelSource.token
+        }
+      );
     }
+  }
+
+  componentWillUnmount() {
+    this.axiosCancelSource.cancel("Component unmounted.");
   }
   render() {
     return (
