@@ -89,11 +89,11 @@ class Profile extends Component {
     return (
       <div>
         <Navbar auth={this.props.auth} />
-        <Container className="wrapper">
-          <Grid item xs={3} justify="center">
+        <Container className="wrapper" justify="center">
+          <Grid item xs={3}>
             <Box flexDirection="col">{this.isUserDataFetched()}</Box>
           </Grid>
-          <Grid item xs={9} justify="center">
+          <Grid item xs={9}>
             <ProfileTable data={this.state.data} />
           </Grid>
         </Container>
