@@ -22,7 +22,7 @@ class Profile extends Component {
     };
   }
   componentDidMount() {
-    let user = localStorage.getItem("user");
+    let user = localStorage.getItem("user-id");
     if (user) {
       axios
         .get(`https://boogie-banana.herokuapp.com/api/scores/${user}`)
@@ -51,7 +51,7 @@ class Profile extends Component {
   };
 
   isUserDataFetched = () => {
-    if (this.props.userAuthInfo && this.state.data !== 0) {
+    if (localStorage.getItem("user-id") && this.state.data !== 0) {
       return (
         <div>
           <Fab size="medium" color="secondary" aria-label="Add" className="fab">
@@ -61,14 +61,14 @@ class Profile extends Component {
           </Fab>
           <Avatar
             alt="Profile Picture"
-            src={localStorage.getItem("picture")}
+            src={localStorage.getItem("user-picture")}
             className="bigAvatar"
           />
           <Typography variant="h6" gutterBottom>
-            {this.props.userAuthInfonickname}
+            {localStorage.getItem("user-nickname")}
           </Typography>
           <Typography variant="body2" gutterBottom>
-            Email: {localStorage.getItem("email")}
+            Email: {localStorage.getItem("user-email")}
             <p className="p">
               {" "}
               Total Score : {this.getTotalScore(this.state.data.data)} Points
@@ -103,10 +103,9 @@ class Profile extends Component {
 }
 const mapStateToProps = state => {
   return {
-    userAuthInfo: state.userAuthInfo,
     currentScore: state.currentScore,
     songSelected: state.songSelected,
-    moveSelected: state.moveSelected
+    moveSelected: state.moveSelected,
   };
 };
 export default connect(mapStateToProps)(Profile);

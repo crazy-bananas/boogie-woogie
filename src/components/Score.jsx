@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import ScoreCard from "./ScoreCard";
 import HighScore from "./HighScore";
 
@@ -36,14 +35,4 @@ class Score extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    currentScore: state.totalScore,
-    songSelected: state.songSelected,
-    moveSelected: state.moveSelected,
-    username: state.userAuthInfo.nickname,
-    userpic: state.userAuthInfo.picture
-  };
-};
-
-export default connect(mapStateToProps)(Score);
+export default Score;
