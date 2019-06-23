@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const REACT_APP_AUTH_REDIRECT_LINK =
-  process.env.REACT_APP_AUTH_REDIRECT_LINK || "/";
+  process.env.REACT_APP_AUTH_REDIRECT_LINK ||
+  "https://boogie-woogie-banana.herokuapp.com/";
 const REDIRECT_SUB =
   REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length - 1] === "/"
     ? "login"
