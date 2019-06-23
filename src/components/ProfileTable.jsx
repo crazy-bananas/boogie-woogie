@@ -138,7 +138,7 @@ export default function CustomPaginationActionsTable(props) {
       rowsPerPage -
       Math.min(rowsPerPage, props.allScores.length - page * rowsPerPage);
     return (
-      <div className={classes.tableWrapper}>
+      <span className={classes.tableWrapper}>
         <h2 className="dance-histroy">Your Dance History</h2>
         <Paper className={classes.root}>
           <Table className={classes.table}>
@@ -158,7 +158,7 @@ export default function CustomPaginationActionsTable(props) {
 
               {emptyRows > 0 && (
                 <TableRow style={{ height: 48 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={2} />
                 </TableRow>
               )}
             </TableBody>
@@ -179,7 +179,7 @@ export default function CustomPaginationActionsTable(props) {
             ActionsComponent={TablePaginationActions}
           />
         </Paper>
-      </div>
+      </ span>
     );
   }
   return isDataFetched(props);
