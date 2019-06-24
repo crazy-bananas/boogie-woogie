@@ -5,6 +5,7 @@ import { styled } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import "../styles/songinput.css";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -71,14 +72,15 @@ export class SongInput extends Component {
 
   render() {
     return (
-      <div>
+      <div id="songinput">
         <form
           noValidate
           style={{
             width: "70%",
             marginTop: "20px",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            width: "50%"
           }}
         >
           {this.state.error.length > 0 && (
@@ -102,7 +104,7 @@ export class SongInput extends Component {
           <MyButton
             fullWidth
             variant="contained"
-            color="primary"
+            color="secondary"
             onClick={this.saveSongData}
           >
             Start Recording
