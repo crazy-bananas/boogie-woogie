@@ -1,10 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
 import "../styles/topPage.css";
-import { makeStyles } from "@material-ui/core/styles";
-import ButtonBase from "@material-ui/core/ButtonBase";
 import playImage from "../images/WMpic/16873098-active-jumping-and-dancing-young-woman-abstract-music-banner-.jpg";
 import record from "../images/WMpic/4788200-turntable-loudspeakers-on-grunge-rainbow-background.jpg";
 import playButton from "../images/WMpic/imageedit_8_7907633207.gif";
