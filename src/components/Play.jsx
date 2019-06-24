@@ -9,7 +9,16 @@ import Score from "./Score";
 import axios from "axios";
 
 class App extends Component {
-  componentDidMount() {
+  async omponentDidMount() {
+    if (this.props.location.pathname !== '/callback'){
+      try {
+        await this.props.auth.silentAuth();
+        this.forceUpdate();
+      } catch (err) {
+        if (err.error !== 'login_required') console.log(err.error);
+      }
+    }
+    
     if (localStorage.getItem("isLoggedIn")) {
       axios
         .get("https://dev-boogie-woogie.auth0.com/userinfo", {
