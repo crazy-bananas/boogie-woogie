@@ -32,16 +32,27 @@ class ScoreCard extends Component {
   }
 
   componentDidMount() {
-    axios.post("https://boogie-banana.herokuapp.com/api/scores", {
-      songId: this.props.songSelected,
-      moveId: this.props.moveSelected,
-      user: localStorage.getItem("user-nickname") || "Anonymous",
-      score: this.props.score,
-      pic:
-        localStorage.getItem("user-picture") ||
-        "https://dummyimage.com/600x400/000/fff",
-      userId: localStorage.getItem("user-id") || "default"
-    });
+    this.axiosCancelSource = axios.CancelToken.source();
+    axios.post(
+      "https://boogie-banana.herokuapp.com/api/scores",
+      {
+        songId: this.props.songSelected,
+        moveId: this.props.moveSelected,
+        user: localStorage.getItem("user-nickname") || "Anonymous",
+        score: this.props.score,
+        pic:
+          localStorage.getItem("user-picture") ||
+          "https://dummyimage.com/600x400/000/fff",
+        userId: localStorage.getItem("user-id") || "default"
+      },
+      {
+        cancelToken: this.axiosCancelSource.token
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    this.axiosCancelSource.cancel("Component unmounted.");
   }
   render() {
     return (

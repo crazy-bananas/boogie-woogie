@@ -1,10 +1,12 @@
 import React from "react";
 import { Route, Router } from "react-router-dom";
 import App from "./App";
+import Play from "./components/Play";
 import AuthCallback from "./components/AuthCallback/AuthCallback";
 import Auth from "./authentication/Auth";
+import SongMenu from "./components/SongMenu";
 import Profile from "./components/Profile";
-
+import Record from "./components/Record";
 import history from "./history";
 
 const auth = new Auth();
@@ -35,6 +37,16 @@ export default () => {
             handleAuthentication(props);
             return <AuthCallback {...props} />;
           }}
+        />
+        <Route
+          exact
+          path="/play"
+          render={props => <Play auth={auth} {...props} />}
+        />
+        <Route
+          exact
+          path="/record"
+          render={props => <Record auth={auth} {...props} />}
         />
       </div>
     </Router>

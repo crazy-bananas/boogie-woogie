@@ -42,11 +42,20 @@ class SongMenu extends Component {
   };
 
   componentDidMount() {
-    axios.get("https://boogie-banana.herokuapp.com/api/songs").then(songs => {
-      setTimeout(() => {
-        this.setState({ isLoading: false, songList: songs.data });
-      }, 1000);
-    }); // TODO: We need to catch this error
+    this.axiosCancelSource = axios.CancelToken.source();
+    axios
+      .get("https://boogie-banana.herokuapp.com/api/songs", {
+        cancelToken: this.axiosCancelSource.token
+      })
+      .then(songs => {
+        setTimeout(() => {
+          this.setState({ isLoading: false, songList: songs.data });
+        }, 1000);
+      }); // TODO: We need to catch this error
+  }
+
+  componentWillUnmount() {
+    this.axiosCancelSource.cancel("Component unmounted.");
   }
 
   render() {
@@ -104,6 +113,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-)(SongMenu);
+export default connect(mapStateToProps)(SongMenu);

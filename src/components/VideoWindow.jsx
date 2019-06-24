@@ -328,7 +328,10 @@ export class VideoWindow extends Component {
           this.drawCurrentDancePose();
         }
 
-        if (!this.state.killRequestAnimationFrame) {
+        if (
+          !this.state.killRequestAnimationFrame &&
+          this.indexCorrectP < this.state.correctPoses.length - 1
+        ) {
           requestAnimationFrame(poseDetectionFrame);
         }
       };
@@ -381,7 +384,7 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({killRequestAnimationFrame: true});
+    this.setState({ killRequestAnimationFrame: true });
     this.props.updateTotalScore(this.score);
     clearInterval(this.danceIntervalStopValue);
 
