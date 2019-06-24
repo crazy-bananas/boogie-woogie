@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import "./App.css";
-import Navbar from "./components/Navbar";
-import SongMenu from "./components/SongMenu";
+import Navbar from "./Navbar";
+import SongMenu from "./SongMenu";
 import { connect } from "react-redux";
-import DanceWindow from "./components/DanceWindow";
-import RecordWindow from "./components/RecordWindow";
-import FinishRecording from "./components/FinishRecording";
-import Score from "./components/Score";
+import DanceWindow from "./DanceWindow";
+import RecordWindow from "./RecordWindow";
+import FinishRecording from "./FinishRecording";
+import Score from "./Score";
 import axios from "axios";
 
 class App extends Component {
