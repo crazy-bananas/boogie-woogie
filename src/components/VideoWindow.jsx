@@ -383,7 +383,7 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({killRequestAnimationFrame: true});
+    this.setState({ killRequestAnimationFrame: true });
     this.props.updateTotalScore(this.score);
     clearInterval(this.danceIntervalStopValue);
 

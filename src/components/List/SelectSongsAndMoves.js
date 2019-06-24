@@ -51,6 +51,7 @@ class SelectSongsAndMoves extends Component {
   }
 
   componentWillUnmount() {
+    console.log("component unmounted");
     this.axiosCancelSource.cancel("Component unmounted.");
   }
 
