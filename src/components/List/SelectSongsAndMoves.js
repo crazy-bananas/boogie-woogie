@@ -47,7 +47,10 @@ class SelectSongsAndMoves extends Component {
           })
           .catch(err => {
             if (axios.isCancel(err)) {
-              console.log("Axios request canceled.", err.message);
+              console.log(
+                "Axios request in SelectSongsAndMoves.js to fetch moves data was cancelled.",
+                err.message
+              );
             } else {
               throw new Error(err.message);
             }
