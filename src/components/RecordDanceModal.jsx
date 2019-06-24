@@ -13,6 +13,9 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
+const CancelToken = axios.CancelToken;
+const cancelAxios = CancelToken.source();
+
 const MyButton = styled(Button)({
   marginTop: "20px"
 });
@@ -42,6 +45,11 @@ class SimpleModal extends Component {
       error: ""
     };
   }
+
+  componentWillUnmount(){
+    cancelAxios.cancel("Operation canceled by the user.");
+  }
+  
   handleClose = () => {
     this.setState({ setOpen: false });
   };
@@ -66,7 +74,8 @@ class SimpleModal extends Component {
 
       axios
         .get(
-          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
+          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`,
+          { cancelToken: cancelAxios.token }
         )
         .then(data => {
           this.props.addSong({
@@ -75,9 +84,16 @@ class SimpleModal extends Component {
           });
         })
         .catch(err => {
-          this.setState({
-            error: "Couldn't get title of youtube video. Please try again"
-          });
+          if (axios.isCancel(err)) {
+            console.log(
+              "Axios request in RecordDanceModal.jsx to fetch youtube video info was canceled.",
+              err.message
+            );
+          } else {
+            this.setState({
+              error: "Couldn't get title of youtube video. Please try again"
+            });
+          }
         });
 
       this.handleClose();
