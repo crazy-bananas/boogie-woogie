@@ -23,6 +23,9 @@ import leftUpper from "../images/body/leftUpper.png";
 import rightDown from "../images/body/rightDown.png";
 import rightUpper from "../images/body/rightUpper.png";
 
+const CancelToken = axios.CancelToken;
+const cancelAxios = CancelToken.source();
+
 export class VideoWindow extends Component {
   constructor(props) {
     super(props);
@@ -273,9 +276,8 @@ export class VideoWindow extends Component {
     if (!this.props.isRecording) {
       axios
         .get(
-          `https://boogie-banana.herokuapp.com/api/moves/${
-            this.props.moveSelected
-          }`
+          `https://boogie-banana.herokuapp.com/api/moves/${this.props.moveSelected}`,
+          { cancelToken: cancelAxios.token }
         )
         .then(poses => {
           this.setState({ correctPoses: poses.data[0].moves });
@@ -283,6 +285,16 @@ export class VideoWindow extends Component {
             (this.state.correctPoses.length * this.bodyParts.length) / 10
           );
           this.props.updateMaxScore(maxScore);
+        })
+        .catch(err => {
+          if (axios.isCancel(err)) {
+            console.log(
+              "Axios request in VideoWindow.jsx to fetch moves was canceled.",
+              err.message
+            );
+          } else {
+            throw new Error(err.message);
+          }
         });
     }
 
@@ -383,6 +395,7 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
+    cancelAxios.cancel("Operation canceled by the user.");
     this.setState({ killRequestAnimationFrame: true });
     this.props.updateTotalScore(this.score);
     clearInterval(this.danceIntervalStopValue);
