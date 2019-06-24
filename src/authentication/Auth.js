@@ -18,7 +18,7 @@ export default class Auth {
 
   auth0 = new auth0.WebAuth({
     domain: "dev-boogie-woogie.auth0.com",
-    clientID: "Pr3GPwMGwsocCaKKlHn6RR46YGsgWNlJ",
+    clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
     redirectUri: REACT_APP_AUTH_REDIRECT_LINK + REDIRECT_SUB,
     responseType: "token id_token",
     scope: "openid profile email"
@@ -39,14 +39,16 @@ export default class Auth {
   }
 
   handleAuthentication() {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
+    return new Promise((resolve, reject) => {
+      this.auth0.parseHash((err, authResult) => {
+        if (err) return reject(err);
+        if (!authResult || !authResult.idToken) {
+          return reject(err);
+        }
         this.setSession(authResult);
-      } else if (err) {
-        history.replace("/failedlogin");
-        alert(`Error: ${err.error}. Check the console for further details.`);
-      }
-    });
+        resolve();
+      });
+    })
   }
 
   getAccessToken() {
@@ -67,7 +69,9 @@ export default class Auth {
 
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
-    this.expiresAt = expiresAt;
+    this.profile = authResult.idTokenPayload;
+    // set the time that the id token will expire at
+    this.expiresAt = authResult.idTokenPayload.exp * 1000;
 
     // navigate to the home route
     history.replace("/");
@@ -101,6 +105,24 @@ export default class Auth {
 
     // navigate to the home route
     history.replace("/");
+  }
+
+  signOut() {
+    this.auth0.logout({
+      returnTo: process.env.REACT_APP_AUTH_REDIRECT_LINK ||
+      "https://boogie-woogie-banana.herokuapp.com/",
+      clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
+    });
+  }
+
+  silentAuth() {
+    return new Promise((resolve, reject) => {
+      this.auth0.checkSession({}, (err, authResult) => {
+        if (err) return reject(err);
+        this.setSession(authResult);
+        resolve();
+      });
+    });
   }
 
   isAuthenticated() {
