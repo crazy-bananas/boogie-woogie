@@ -106,7 +106,7 @@ class Profile extends Component {
 
   render() {
     return (
-      <div>
+      <div id="background">
         <Navbar auth={this.props.auth} />
         <Container className="wrapper" justify="center">
           <Grid item xs={3}>

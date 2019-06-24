@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "../styles/retry.css";
 import HomeIcon from "@material-ui/icons/Home";
-import CachedIcon from "@material-ui/icons/Cached";
 
 const useStyles = makeStyles(theme => ({
   buttons: {},
@@ -16,9 +15,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 function Retry(props) {
-  function retry() {
-    props.retryDance();
-  }
   function home() {
     props.returnHome();
   }
@@ -26,14 +22,6 @@ function Retry(props) {
   return (
     <div id="scoreButtons">
       <div id="retry">
-        <Button
-          onClick={() => {
-            retry();
-          }}
-          className={classes.buttons}
-        >
-          <CachedIcon style={{ color: "white" }} />
-        </Button>
         <Button
           onClick={() => {
             home();

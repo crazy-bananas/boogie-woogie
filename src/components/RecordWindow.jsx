@@ -13,7 +13,7 @@ class RecordWindow extends Component {
 
   render() {
     return (
-      <div>
+      <div id="danceWindow">
         <VideoWindow />
         <Counter />
         {this.props.isCountdownFinished && (

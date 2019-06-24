@@ -18,7 +18,7 @@ class DanceWindow extends Component {
 
   render() {
     return (
-      <div>
+      <div id="danceWindow">
         <VideoWindow />
         <Counter />
 
