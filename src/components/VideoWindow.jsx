@@ -95,7 +95,8 @@ export class VideoWindow extends Component {
       leftAnkleMatched: false,
       rightAnkleMatched: false,
       correctPoses: [],
-      combo: 0
+      combo: 0,
+      killRequestAnimationFrame: false
     };
 
     this.startPosition = {
@@ -327,7 +328,7 @@ export class VideoWindow extends Component {
           this.drawCurrentDancePose();
         }
 
-        if (!this.props.isAudioFinished) {
+        if (!this.state.killRequestAnimationFrame) {
           requestAnimationFrame(poseDetectionFrame);
         }
       };
@@ -380,6 +381,7 @@ export class VideoWindow extends Component {
   }
 
   componentWillUnmount() {
+    this.setState({killRequestAnimationFrame: true});
     this.props.updateTotalScore(this.score);
     clearInterval(this.danceIntervalStopValue);
 
