@@ -28,14 +28,6 @@ function Retry(props) {
       <div id="retry">
         <Button
           onClick={() => {
-            retry();
-          }}
-          className={classes.buttons}
-        >
-          <CachedIcon style={{ color: "white" }} />
-        </Button>
-        <Button
-          onClick={() => {
             home();
           }}
           className={classes.buttons}
