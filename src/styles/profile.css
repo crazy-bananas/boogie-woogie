@@ -60,3 +60,11 @@ body {
     #ffffff 1px -1px 0, #ffffff 0px 1px 0, #ffffff 0 -1px 0, #ffffff -1px 0 0,
     #ffffff 1px 0 0;
 }
+
+#background{
+  background-image: url("../images/24250447-young-people-on-the-party.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+} 

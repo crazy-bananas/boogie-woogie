@@ -1,0 +1,60 @@
+
+#leftPic{
+  opacity: 0.7;
+  animation-name:leftPic;
+  animation-duration:3s;
+}
+@keyframes leftPic {
+  from {transform:translate(200px,622.8px) }
+  to {
+    transform:translate(0px,622.8px) }
+}
+#rightPic{
+  opacity: 0.7;
+  animation-name:rightPic;
+  animation-duration:3s;
+  transition: all 200ms ease-in
+
+}
+
+@keyframes rightPic {
+  0% {transform:translate(1350px,622.8px);}
+  100% {transform:translate(1439px,622.8px)}
+}
+
+#middleText{
+  font-weight: bold;
+  color:#E91E63;
+  font-size: 25px;
+  animation-name:middleText;
+  animation-duration:3s;
+  position: absolute;
+  right: 33%;
+  bottom: 30%;
+}
+@keyframes middleText{
+from{
+
+  transform: scale3d(.10, .10, .25)
+}
+to{
+
+  transform: scale3d(1,1,1)
+}
+
+}
+#rightPic:hover img {
+  transition: all .25s;
+  transform : scale(1.2); 
+  }
+#leftPic:hover img{
+  transition: all .25s;
+  transform : scale(1.2); 
+}
+
+#rightPic:hover{
+  opacity: 1;
+}
+#leftPic:hover{
+  opacity: 1;
+}
