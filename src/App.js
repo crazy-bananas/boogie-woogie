@@ -1,13 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
-import SongMenu from "./components/SongMenu";
 import { connect } from "react-redux";
-import DanceWindow from "./components/DanceWindow";
-import RecordWindow from "./components/RecordWindow";
-import FinishRecording from "./components/FinishRecording";
-import Score from "./components/Score";
-
 import TopPage from "./components/TopPage";
 import axios from "axios";
 

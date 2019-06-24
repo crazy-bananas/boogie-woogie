@@ -1,25 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import { styled } from "@material-ui/styles";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import RecordWindow from "./RecordWindow";
 import FinishRecording from "./FinishRecording";
 import SongInput from "./SongInput";
 import dotenv from "dotenv";
 import Navbar from "./Navbar";
 dotenv.config();
-const MyButton = styled(Button)({
-  marginTop: "20px"
-});
-
-const MyTypography = styled(Typography)({
-  color: "#ff0000",
-  fontSize: "15px",
-  fontWeight: "300"
-});
 
 export class Record extends Component {
   constructor(props) {

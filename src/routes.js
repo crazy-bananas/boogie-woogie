@@ -4,7 +4,6 @@ import App from "./App";
 import Play from "./components/Play";
 import AuthCallback from "./components/AuthCallback/AuthCallback";
 import Auth from "./authentication/Auth";
-import SongMenu from "./components/SongMenu";
 import Profile from "./components/Profile";
 import Record from "./components/Record";
 import history from "./history";
