@@ -61,7 +61,7 @@ export class Record extends Component {
 
   render() {
     return (
-      <div>
+      <div className="App">
         <Navbar auth={this.props.auth} />
         {!this.props.isRecording && !this.props.isAudioFinished && (
           <SongInput />
