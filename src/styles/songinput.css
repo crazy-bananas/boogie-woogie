@@ -1,5 +1,9 @@
 #songinput {
-  background: rgba(242, 242, 242, 0.7);
+  background-image: url("../images/24250447-young-people-on-the-party.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
   padding: 30px;
   height: 100vh;
   justify-content: center;

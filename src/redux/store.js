@@ -1,4 +1,6 @@
 import { createStore } from "redux";
+import dotenv from "dotenv";
+dotenv.config();
 
 const initialState = {
   isSongSelected: false,
@@ -7,9 +9,9 @@ const initialState = {
   totalScore: 0,
   maxScore: 0,
   combo: 0,
-  isUserLoggedIn: true,
+  isUserLoggedIn: false,
   isCountdownFinished: false,
-  isUserReady: true,
+  isUserReady: process.env.REACT_APP_DEVMODE ? true : false,
   isAudioFinished: false,
   newSong: {
     title: "",

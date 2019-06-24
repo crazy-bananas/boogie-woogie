@@ -1,7 +1,7 @@
 #audio_player {
   display: none;
 }
-body {
+#danceWindow{
   background-image: url("../images/WMpic/30027855.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;

@@ -6,7 +6,16 @@ import TopPage from "./components/TopPage";
 import axios from "axios";
 
 class App extends Component {
-  componentDidMount() {
+  async componentDidMount() {
+    if (this.props.location.pathname !== '/callback'){
+      try {
+        await this.props.auth.silentAuth();
+        this.forceUpdate();
+      } catch (err) {
+        if (err.error !== 'login_required') console.log(err.error);
+      }
+    }
+    
     this.axiosCancelSource = axios.CancelToken.source();
     if (localStorage.getItem("isLoggedIn")) {
       axios
