@@ -25,7 +25,6 @@ class App extends Component {
           return responseWithUserInfo.data;
         })
         .then(userInfo => {
-          this.props.userAuthInfo(userInfo);
           localStorage.setItem("user-email", userInfo.email);
           localStorage.setItem("user-name", userInfo.name);
           localStorage.setItem("user-nickname", userInfo.nickname);
