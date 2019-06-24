@@ -7,3 +7,12 @@
   margin:50px;
   margin-top: 20px;
 }
+
+#background{
+  background-image: url("../images/24250447-young-people-on-the-party.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+}
