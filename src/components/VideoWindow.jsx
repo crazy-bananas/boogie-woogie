@@ -273,7 +273,9 @@ export class VideoWindow extends Component {
     if (!this.props.isRecording) {
       axios
         .get(
-          `https://boogie-banana.herokuapp.com/api/moves/${this.props.moveSelected}`
+          `https://boogie-banana.herokuapp.com/api/moves/${
+            this.props.moveSelected
+          }`
         )
         .then(poses => {
           this.setState({ correctPoses: poses.data[0].moves });
@@ -328,10 +330,7 @@ export class VideoWindow extends Component {
           this.drawCurrentDancePose();
         }
 
-        if (
-          !this.state.killRequestAnimationFrame &&
-          this.indexCorrectP < this.state.correctPoses.length - 1
-        ) {
+        if (!this.state.killRequestAnimationFrame) {
           requestAnimationFrame(poseDetectionFrame);
         }
       };
