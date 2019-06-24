@@ -11,7 +11,7 @@ import { styled } from "@material-ui/styles";
 
 const MyCard = styled(Card)({
   width: 350,
-  height:500,
+  height: 500
 });
 
 const MyMedia = styled(CardMedia)({
@@ -32,36 +32,43 @@ class ScoreCard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.username !== undefined) {
-      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
+    this.axiosCancelSource = axios.CancelToken.source();
+    axios.post(
+      "https://boogie-banana.herokuapp.com/api/scores",
+      {
         songId: this.props.songSelected,
         moveId: this.props.moveSelected,
-        user: this.props.username,
+        user: localStorage.getItem("user-nickname") || "Anonymous",
         score: this.props.score,
-        pic: this.props.userpic,
-        userId: this.props.userId
-      });
-    } else {
-      axios.post("https://boogie-banana.herokuapp.com/api/scores", {
-        songId: this.props.songSelected,
-        moveId: this.props.moveSelected,
-        user: "Anonymous",
-        score: this.props.score,
-        pic: "https://dummyimage.com/600x400/000/fff",
-        userId: "default"
-      });
-    }
+        pic:
+          localStorage.getItem("user-picture") ||
+          "https://dummyimage.com/600x400/000/fff",
+        userId: localStorage.getItem("user-id") || "default"
+      },
+      {
+        cancelToken: this.axiosCancelSource.token
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    this.axiosCancelSource.cancel("Component unmounted.");
   }
   render() {
     return (
       <div id="card">
         <MyCard>
           <div id="trophy">
-            <MyMedia image={Trophy} style={{height: 150}} title="Song Score" />
+            <MyMedia
+              image={Trophy}
+              style={{ height: 150 }}
+              title="Song Score"
+            />
           </div>
           <CardContent>
             <MyTypography variant="body2" color="textSecondary" component="p">
-              Your Score: {`${this.userScore}%`}<br/>
+              Your Score: {`${this.userScore}%`}
+              <br />
               {`(${this.props.score}/${this.props.maxScore})`}
             </MyTypography>
           </CardContent>
@@ -76,10 +83,7 @@ const mapStateToProps = state => {
     score: state.totalScore,
     maxScore: state.maxScore,
     songSelected: state.songSelected,
-    moveSelected: state.moveSelected,
-    username: state.userAuthInfo.nickname,
-    userpic: state.userAuthInfo.picture,
-    userId: state.userAuthInfo.sub
+    moveSelected: state.moveSelected
   };
 };
 

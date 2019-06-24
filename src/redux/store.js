@@ -17,18 +17,12 @@ const initialState = {
     moves: []
   },
   isRecording: false,
-  userAuthInfo: {},
+  user: {},
   time: 0
 };
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SELECT_SONG": {
-      const newState = { ...state };
-      newState.isSongSelected = true;
-      newState.songSelected = action.payload;
-      return newState;
-    }
     case "COUNTDOWN_FINISHED": {
       const newState = { ...state };
       newState.isCountdownFinished = true;
@@ -90,15 +84,20 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
-    case "SELECTED_MOVEID": {
+    case "SELECT_SONG_AND_MOVES": {
       const newState = { ...state };
-      newState.moveSelected = action.payload;
+      
+      newState.isSongSelected = true;
+      newState.songSelected = action.payload.selectedSong;
+
+      newState.moveSelected = action.payload.selectedMoves;
       return newState;
     }
 
-    case "USER_AUTH_INFO": {
+    case "UPDATE_USER_PICTURE": {
       const newState = { ...state };
-      newState.userAuthInfo = action.payload;
+      console.log("Update user pic with:", action.payload)
+      newState.user.pictureUrl = action.payload;
       return newState;
     }
 

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "../App.css";
 import Navbar from "./Navbar";
 import SongMenu from "./SongMenu";
 import { connect } from "react-redux";
@@ -7,8 +6,6 @@ import DanceWindow from "./DanceWindow";
 import RecordWindow from "./RecordWindow";
 import FinishRecording from "./FinishRecording";
 import Score from "./Score";
-import MoveSelection from "./MoveSelection";
-
 import axios from "axios";
 
 class App extends Component {
@@ -24,9 +21,12 @@ class App extends Component {
           return responseWithUserInfo.data;
         })
         .then(userInfo => {
-          localStorage.setItem("user", userInfo.sub);
-          localStorage.setItem("picture", userInfo.picture);
-          localStorage.setItem("email", userInfo.email);
+          localStorage.setItem("user-email",userInfo.email)
+          localStorage.setItem("user-name",userInfo.name)
+          localStorage.setItem("user-nickname",userInfo.nickname)
+          localStorage.setItem("user-picture",userInfo.picture)
+          localStorage.setItem("user-id",userInfo.sub)
+
           axios.post("https://boogie-banana.herokuapp.com/api/users", {
             userId: userInfo.sub,
             email: userInfo.email,
@@ -35,7 +35,8 @@ class App extends Component {
             picture: userInfo.picture,
             updated_at: userInfo.updated_at
           });
-          this.props.userAuthInfo(userInfo);
+          
+          this.props.updateProfilePicture(userInfo.picture);
         })
         .catch(err => {
           throw err;
@@ -63,9 +64,6 @@ class App extends Component {
       <div className="App">
         <Navbar auth={this.props.auth} />
         {this.showMenu() && <SongMenu auth={this.props.auth} />}
-        {this.props.isSongSelected &&
-          !this.props.isAudioFinished &&
-          this.props.moveSelected.length === 0 && <MoveSelection />}
 
         {this.props.isSongSelected &&
           !this.props.isAudioFinished &&
@@ -98,14 +96,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    userAuthInfo: data => {
+    updateProfilePicture: (pictureUrl) => {
       dispatch({
-        type: "USER_AUTH_INFO",
-        payload: data
-      });
+        type: "UPDATE_USER_PICTURE",
+        payload: pictureUrl
+      })
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,

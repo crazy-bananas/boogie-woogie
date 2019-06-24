@@ -14,7 +14,6 @@ class DanceWindow extends Component {
   }
   getTimeLeft = event => {
     this.setState({ time: event.target.getDuration() });
-    console.log("GET TIME", event.target.getDuration());
   };
 
   render() {

@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const REACT_APP_AUTH_REDIRECT_LINK =
-  process.env.REACT_APP_AUTH_REDIRECT_LINK || "https://master.amplifyapp.com/";
+  process.env.REACT_APP_AUTH_REDIRECT_LINK ||
+  "https://boogie-woogie-banana.herokuapp.com/";
 const REDIRECT_SUB =
   REACT_APP_AUTH_REDIRECT_LINK[REACT_APP_AUTH_REDIRECT_LINK.length - 1] === "/"
     ? "login"
@@ -92,11 +93,7 @@ export default class Auth {
     this.expiresAt = 0;
 
     // Remove isLoggedIn flag from localStorage
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("expireAt");
-    localStorage.removeItem("user");
-    localStorage.removeItem("picture");
-    localStorage.removeItem("email");
+    localStorage.clear()
 
     this.auth0.logout({
       returnTo: window.location.origin
@@ -110,6 +107,14 @@ export default class Auth {
     // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = localStorage.getItem("expireAt");
+    let timenow = new Date();
+    if (timenow.getTime() > expiresAt) {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("expireAt");
+      localStorage.removeItem("user");
+      localStorage.removeItem("picture");
+      localStorage.removeItem("email");
+    }
     return new Date().getTime() < expiresAt;
   }
 }

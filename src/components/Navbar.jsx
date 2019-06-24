@@ -43,10 +43,7 @@ class Navbar extends Component {
                 {this.props.auth.isAuthenticated() && (
                   <AppBars
                     auth={this.props.auth}
-                    picture={
-                      this.props.userAuthInfo.picture ||
-                      localStorage.getItem("picture")
-                    }
+                    picture={localStorage.getItem("user-picture")}
                   />
                 )}
               </Grid>
@@ -63,27 +60,15 @@ class Navbar extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    userAuthInfo: data => {
-      dispatch({
-        type: "USER_AUTH_INFO",
-        payload: data
-      });
-    }
-  };
-};
-
 const mapStateToProps = state => {
   return {
-    userAuthInfo: state.userAuthInfo,
     songList: state.songList,
     indexOfSelectedSong: state.songSelected,
-    moveSelected: state.moveSelected
+    moveSelected: state.moveSelected,
+    userPicture: state.user.pictureUrl
   };
 };
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Navbar);

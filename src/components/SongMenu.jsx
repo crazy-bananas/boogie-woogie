@@ -1,23 +1,18 @@
 import React, { Component } from "react";
-import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 
 import Grid from "@material-ui/core/Grid";
 
 import Typography from "@material-ui/core/Typography";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import MusicNote from "@material-ui/icons/MusicNote";
 
-import List from "@material-ui/core/List";
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
 import dancingPeople from "../images//WMpic/15809153.jpg";
 import RecordDanceModal from "./RecordDanceModal";
 import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
+import SongsAndMoves from "./List/SelectSongsAndMoves";
 
 import axios from "axios";
 import RecordButton from "./Buttons/recordbutton";
@@ -34,30 +29,33 @@ const MyPaper = styled(Paper)({
 class SongMenu extends Component {
   constructor(props) {
     super(props);
-    this.loaded = false;
     this.songRef = React.createRef();
     this.state = {
       showModal: false,
       songList: [],
+      isLoading: true
     };
   }
-
-  playSong = event => {
-    this.props.playSong(event);
-  };
 
   switchModal = () => {
     this.setState({ showModal: !this.state.showModal });
   };
 
   componentDidMount() {
+    this.axiosCancelSource = axios.CancelToken.source();
     axios
-      .get("https://boogie-banana.herokuapp.com/api/songs")
+      .get("https://boogie-banana.herokuapp.com/api/songs", {
+        cancelToken: this.axiosCancelSource.token
+      })
       .then(songs => {
         setTimeout(() => {
-          this.setState({ loaded: true, songList: songs.data });
+          this.setState({ isLoading: false, songList: songs.data });
         }, 1000);
-      }) // TODO: We need to catch this error
+      }); // TODO: We need to catch this error
+  }
+
+  componentWillUnmount() {
+    this.axiosCancelSource.cancel("Component unmounted.");
   }
 
   render() {
@@ -83,38 +81,23 @@ class SongMenu extends Component {
           square
         >
           <div>
-            <Typography component="h1" variant="h5" >
+            <Typography component="h1" variant="h5">
               Select your song
             </Typography>
 
-            {!this.state.loaded && <SongLoading />}
-            {this.state.loaded && (
-              <List>
-                {this.state.songList.map((song, index) => {
-                  return (
-                    <ListItem 
-                      key={index}
-                      button
-                      onClick={() => this.playSong({ songCode: song.code })}
-                    >
-                      <ListItemAvatar>
-                        <Avatar id="songIcon">
-                          <MusicNote />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={song.title}
-                      />
-                    </ListItem>
-                  );
-                })}
-              </List>
+            {this.state.isLoading ? (
+              <SongLoading />
+            ) : (
+              <SongsAndMoves songList={this.state.songList} />
             )}
 
             <Typography component="h1" variant="h5">
               Record your dance
             </Typography>
-            <RecordButton auth={this.props.auth} switchModal={this.switchModal} />
+            <RecordButton
+              auth={this.props.auth}
+              switchModal={this.switchModal}
+            />
           </div>
         </Grid>
         <div />
@@ -130,18 +113,4 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    playSong: song => {
-      dispatch({
-        type: "SELECT_SONG",
-        payload: song.songCode
-      });
-    }
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SongMenu);
+export default connect(mapStateToProps)(SongMenu);
