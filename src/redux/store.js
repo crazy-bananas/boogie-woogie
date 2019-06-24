@@ -17,7 +17,7 @@ const initialState = {
     moves: []
   },
   isRecording: false,
-  userAuthInfo: {},
+  user: {},
   time: 0
 };
 
@@ -94,9 +94,10 @@ const appReducer = (state = initialState, action) => {
       return newState;
     }
 
-    case "USER_AUTH_INFO": {
+    case "UPDATE_USER_PICTURE": {
       const newState = { ...state };
-      newState.userAuthInfo = action.payload;
+      console.log("Update user pic with:", action.payload)
+      newState.user.pictureUrl = action.payload;
       return newState;
     }
 

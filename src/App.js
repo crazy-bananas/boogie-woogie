@@ -25,9 +25,13 @@ class App extends Component {
           return responseWithUserInfo.data;
         })
         .then(userInfo => {
-          localStorage.setItem("user", userInfo.sub);
-          localStorage.setItem("picture", userInfo.picture);
-          localStorage.setItem("email", userInfo.email);
+          this.props.userAuthInfo(userInfo);
+          localStorage.setItem("user-email", userInfo.email);
+          localStorage.setItem("user-name", userInfo.name);
+          localStorage.setItem("user-nickname", userInfo.nickname);
+          localStorage.setItem("user-picture", userInfo.picture);
+          localStorage.setItem("user-id", userInfo.sub);
+
           axios.post(
             "https://boogie-banana.herokuapp.com/api/users",
             {
@@ -42,7 +46,8 @@ class App extends Component {
               cancelToken: this.axiosCancelSource.token
             }
           );
-          this.props.userAuthInfo(userInfo);
+
+          this.props.updateProfilePicture(userInfo.picture);
         })
         .catch(err => {
           throw err;
@@ -92,10 +97,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    userAuthInfo: data => {
+    updateProfilePicture: pictureUrl => {
       dispatch({
-        type: "USER_AUTH_INFO",
-        payload: data
+        type: "UPDATE_USER_PICTURE",
+        payload: pictureUrl
       });
     }
   };

@@ -8,7 +8,7 @@ class HighShcore extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      scoreList: -1
+      scoreList: undefined
     };
   }
   fetchUsersScores = () => {
@@ -24,14 +24,12 @@ class HighShcore extends Component {
   componentDidMount() {
     this.fetchUsersScores();
   }
-  isDataFetched = () => {
-    if (this.state.scoreList === -1) {
+
+  render() {
+    if (this.state.scoreList === undefined) {
       return <Loading />;
     }
     return <ScoreTable scoreList={this.state.scoreList} />;
-  };
-  render() {
-    return this.isDataFetched();
   }
 }
 const mapStateToProps = state => {

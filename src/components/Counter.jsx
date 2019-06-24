@@ -5,6 +5,8 @@ import { ReactComponent as Two } from "../images/2.svg";
 import { ReactComponent as Three } from "../images/3.svg";
 import "../styles/counter.css";
 
+let endTimeout = 0;
+
 class Counter extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +17,7 @@ class Counter extends Component {
     this.setState({ countdown: this.state.countdown - 1 });
   };
   startCountdown = () => {
-    let endTimeout = setInterval(() => {
+    endTimeout = setInterval(() => {
       this.decrementCountdown();
       if (this.state.countdown === 0) {
         this.props.countdownFinished();
@@ -23,6 +25,10 @@ class Counter extends Component {
       }
     }, 1000);
   };
+
+  componentWillUnmount() {
+    clearInterval(endTimeout);
+  }
 
   render() {
     if (this.state.countdown === 4 && this.props.isUserReady) {

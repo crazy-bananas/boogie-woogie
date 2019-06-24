@@ -73,7 +73,7 @@ export default function CustomizedTables(props) {
               return b.score - a.score;
             })
             .map(row => (
-              <StyledTableRow key={row.name}>
+              <StyledTableRow key={row._id}>
                 <StyledTableCell align="left">
                   <Avatar
                     style={{ zIndex: 1 }}
