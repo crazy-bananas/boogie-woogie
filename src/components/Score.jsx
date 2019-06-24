@@ -21,7 +21,7 @@ class Score extends Component {
   }
   render() {
     return (
-      <div>
+      <div id="background">
         {this.state.loadingScore ? (
           <LoadingScore />
         ) : (
