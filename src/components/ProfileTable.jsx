@@ -143,8 +143,10 @@ export default function CustomPaginationActionsTable(props) {
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
-              <StyledTableCell align="left">Song Title</StyledTableCell>
-              <StyledTableCell align="left">Points</StyledTableCell>
+              <TableRow>
+                <StyledTableCell align="left">Song Title</StyledTableCell>
+                <StyledTableCell align="left">Points</StyledTableCell>
+              </TableRow>
             </TableHead>
             <TableBody>
               {props.allScores
@@ -179,7 +181,7 @@ export default function CustomPaginationActionsTable(props) {
             ActionsComponent={TablePaginationActions}
           />
         </Paper>
-      </ span>
+      </span>
     );
   }
   return isDataFetched(props);
