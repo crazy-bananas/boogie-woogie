@@ -13,9 +13,7 @@ import RecordDanceModal from "./RecordDanceModal";
 import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
 import SongsAndMoves from "./List/SelectSongsAndMoves";
-
 import axios from "axios";
-import RecordButton from "./Buttons/recordbutton";
 
 const MyPaper = styled(Paper)({
   display: "flex",
@@ -90,14 +88,6 @@ class SongMenu extends Component {
             ) : (
               <SongsAndMoves songList={this.state.songList} />
             )}
-
-            <Typography component="h1" variant="h5">
-              Record your dance
-            </Typography>
-            <RecordButton
-              auth={this.props.auth}
-              switchModal={this.switchModal}
-            />
           </div>
         </Grid>
         <div />
