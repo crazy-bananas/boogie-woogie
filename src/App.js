@@ -5,24 +5,28 @@ import { connect } from "react-redux";
 import TopPage from "./components/TopPage";
 import axios from "axios";
 
+const CancelToken = axios.CancelToken;
+const cancelAxios = CancelToken.source();
+
 class App extends Component {
   async componentDidMount() {
-    if (this.props.location.pathname !== '/callback'){
+    if (this.props.location.pathname !== "/callback") {
       try {
         await this.props.auth.silentAuth();
         this.forceUpdate();
       } catch (err) {
-        if (err.error !== 'login_required') console.log(err.error);
+        if (err.error !== "login_required") console.log(err.error);
       }
     }
-    
+
     this.axiosCancelSource = axios.CancelToken.source();
     if (localStorage.getItem("isLoggedIn")) {
       axios
         .get("https://dev-boogie-woogie.auth0.com/userinfo", {
           headers: {
             Authorization: `Bearer ${this.props.auth.getAccessToken()}`
-          }
+          },
+          cancelToken: cancelAxios.token
         })
         .then(responseWithUserInfo => {
           return responseWithUserInfo.data;
@@ -52,7 +56,14 @@ class App extends Component {
           this.props.updateProfilePicture(userInfo.picture);
         })
         .catch(err => {
-          throw err;
+          if (axios.isCancel(err)) {
+            console.log(
+              "Axios request in App.js to fetch user info was canceled.",
+              err.message
+            );
+          } else {
+            throw new Error(err.message);
+          }
         });
     }
   }
@@ -73,7 +84,7 @@ class App extends Component {
   };
 
   componentWillUnmount() {
-    this.axiosCancelSource.cancel("Component unmounted.");
+    this.axiosCancelSource.cancel("Operation canceled by the user.");
   }
 
   render() {

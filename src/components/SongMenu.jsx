@@ -49,7 +49,17 @@ class SongMenu extends Component {
         setTimeout(() => {
           this.setState({ isLoading: false, songList: songs.data });
         }, 1000);
-      }); // TODO: We need to catch this error
+      })
+      .catch(err => {
+        if (axios.isCancel(err)) {
+          console.log(
+            "Axios request in SongMenu.jsx to song info was canceled.",
+            err.message
+          );
+        } else {
+          throw new Error(err.message);
+        }
+      });
   }
 
   componentWillUnmount() {
