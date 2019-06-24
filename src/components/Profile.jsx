@@ -71,19 +71,19 @@ class Profile extends Component {
             <span className="userInfo">
               E-mail: {localStorage.getItem("user-email")}
             </span>
-            <br/>
+            <br />
             <span className="userInfo">
               Total Score : {this.getTotalScore(this.state.usersScores)} Points
             </span>
-            <br/>
+            <br />
             <span className="userInfo">
-              Average Score : {this.getAverageScore(this.state.usersScores) + " Points"}
-              Points
+              Average Score :{" "}
+              {this.getAverageScore(this.state.usersScores) + " Points"}
             </span>
           </Typography>
         </div>
       );
-    } 
+    }
     return <Loading />;
   };
 
@@ -107,7 +107,7 @@ const mapStateToProps = state => {
   return {
     currentScore: state.currentScore,
     songSelected: state.songSelected,
-    moveSelected: state.moveSelected,
+    moveSelected: state.moveSelected
   };
 };
 export default connect(mapStateToProps)(Profile);
