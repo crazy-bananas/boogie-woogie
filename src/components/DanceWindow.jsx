@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import YouTube from "react-youtube";
 import Timer from "./Timer";
 
+
 class DanceWindow extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +19,7 @@ class DanceWindow extends Component {
 
   render() {
     return (
-      <div>
+      <div id="danceWindow">
         <VideoWindow />
         <Counter />
 
