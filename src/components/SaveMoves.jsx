@@ -50,15 +50,22 @@ class SaveMoves extends Component {
   };
 
   save = () => {
+    this.axiosCancelSource = axios.CancelToken.source();
     if (!this.state.danceName) {
       this.setState({ errorDescription: "Dance name cannot be blank" });
     } else {
       axios
-        .post("https://boogie-banana.herokuapp.com/api/moves", {
-          songcode: this.props.newSong.code,
-          moves: this.props.newSong.moves,
-          name: this.state.danceName
-        })
+        .post(
+          "https://boogie-banana.herokuapp.com/api/moves",
+          {
+            songcode: this.props.newSong.code,
+            moves: this.props.newSong.moves,
+            name: this.state.danceName
+          },
+          {
+            cancelToken: this.axiosCancelSource.token
+          }
+        )
         .then(data => {
           this.setState({
             saved: true
@@ -74,12 +81,22 @@ class SaveMoves extends Component {
           this.props.onsaveUnsuccessful();
         });
 
-      axios.post("https://boogie-banana.herokuapp.com/api/songs", {
-        code: this.props.newSong.code,
-        title: this.props.newSong.title
-      }); // TODO: We need error check here, and message to user on success.
+      axios.post(
+        "https://boogie-banana.herokuapp.com/api/songs",
+        {
+          code: this.props.newSong.code,
+          title: this.props.newSong.title
+        },
+        {
+          cancelToken: this.axiosCancelSource.token
+        }
+      ); // TODO: We need error check here, and message to user on success.
     }
   };
+
+  componentWillUnmount() {
+    this.axiosCancelSource.cancel("Component unmounted.");
+  }
 
   render() {
     return (
