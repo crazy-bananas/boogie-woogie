@@ -76,7 +76,6 @@ export class SongInput extends Component {
         <form
           noValidate
           style={{
-            width: "70%",
             marginTop: "20px",
             alignItems: "center",
             justifyContent: "center",

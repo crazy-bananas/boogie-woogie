@@ -28,15 +28,13 @@ class SelectSongsAndMoves extends Component {
   }
 
   componentDidUpdate() {
-    this.axiosCancelSource = axios.CancelToken.source();
     if (this.state.moves.length === 0 && this.props.songList.length !== 0) {
       for (let i = 0; i < this.props.songList.length; ++i) {
         axios
           .get(
             `https://boogie-banana.herokuapp.com/api/moves/${
               this.props.songList[i].code
-            }`,
-            { cancelToken: this.axiosCancelSource.token }
+            }`
           )
           .then(reply => {
             const newMovesSet = [...this.state.moves];
@@ -48,11 +46,6 @@ class SelectSongsAndMoves extends Component {
           });
       }
     }
-  }
-
-  componentWillUnmount() {
-    console.log("component unmounted");
-    this.axiosCancelSource.cancel("Component unmounted.");
   }
 
   render() {
