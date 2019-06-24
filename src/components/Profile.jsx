@@ -79,7 +79,6 @@ class Profile extends Component {
             <span className="userInfo">
               Average Score :{" "}
               {this.getAverageScore(this.state.usersScores) + " Points"}
-              Points
             </span>
           </Typography>
         </div>

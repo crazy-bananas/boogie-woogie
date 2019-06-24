@@ -163,23 +163,25 @@ export default function CustomPaginationActionsTable(props) {
                   <TableCell colSpan={2} />
                 </TableRow>
               )}
+              <TableRow>
+                <TablePagination
+                  style={{ width: "900px" }}
+                  rowsPerPageOptions={[5, 10, 25]}
+                  colSpan={2}
+                  count={props.allScores.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: { "aria-label": "Rows per page" },
+                    native: true
+                  }}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
             </TableBody>
           </Table>
-          <TablePagination
-            style={{ width: "900px" }}
-            rowsPerPageOptions={[5, 10, 25]}
-            colSpan={2}
-            count={props.allScores.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            SelectProps={{
-              inputProps: { "aria-label": "Rows per page" },
-              native: true
-            }}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            ActionsComponent={TablePaginationActions}
-          />
         </Paper>
       </span>
     );
