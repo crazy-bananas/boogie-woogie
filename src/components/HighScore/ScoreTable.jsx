@@ -7,9 +7,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Avatar from "@material-ui/core/Avatar";
-import podium from "../images/podiumTransparent.png";
+import podium from "../../images/podiumTransparent.png";
 import Fab from "@material-ui/core/Fab";
-import star from "../images/star.png";
+import star from "../../images/star.png";
 
 const StyledTableCell = withStyles(theme => ({
   head: {

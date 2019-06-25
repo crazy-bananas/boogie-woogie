@@ -4,8 +4,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-import Trophy from "../images/trophy.png";
-import "../styles/scoreCard.css";
+import Trophy from "../../images/trophy.png";
+import "../../styles/scoreCard.css";
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
 

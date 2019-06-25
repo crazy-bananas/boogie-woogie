@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import DanceWindow from "./DanceWindow";
 import RecordWindow from "./Record/RecordWindow";
 import FinishRecording from "./Record/FinishRecording";
-import Score from "./Score";
+import Score from "./HighScore/Score";
 import axios from "axios";
 
 const CancelToken = axios.CancelToken;

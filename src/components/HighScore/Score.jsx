@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import ScoreCard from "./ScoreCard";
 import HighScore from "./HighScore";
 
-import "../styles/scores.css";
-import LoadingScore from "./animation/LoadingScore";
+import "../../styles/scores.css";
+import LoadingScore from "./../animation/LoadingScore";
 
 class Score extends Component {
   constructor(props) {
