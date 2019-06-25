@@ -5,7 +5,7 @@ import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/styles";
-import "../styles/recorddancemodal.css";
+import "../../styles/recorddancemodal.css";
 import { connect } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Close from "@material-ui/icons/Close";
