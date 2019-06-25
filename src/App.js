@@ -83,10 +83,6 @@ class App extends Component {
     return true;
   };
 
-  componentWillUnmount() {
-    this.axiosCancelSource.cancel("Operation canceled by the user.");
-  }
-
   render() {
     return (
       <div className="App">
