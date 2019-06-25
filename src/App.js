@@ -72,10 +72,6 @@ class App extends Component {
     return true;
   };
 
-  componentWillUnmount() {
-    this.axiosCancelSource.cancel("Component unmounted.");
-  }
-
   render() {
     return (
       <div className="App">
