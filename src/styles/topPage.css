@@ -5,9 +5,9 @@
   animation-duration:3s;
 }
 @keyframes leftPic {
-  from {transform:translate(200px,622.8px) }
+  from {transform:translate(200px,89.6vh) }
   to {
-    transform:translate(0px,622.8px) }
+    transform:translate(0px,89.6vh) }
 }
 #rightPic{
   opacity: 0.7;
@@ -18,8 +18,8 @@
 }
 
 @keyframes rightPic {
-  0% {transform:translate(1350px,622.8px);}
-  100% {transform:translate(1439px,622.8px)}
+  0% {transform:translate(1350px,89.6vh);}
+  100% {transform:translate(1439px,89.6vh)}
 }
 
 #middleText{
