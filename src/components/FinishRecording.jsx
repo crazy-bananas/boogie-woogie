@@ -53,7 +53,7 @@ class FinishRecording extends Component {
                 <Button
                   onClick={this.switchModal}
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                 >
                   Save
                 </Button>
@@ -76,7 +76,7 @@ class FinishRecording extends Component {
                     this.props.resetState();
                   }}
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                 >
                   Home
                 </Button>
