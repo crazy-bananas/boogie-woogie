@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import anime from "animejs";
 
-import { drawPose } from "../canvasDrawings";
+import { drawPose } from "./canvasDrawings";
 
 import Loading from "../Loading";
 

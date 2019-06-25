@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Navbar from "./Navbar";
-import SongMenu from "./SongMenu";
+import SongMenu from "./SongSelect/SongMenu";
 import { connect } from "react-redux";
 import DanceWindow from "./Dancing/DanceWindow";
 import RecordWindow from "./Record/RecordWindow";

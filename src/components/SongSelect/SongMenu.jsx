@@ -8,9 +8,9 @@ import Typography from "@material-ui/core/Typography";
 
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
-import dancingPeople from "../images//WMpic/15809153.jpg";
-import "../styles/songmenu.css";
-import SongLoading from "./SongLoading";
+import dancingPeople from "../../images//WMpic/15809153.jpg";
+import "../../styles/songmenu.css";
+import SongLoading from "../SongLoading";
 import SongsAndMoves from "./SelectSongsAndMoves";
 import axios from "axios";
 
