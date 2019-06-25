@@ -97,6 +97,7 @@ export default class Auth {
     this.expiresAt = 0;
 
     // Remove isLoggedIn flag from localStorage
+    localStorage.removeItem("isLoggedIn");
     localStorage.clear();
 
     this.auth0.logout({
@@ -108,6 +109,13 @@ export default class Auth {
   }
 
   signOut() {
+    this.accessToken = null;
+    this.idToken = null;
+    this.expiresAt = 0;
+
+    localStorage.removeItem("isLoggedIn");
+    localStorage.clear();
+
     this.auth0.logout({
       returnTo:
         process.env.REACT_APP_AUTH_REDIRECT_LINK ||

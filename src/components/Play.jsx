@@ -13,14 +13,14 @@ const cancelAxios = CancelToken.source();
 
 class App extends Component {
   async componentDidMount() {
-    if (this.props.location.pathname !== "/callback") {
-      try {
-        await this.props.auth.silentAuth();
-        this.forceUpdate();
-      } catch (err) {
-        if (err.error !== "login_required") console.log(err.error);
-      }
-    }
+    // if (this.props.location.pathname !== "/callback") {
+    //   try {
+    //     await this.props.auth.silentAuth();
+    //     this.forceUpdate();
+    //   } catch (err) {
+    //     if (err.error !== "login_required") console.log(err.error);
+    //   }
+    // }
 
     if (localStorage.getItem("isLoggedIn")) {
       axios

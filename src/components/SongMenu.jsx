@@ -12,7 +12,7 @@ import dancingPeople from "../images//WMpic/15809153.jpg";
 import RecordDanceModal from "./RecordDanceModal";
 import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
-import SongsAndMoves from "./List/SelectSongsAndMoves";
+import SongsAndMoves from "./SelectSongsAndMoves";
 import axios from "axios";
 
 const MyPaper = styled(Paper)({
