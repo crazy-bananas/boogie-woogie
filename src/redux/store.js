@@ -88,7 +88,7 @@ const appReducer = (state = initialState, action) => {
 
     case "SELECT_SONG_AND_MOVES": {
       const newState = { ...state };
-      
+
       newState.isSongSelected = true;
       newState.songSelected = action.payload.selectedSong;
 
@@ -98,7 +98,7 @@ const appReducer = (state = initialState, action) => {
 
     case "UPDATE_USER_PICTURE": {
       const newState = { ...state };
-      console.log("Update user pic with:", action.payload)
+      console.log("Update user pic with:", action.payload);
       newState.user.pictureUrl = action.payload;
       return newState;
     }

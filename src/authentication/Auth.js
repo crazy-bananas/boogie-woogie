@@ -48,7 +48,7 @@ export default class Auth {
         this.setSession(authResult);
         resolve();
       });
-    })
+    });
   }
 
   getAccessToken() {
@@ -97,7 +97,7 @@ export default class Auth {
     this.expiresAt = 0;
 
     // Remove isLoggedIn flag from localStorage
-    localStorage.clear()
+    localStorage.clear();
 
     this.auth0.logout({
       returnTo: window.location.origin
@@ -109,9 +109,10 @@ export default class Auth {
 
   signOut() {
     this.auth0.logout({
-      returnTo: process.env.REACT_APP_AUTH_REDIRECT_LINK ||
-      "https://boogie-woogie-banana.herokuapp.com/",
-      clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
+      returnTo:
+        process.env.REACT_APP_AUTH_REDIRECT_LINK ||
+        "https://boogie-woogie-banana.herokuapp.com/",
+      clientID: process.env.REACT_APP_AUTH0_CLIENT_ID
     });
   }
 
