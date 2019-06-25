@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import "../styles/about.css";
 import Grid from "@material-ui/core/Grid";
 import dance from "../images/about/demo_play.png";
+import record from "../images/WMpic/4788200-turntable-loudspeakers-on-grunge-rainbow-background.jpg";
 
 export function About(props) {
   return (
@@ -51,7 +52,7 @@ export function About(props) {
       </Grid>
       <h3 className="sub-title">2. Record</h3>
       <Grid container>
-        <Grid item xs={4} />
+        <Grid item xs={2} />
         <Grid item xs={4} className="list-half">
           <ol>
             <li>Pick a song from YouTube</li>
@@ -60,7 +61,10 @@ export function About(props) {
             <li>Save your move</li>
           </ol>
         </Grid>
-        <Grid item xs={4} />
+        <Grid item xs={2}>
+          <img src={record} alt="record_demo" className="demo-image" />
+        </Grid>
+        <Grid item xs={2} />
       </Grid>
       <div className="section">
         <span>What you need</span>
@@ -74,7 +78,7 @@ export function About(props) {
       <div className="section">
         <span>Who we are</span>
       </div>
-      <ul>
+      <ul className="whoweare">
         <li>
           Florin{" "}
           <a href="https://github.com/Mavroian" target="_blank">

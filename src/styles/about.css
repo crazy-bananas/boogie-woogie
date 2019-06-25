@@ -83,3 +83,7 @@ a {
   color: darkgrey;
   text-decoration: none;
 }
+
+.whoweare li {
+  font-size: 1.5em;
+}
