@@ -152,7 +152,7 @@ class SaveMoves extends Component {
               <MyButton
                 fullWidth
                 variant="contained"
-                color="primary"
+                color="secondary"
                 onClick={this.save}
               >
                 Save
