@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
 import dancingPeople from "../images//WMpic/15809153.jpg";
-import RecordDanceModal from "./RecordDanceModal";
 import "../styles/songmenu.css";
 import SongLoading from "./SongLoading";
 import SongsAndMoves from "./SelectSongsAndMoves";
@@ -101,7 +100,6 @@ class SongMenu extends Component {
           </div>
         </Grid>
         <div />
-        {this.state.showModal && <RecordDanceModal />}
       </Grid>
     );
   }

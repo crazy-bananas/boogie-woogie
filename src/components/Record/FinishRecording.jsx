@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import "../styles/scoreCard.css";
-import "../styles/finishrecording.css";
+import "../../styles/scoreCard.css";
+import "../../styles/finishrecording.css";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
-import SaveMoves from "./SaveMoves";
-import LoadingRecordResult from "./animation/LoadingRecordResult";
+import SaveMoves from "../SaveMoves";
+import LoadingRecordResult from "../animation/LoadingRecordResult";
 
 class FinishRecording extends Component {
   constructor(props) {

@@ -5,7 +5,7 @@ import Play from "./components/Play";
 import AuthCallback from "./components/AuthCallback/AuthCallback";
 import Auth from "./authentication/Auth";
 import Profile from "./components/Profile";
-import Record from "./components/Record";
+import Record from "./components/Record/Record";
 import history from "./history";
 
 const auth = new Auth();

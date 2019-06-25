@@ -3,8 +3,8 @@ import Navbar from "./Navbar";
 import SongMenu from "./SongMenu";
 import { connect } from "react-redux";
 import DanceWindow from "./DanceWindow";
-import RecordWindow from "./RecordWindow";
-import FinishRecording from "./FinishRecording";
+import RecordWindow from "./Record/RecordWindow";
+import FinishRecording from "./Record/FinishRecording";
 import Score from "./Score";
 import axios from "axios";
 

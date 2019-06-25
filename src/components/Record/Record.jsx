@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import axios from "axios";
 import RecordWindow from "./RecordWindow";
 import FinishRecording from "./FinishRecording";
-import SongInput from "./SongInput";
+import SongInput from "../SongInput";
 import dotenv from "dotenv";
-import Navbar from "./Navbar";
+import Navbar from "../Navbar";
 dotenv.config();
 
 const CancelToken = axios.CancelToken;
