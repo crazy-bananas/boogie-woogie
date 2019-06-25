@@ -6,6 +6,7 @@ import AuthCallback from "./components/AuthCallback/AuthCallback";
 import Auth from "./authentication/Auth";
 import Profile from "./components/Profile";
 import Record from "./components/Record";
+import About from "./components/About";
 import history from "./history";
 
 const auth = new Auth();
@@ -46,6 +47,11 @@ export default () => {
           exact
           path="/record"
           render={props => <Record auth={auth} {...props} />}
+        />
+        <Route
+          exact
+          path="/about"
+          render={props => <About auth={auth} {...props} />}
         />
       </div>
     </Router>
