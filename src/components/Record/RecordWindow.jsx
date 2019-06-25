@@ -1,6 +1,6 @@
-import VideoWindow from "../VideoWindow";
+import VideoWindow from "../Dancing/VideoWindow";
 import React, { Component } from "react";
-import Counter from "../Counter";
+import Counter from "../Dancing/Counter";
 import "../../styles/dancewindow.css";
 import { connect } from "react-redux";
 import YouTube from "react-youtube";

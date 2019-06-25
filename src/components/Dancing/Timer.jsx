@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../styles/timer.css";
+import "../../styles/timer.css";
 import { connect } from "react-redux";
 
 export class Timer extends Component {

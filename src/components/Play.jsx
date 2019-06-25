@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Navbar from "./Navbar";
 import SongMenu from "./SongMenu";
 import { connect } from "react-redux";
-import DanceWindow from "./DanceWindow";
+import DanceWindow from "./Dancing/DanceWindow";
 import RecordWindow from "./Record/RecordWindow";
 import FinishRecording from "./Record/FinishRecording";
 import Score from "./HighScore/Score";
