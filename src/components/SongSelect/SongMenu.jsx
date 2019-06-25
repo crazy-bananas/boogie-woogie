@@ -61,9 +61,9 @@ class SongMenu extends Component {
       });
   }
 
-  componentWillUnmount() {
-    this.axiosCancelSource.cancel("Component unmounted.");
-  }
+  // componentWillUnmount() {
+  //   this.axiosCancelSource.cancel("Component unmounted.");
+  // }
 
   render() {
     return (
