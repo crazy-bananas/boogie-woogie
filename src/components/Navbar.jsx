@@ -60,7 +60,7 @@ class Navbar extends Component {
                 )}
               </Grid>
 
-              <Grid item style={{ position: "absolute", right: 100 }}>
+              <Grid item style={{ position: "absolute", right: 200 }}>
                 {this.props.indexOfSelectedSong !== "" &&
                   this.props.moveSelected !== "" && <Retry />}
               </Grid>
