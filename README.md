@@ -1,6 +1,13 @@
 # Boogie Woogie
 
-A Dancing Game that rates the users dansing moves by tracking it with the webcam and comparing it to the correct dance. This project was a three week long project created as a part of the Code Chrysalise Immersive Programing Course.
+A Dancing Game that rates the users dansing moves by tracking it with the webcam and comparing it to the correct dance. This project was created during only three weeks as the senior project at Code Chrysalis' Immersive Programing Bootcamp.
+
+## Demo
+Try it out yourself by [visiting the deployed version](https://boogie-woogie-banana.herokuapp.com).
+
+### Front page
+PICTURE
+
 
 ## Getting Started
 
@@ -8,7 +15,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You only need yarn and the backend
+The backend of this application is in a separate repo, [Boogie Woogie Backend](https://github.com/crazy-bananas/boogie-woogie-backend). Learn how to set up the backend by visiting that repo [here](https://github.com/crazy-bananas/boogie-woogie-backend).
+
+You also need `yarn`. Please install it by using the code below, or visit [yarns official website](https://yarnpkg.com/) for more detailed instruction.
 
 ```
 brew install yarn
@@ -16,21 +25,29 @@ brew install yarn
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Start with installing all dependencies
+Start by forking the repository, clone it to your computer and installing all dependencies using yarn.
 
 ```
 yarn
 ```
 
-Running the app:
+You also need to setup your enviromental variables as below.
+```
+// .env
+REACT_APP_AUTH_REDIRECT_LINK=<Link to where the user should be redirected after login/logout>
+REACT_APP_YOUTUBE_API_KEY=<Your Youtube API key>
+REACT_APP_AUTH0_CLIENT_ID=<Your Auth0 Client ID>
+REACT_APP_DEVMODE=true
+```
+`REACT_APP_AUTH0_CLIENT_ID` and `REACT_APP_AUTH0_CLIENT_ID` is only needed if you want to have functional login. If you leave this empty, the login button will not work.
+If you imput `REACT_APP_DEVMODE`, the app will not require the player to get into start position before the song starts playing.
+
+
+When aboce setup is completed, you can start the aplication by writing:
 
 ```
 yarn start
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Deployment
 
