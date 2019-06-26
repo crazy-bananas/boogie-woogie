@@ -8,9 +8,6 @@ import FinishRecording from "./Record/FinishRecording";
 import Score from "./HighScore/Score";
 import axios from "axios";
 
-const CancelToken = axios.CancelToken;
-const cancelAxios = CancelToken.source();
-
 class App extends Component {
   async componentDidMount() {
     // if (this.props.location.pathname !== "/callback") {
@@ -27,8 +24,7 @@ class App extends Component {
         .get("https://dev-boogie-woogie.auth0.com/userinfo", {
           headers: {
             Authorization: `Bearer ${this.props.auth.getAccessToken()}`
-          },
-          cancelToken: cancelAxios.token
+          }
         })
         .then(responseWithUserInfo => {
           return responseWithUserInfo.data;
@@ -52,20 +48,9 @@ class App extends Component {
           this.props.updateProfilePicture(userInfo.picture);
         })
         .catch(err => {
-          if (axios.isCancel(err)) {
-            console.log(
-              "Axios request in Play.jsx to fetch user info was canceled.",
-              err.message
-            );
-          } else {
-            throw new Error(err.message);
-          }
+          throw new Error(err.message);
         });
     }
-  }
-
-  componentWillUnmount() {
-    cancelAxios.cancel("Operation canceled by the user.");
   }
 
   login = () => {

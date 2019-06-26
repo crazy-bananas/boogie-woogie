@@ -5,9 +5,6 @@ import { connect } from "react-redux";
 import TopPage from "./components/TopPage";
 import axios from "axios";
 
-const CancelToken = axios.CancelToken;
-const cancelAxios = CancelToken.source();
-
 class App extends Component {
   async componentDidMount() {
     if (this.props.location.pathname !== "/callback") {
@@ -19,14 +16,12 @@ class App extends Component {
       }
     }
 
-    this.axiosCancelSource = axios.CancelToken.source();
     if (localStorage.getItem("isLoggedIn")) {
       axios
         .get("https://dev-boogie-woogie.auth0.com/userinfo", {
           headers: {
             Authorization: `Bearer ${this.props.auth.getAccessToken()}`
-          },
-          cancelToken: cancelAxios.token
+          }
         })
         .then(responseWithUserInfo => {
           return responseWithUserInfo.data;
@@ -38,32 +33,19 @@ class App extends Component {
           localStorage.setItem("user-picture", userInfo.picture);
           localStorage.setItem("user-id", userInfo.sub);
 
-          axios.post(
-            "https://boogie-banana.herokuapp.com/api/users",
-            {
-              userId: userInfo.sub,
-              email: userInfo.email,
-              name: userInfo.name,
-              nickname: userInfo.nickname,
-              picture: userInfo.picture,
-              updated_at: userInfo.updated_at
-            },
-            {
-              cancelToken: this.axiosCancelSource.token
-            }
-          );
+          axios.post("https://boogie-banana.herokuapp.com/api/users", {
+            userId: userInfo.sub,
+            email: userInfo.email,
+            name: userInfo.name,
+            nickname: userInfo.nickname,
+            picture: userInfo.picture,
+            updated_at: userInfo.updated_at
+          });
 
           this.props.updateProfilePicture(userInfo.picture);
         })
         .catch(err => {
-          if (axios.isCancel(err)) {
-            console.log(
-              "Axios request in App.js to fetch user info was canceled.",
-              err.message
-            );
-          } else {
-            throw new Error(err.message);
-          }
+          throw new Error(err.message);
         });
     }
   }

@@ -14,9 +14,6 @@ import ProfileTable from "./ProfileTable";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 
-const CancelToken = axios.CancelToken;
-const cancelAxios = CancelToken.source();
-
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -28,27 +25,14 @@ class Profile extends Component {
     let user = localStorage.getItem("user-id");
     if (user) {
       axios
-        .get(`https://boogie-banana.herokuapp.com/api/scores/${user}`, {
-          cancelToken: cancelAxios.token
-        })
+        .get(`https://boogie-banana.herokuapp.com/api/scores/${user}`)
         .then(data => {
           this.setState({ usersScores: data.data });
         })
         .catch(err => {
-          if (axios.isCancel(err)) {
-            console.log(
-              "Axios request in Profile.jsx to score info was canceled.",
-              err.message
-            );
-          } else {
-            throw new Error(err.message);
-          }
+          throw new Error(err.message);
         });
     }
-  }
-
-  componentWillUnmount(){
-    cancelAxios.cancel("Operation canceled by the user.");
   }
 
   getTotalScore = allScores => {

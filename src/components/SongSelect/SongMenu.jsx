@@ -39,31 +39,17 @@ class SongMenu extends Component {
   };
 
   componentDidMount() {
-    this.axiosCancelSource = axios.CancelToken.source();
     axios
-      .get("https://boogie-banana.herokuapp.com/api/songs", {
-        cancelToken: this.axiosCancelSource.token
-      })
+      .get("https://boogie-banana.herokuapp.com/api/songs")
       .then(songs => {
         setTimeout(() => {
           this.setState({ isLoading: false, songList: songs.data });
         }, 1000);
       })
       .catch(err => {
-        if (axios.isCancel(err)) {
-          console.log(
-            "Axios request in SongMenu.jsx to song info was canceled.",
-            err.message
-          );
-        } else {
-          throw new Error(err.message);
-        }
+        throw new Error(err.message);
       });
   }
-
-  // componentWillUnmount() {
-  //   this.axiosCancelSource.cancel("Component unmounted.");
-  // }
 
   render() {
     return (

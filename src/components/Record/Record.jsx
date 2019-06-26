@@ -8,9 +8,6 @@ import dotenv from "dotenv";
 import Navbar from "../Navbar";
 dotenv.config();
 
-const CancelToken = axios.CancelToken;
-const cancelAxios = CancelToken.source();
-
 export class Record extends Component {
   constructor(props) {
     super(props);
@@ -24,10 +21,6 @@ export class Record extends Component {
     };
   }
 
-  componentWillUnmount(){
-    cancelAxios.cancel("Operation canceled by the user.");
-  }
-  
   setSongUrl = event => {
     this.setState({ code: event.target.value });
   };
@@ -44,8 +37,7 @@ export class Record extends Component {
 
       axios
         .get(
-          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`,
-          { cancelToken: cancelAxios.token }
+          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
         )
         .then(data => {
           this.props.addSong({
@@ -53,17 +45,10 @@ export class Record extends Component {
             code: songCode
           });
         })
-        .catch(err => {
-          if (axios.isCancel(err)) {
-            console.log(
-              "Axios request in Record.jsx to fetch youtube video info was canceled.",
-              err.message
-            );
-          } else {
-            this.setState({
-              error: "Couldn't get title of youtube video. Please try again"
-            });
-          }
+        .catch(() => {
+          this.setState({
+            error: "Couldn't get title of youtube video. Please try again"
+          });
         });
     }
   };

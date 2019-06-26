@@ -50,7 +50,6 @@ class SaveMoves extends Component {
   };
 
   save = () => {
-    this.axiosCancelSource = axios.CancelToken.source();
     if (!this.state.danceName) {
       this.setState({ errorDescription: "Dance name cannot be blank" });
     } else {
@@ -61,9 +60,6 @@ class SaveMoves extends Component {
             songcode: this.props.newSong.code,
             moves: this.props.newSong.moves,
             name: this.state.danceName
-          },
-          {
-            cancelToken: this.axiosCancelSource.token
           }
         )
         .then(data => {
@@ -86,17 +82,10 @@ class SaveMoves extends Component {
         {
           code: this.props.newSong.code,
           title: this.props.newSong.title
-        },
-        {
-          cancelToken: this.axiosCancelSource.token
         }
       ); // TODO: We need error check here, and message to user on success.
     }
   };
-
-  componentWillUnmount() {
-    this.axiosCancelSource.cancel("Component unmounted.");
-  }
 
   render() {
     return (
