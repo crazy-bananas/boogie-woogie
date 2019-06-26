@@ -19,7 +19,9 @@ class App extends Component {
     //   }
     // }
 
-    if (localStorage.getItem("isLoggedIn")) {
+    if (
+      localStorage.getItem("isLoggedIn" && this.props.auth.getAccessToken())
+    ) {
       axios
         .get("https://dev-boogie-woogie.auth0.com/userinfo", {
           headers: {
