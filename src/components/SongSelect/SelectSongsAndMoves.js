@@ -13,9 +13,6 @@ import StarBorder from "@material-ui/icons/StarBorder";
 import MusicNote from "@material-ui/icons/MusicNote";
 import axios from "axios";
 
-const CancelToken = axios.CancelToken;
-const cancelAxios = CancelToken.source();
-
 class SelectSongsAndMoves extends Component {
   constructor(props) {
     super(props);
@@ -35,10 +32,7 @@ class SelectSongsAndMoves extends Component {
       for (let i = 0; i < this.props.songList.length; ++i) {
         axios
           .get(
-            `https://boogie-banana.herokuapp.com/api/moves/${this.props.songList[i].code}`,
-            {
-              cancelToken: cancelAxios.token
-            }
+            `https://boogie-banana.herokuapp.com/api/moves/${this.props.songList[i].code}`
           )
           .then(reply => {
             const newMovesSet = [...this.state.moves];
@@ -46,21 +40,10 @@ class SelectSongsAndMoves extends Component {
             this.setState({ moves: newMovesSet });
           })
           .catch(err => {
-            if (axios.isCancel(err)) {
-              console.log(
-                "Axios request in SelectSongsAndMoves.js to fetch moves data was cancelled.",
-                err.message
-              );
-            } else {
-              throw new Error(err.message);
-            }
+            throw new Error(err.message);
           });
       }
     }
-  }
-
-  componentWillUnmount() {
-    cancelAxios.cancel("Operation canceled by the user.");
   }
 
   render() {
