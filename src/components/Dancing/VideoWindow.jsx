@@ -177,7 +177,7 @@ export class VideoWindow extends Component {
 
   drawCurrentDancePose = () => {
     if (this.indexCorrectP >= this.state.correctPoses.length - 1) {
-      console.log("drawCurrentDancePose was called too many times");
+      // console.log("drawCurrentDancePose was called too many times");
       return;
     }
 
