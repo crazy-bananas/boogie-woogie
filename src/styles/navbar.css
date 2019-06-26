@@ -5,7 +5,12 @@
 .heading {
   text-shadow: 2px 2px #d3d3d3;
 }
-#navbar{
+#navbar {
   font-weight: 400;
   line-height: 1.43;
+}
+
+#about_btn {
+  color: #fff;
+  font-weight: 800;
 }

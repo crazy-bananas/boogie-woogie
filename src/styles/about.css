@@ -1,0 +1,89 @@
+#about {
+  background: url("../images/WMpic/16873098-active-jumping-and-dancing-young-woman-abstract-music-banner-.jpg");
+  background-size: 30%;
+  background-position: right 1% top 10%;
+  background-repeat: no-repeat;
+}
+
+.headline {
+  font-size: 3em;
+  padding-top: 10vh;
+  padding-bottom: 60vh;
+}
+
+.second-line {
+  font-size: 2em;
+  padding-top: 50px;
+}
+
+.section {
+  font-size: 2em;
+  padding: 50px 0px;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.section span {
+  padding: 0px 20px;
+}
+
+.ol {
+  text-align: left;
+  list-style-type: none !important;
+  padding: 0;
+  border-top: solid 2px black;
+  border-bottom: solid 2px black;
+}
+
+ol li {
+  font-size: 1.5em;
+  padding: 0.5em 0;
+  position: relative;
+  padding-left: 1.4em;
+  line-height: 1.5em;
+}
+
+ol li:before {
+  position: absolute;
+  font-size: 1.3em;
+}
+
+.list-half {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.list-what-you-need {
+  text-align: left;
+  padding-left: 20vw;
+}
+
+.padding-bottom {
+  padding-bottom: 100px;
+}
+
+.sub-title {
+  font-size: 2em;
+}
+
+.demo-image {
+  max-width: 100%;
+  max-height: auto;
+}
+
+ul li {
+  margin-bottom: 5px;
+  line-height: 1.5;
+  padding: 0.5em;
+  list-style-type: none !important;
+  font-weight: bold;
+}
+
+a {
+  color: darkgrey;
+  text-decoration: none;
+}
+
+.whoweare li {
+  font-size: 1.5em;
+}
