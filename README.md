@@ -5,9 +5,28 @@ A Dancing Game that rates the users dansing moves by tracking it with the webcam
 ## Demo
 Try it out yourself by [visiting the deployed version](https://boogie-woogie-banana.herokuapp.com).
 
-### Front page
-PICTURE
+#### Front page
+<img src="docs/images/FirstPage.png"
+     alt="first page pic "
+     style=" margin: 10px;" />
 
+#### Select Song Page
+<img src="docs/images/SongPage.png"
+     alt="song page pic "
+     style=" margin: 10px;" />
+
+#### Song Selection
+ <iframe src="https://giphy.com/embed/ggQMMsFw0eb30ppHl9" width="500" height="234" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+
+#### Dance Page
+<img src="docs/images/DanceWindow.png"
+     alt="Dance page pic "
+     style=" margin: 10px;" />
+
+#### Highscore Page
+<img src="docs/images/HighScore.png"
+     alt="song page pic "
+     style=" margin: 10px;" />
 
 ## Getting Started
 
@@ -34,6 +53,7 @@ yarn
 You also need to setup your enviromental variables as below.
 ```
 // .env
+
 REACT_APP_AUTH_REDIRECT_LINK=<Link to where the user should be redirected after login/logout>
 REACT_APP_YOUTUBE_API_KEY=<Your Youtube API key>
 REACT_APP_AUTH0_CLIENT_ID=<Your Auth0 Client ID>
@@ -72,10 +92,11 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Authors
 
+
+* **Florin Mavroian** - *Initial work* - [Mavroian](https://github.com/mavroian)
 * **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
-* **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
-* **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
-* **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
+* **Shruti Jain** - *Initial work* - [Sjain020188](https://github.com/Sjain020188)
+* **Yasuhito Miyazaki** - *Initial work* - [yasmiyazaki](https://github.com/yasmiyazaki)
 
 ## License
 
