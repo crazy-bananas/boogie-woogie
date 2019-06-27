@@ -1,27 +1,27 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import Combo from "./animation/Combo.jsx";
+import Combo from "../animation/Combo.jsx";
 import * as posenet from "@tensorflow-models/posenet";
-import "../styles/videowindow.css";
+import "../../styles/videowindow.css";
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import anime from "animejs";
 
 import { drawPose } from "./canvasDrawings";
 
-import Loading from "../components/Loading";
+import Loading from "../Loading";
 
 // Images for the body
-import nose from "../images/body/glasses.png";
-import leftHandImg from "../images/body/leftHand.png";
-import rightHandImg from "../images/body/rightHand.png";
-import leftShoe from "../images/body/rightShoe.png";
-import rightShoe from "../images/body/leftShoe.png";
-import leftDown from "../images/body/leftDown.png";
-import leftUpper from "../images/body/leftUpper.png";
-import rightDown from "../images/body/rightDown.png";
-import rightUpper from "../images/body/rightUpper.png";
+import nose from "../../images/body/glasses.png";
+import leftHandImg from "../../images/body/leftHand.png";
+import rightHandImg from "../../images/body/rightHand.png";
+import leftShoe from "../../images/body/rightShoe.png";
+import rightShoe from "../../images/body/leftShoe.png";
+import leftDown from "../../images/body/leftDown.png";
+import leftUpper from "../../images/body/leftUpper.png";
+import rightDown from "../../images/body/rightDown.png";
+import rightUpper from "../../images/body/rightUpper.png";
 
 export class VideoWindow extends Component {
   constructor(props) {
@@ -177,7 +177,7 @@ export class VideoWindow extends Component {
 
   drawCurrentDancePose = () => {
     if (this.indexCorrectP >= this.state.correctPoses.length - 1) {
-      console.log("drawCurrentDancePose was called too many times");
+      // console.log("drawCurrentDancePose was called too many times");
       return;
     }
 
@@ -273,9 +273,7 @@ export class VideoWindow extends Component {
     if (!this.props.isRecording) {
       axios
         .get(
-          `https://boogie-banana.herokuapp.com/api/moves/${
-            this.props.moveSelected
-          }`
+          `https://boogie-banana.herokuapp.com/api/moves/${this.props.moveSelected}`
         )
         .then(poses => {
           this.setState({ correctPoses: poses.data[0].moves });
@@ -283,6 +281,9 @@ export class VideoWindow extends Component {
             (this.state.correctPoses.length * this.bodyParts.length) / 10
           );
           this.props.updateMaxScore(maxScore);
+        })
+        .catch(err => {
+            throw new Error(err.message);
         });
     }
 

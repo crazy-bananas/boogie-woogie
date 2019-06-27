@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import "../styles/scoreCard.css";
-import "../styles/finishrecording.css";
+import "../../styles/scoreCard.css";
+import "../../styles/finishrecording.css";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import SaveMoves from "./SaveMoves";
-import LoadingRecordResult from "./animation/LoadingRecordResult";
+import LoadingRecordResult from "../animation/LoadingRecordResult";
 
 class FinishRecording extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class FinishRecording extends Component {
                 <Button
                   onClick={this.switchModal}
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                 >
                   Save
                 </Button>
@@ -76,7 +76,7 @@ class FinishRecording extends Component {
                     this.props.resetState();
                   }}
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                 >
                   Home
                 </Button>

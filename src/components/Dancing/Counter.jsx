@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { ReactComponent as One } from "../images/1.svg";
-import { ReactComponent as Two } from "../images/2.svg";
-import { ReactComponent as Three } from "../images/3.svg";
-import "../styles/counter.css";
+import { ReactComponent as One } from "../../images/1.svg";
+import { ReactComponent as Two } from "../../images/2.svg";
+import { ReactComponent as Three } from "../../images/3.svg";
+import "../../styles/counter.css";
 
 let endTimeout = 0;
 

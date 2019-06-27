@@ -2,10 +2,11 @@ import React from "react";
 import { Route, Router } from "react-router-dom";
 import App from "./App";
 import Play from "./components/Play";
+import About from "./components/About";
 import AuthCallback from "./components/AuthCallback/AuthCallback";
 import Auth from "./authentication/Auth";
-import Profile from "./components/Profile";
-import Record from "./components/Record";
+import Profile from "./components/Profile/Profile";
+import Record from "./components/Record/Record";
 import history from "./history";
 
 const auth = new Auth();
@@ -46,6 +47,11 @@ export default () => {
           exact
           path="/record"
           render={props => <Record auth={auth} {...props} />}
+        />
+        <Route
+          exact
+          path="/about"
+          render={props => <About {...props} auth={auth} />}
         />
       </div>
     </Router>

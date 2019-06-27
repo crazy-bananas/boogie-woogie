@@ -4,11 +4,11 @@ import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import "../styles/profile.css";
-import Loading from "./Loading";
+import "../../styles/profile.css";
+import Loading from "./../Loading";
 import { connect } from "react-redux";
-import backIcon from "../images/backArrow.png";
-import Navbar from "./Navbar";
+import backIcon from "../../images/backArrow.png";
+import Navbar from "./../Navbar";
 import axios from "axios";
 import ProfileTable from "./ProfileTable";
 import { Link } from "react-router-dom";
@@ -29,11 +29,12 @@ class Profile extends Component {
         .then(data => {
           this.setState({ usersScores: data.data });
         })
-        .catch(error => {
-          throw new Error(`Getting user info: ${error.message}`);
+        .catch(err => {
+          throw new Error(err.message);
         });
     }
   }
+
   getTotalScore = allScores => {
     let score = 0;
     if (allScores.length === 0) return score;

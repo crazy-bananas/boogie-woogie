@@ -1,69 +1,108 @@
-Boogie-Woogie
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Boogie Woogie
 
-## Available Scripts
+A Dancing Game that rates the users dansing moves by tracking it with the webcam and comparing it to the correct dance. This project was created during only three weeks as the senior project at Code Chrysalis' Immersive Programing Bootcamp.
 
-In the project directory, you can run:
+## Demo
+Try it out yourself by [visiting the deployed version](https://boogie-woogie-banana.herokuapp.com).
 
-### `npm start`
+#### Front page
+<img src="docs/images/FirstPage.png"
+     alt="first page pic "
+     style=" margin: 10px;" />
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### Select Song Page
+<img src="docs/images/SongPage.png"
+     alt="song page pic "
+     style=" margin: 10px;" />
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+#### Song Selection
+ ![song selection Demo](docs/images/boogie.gif)
 
-### `npm test`
+#### Dance Page
+<img src="docs/images/DanceWindow.png"
+     alt="Dance page pic "
+     style=" margin: 10px;" />
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### Highscore Page
+<img src="docs/images/HighScore.png"
+     alt="song page pic "
+     style=" margin: 10px;" />
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### Prerequisites
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The backend of this application is in a separate repo, [Boogie Woogie Backend](https://github.com/crazy-bananas/boogie-woogie-backend). Learn how to set up the backend by visiting that repo [here](https://github.com/crazy-bananas/boogie-woogie-backend).
 
-### `npm run eject`
+You also need `yarn`. Please install it by using the code below, or visit [yarns official website](https://yarnpkg.com/) for more detailed instruction.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+brew install yarn
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Installing
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Start by forking the repository, clone it to your computer and installing all dependencies using yarn.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+yarn
+```
 
-## Learn More
+You also need to setup your enviromental variables as below.
+```
+// .env
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+REACT_APP_AUTH_REDIRECT_LINK=<Link to where the user should be redirected after login/logout>
+REACT_APP_YOUTUBE_API_KEY=<Your Youtube API key>
+REACT_APP_AUTH0_CLIENT_ID=<Your Auth0 Client ID>
+REACT_APP_DEVMODE=true
+```
+`REACT_APP_AUTH0_CLIENT_ID` and `REACT_APP_AUTH0_CLIENT_ID` is only needed if you want to have functional login. If you leave this empty, the login button will not work.
+If you imput `REACT_APP_DEVMODE`, the app will not require the player to get into start position before the song starts playing.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+When aboce setup is completed, you can start the aplication by writing:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+```
+yarn start
+```
 
-### Analyzing the Bundle Size
+## Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+Add additional notes about how to deploy this on a live system
 
-### Making a Progressive Web App
+## Built With
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+* [React](https://reactjs.org/) - The web framework used
 
-### Advanced Configuration
+## Contributing
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
-### Deployment
+## Technologies Used
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+- [React](https://github.com/facebook/create-react-app)
+- [Posenet](https://github.com/tensorflow/tfjs-models/tree/master/posenet)
+- [auth0](https://auth0.com/) - For authentication and user login
+- [Axios](https://maven.apache.org/) - Dependency Management
+- [Redux](https://redux.js.org/) - To handle the state
+- [MongoDB](https://www.mongodb.com/) - For the database
 
-### `npm run build` fails to minify
+## Authors
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+* **Florin Mavroian** - *Initial work* - [Mavroian](https://github.com/mavroian)
+* **Johannes Jarbratt** - *Initial work* - [Johachi](https://github.com/johachi)
+* **Shruti Jain** - *Initial work* - [Sjain020188](https://github.com/Sjain020188)
+* **Yasuhito Miyazaki** - *Initial work* - [yasmiyazaki](https://github.com/yasmiyazaki)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* [Code Chrysalis](https://www.codechrysalis.io/)
+* [Posenet Team](https://github.com/tensorflow/tfjs-models/tree/master/posenet)

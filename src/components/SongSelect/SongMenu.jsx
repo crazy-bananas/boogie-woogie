@@ -8,11 +8,10 @@ import Typography from "@material-ui/core/Typography";
 
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
-import dancingPeople from "../images//WMpic/15809153.jpg";
-import RecordDanceModal from "./RecordDanceModal";
-import "../styles/songmenu.css";
-import SongLoading from "./SongLoading";
-import SongsAndMoves from "./List/SelectSongsAndMoves";
+import dancingPeople from "../../images//WMpic/15809153.jpg";
+import "../../styles/songmenu.css";
+import SongLoading from "../SongLoading";
+import SongsAndMoves from "./SelectSongsAndMoves";
 import axios from "axios";
 
 const MyPaper = styled(Paper)({
@@ -40,20 +39,16 @@ class SongMenu extends Component {
   };
 
   componentDidMount() {
-    this.axiosCancelSource = axios.CancelToken.source();
     axios
-      .get("https://boogie-banana.herokuapp.com/api/songs", {
-        cancelToken: this.axiosCancelSource.token
-      })
+      .get("https://boogie-banana.herokuapp.com/api/songs")
       .then(songs => {
         setTimeout(() => {
           this.setState({ isLoading: false, songList: songs.data });
         }, 1000);
-      }); // TODO: We need to catch this error
-  }
-
-  componentWillUnmount() {
-    this.axiosCancelSource.cancel("Component unmounted.");
+      })
+      .catch(err => {
+        throw new Error(err.message);
+      });
   }
 
   render() {
@@ -91,7 +86,6 @@ class SongMenu extends Component {
           </div>
         </Grid>
         <div />
-        {this.state.showModal && <RecordDanceModal />}
       </Grid>
     );
   }

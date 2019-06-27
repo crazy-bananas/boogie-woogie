@@ -7,16 +7,15 @@ import axios from "axios";
 
 class App extends Component {
   async componentDidMount() {
-    if (this.props.location.pathname !== '/callback'){
+    if (this.props.location.pathname !== "/callback") {
       try {
         await this.props.auth.silentAuth();
         this.forceUpdate();
       } catch (err) {
-        if (err.error !== 'login_required') console.log(err.error);
+        if (err.error !== "login_required") console.log(err.error);
       }
     }
-    
-    this.axiosCancelSource = axios.CancelToken.source();
+
     if (localStorage.getItem("isLoggedIn")) {
       axios
         .get("https://dev-boogie-woogie.auth0.com/userinfo", {
@@ -34,25 +33,19 @@ class App extends Component {
           localStorage.setItem("user-picture", userInfo.picture);
           localStorage.setItem("user-id", userInfo.sub);
 
-          axios.post(
-            "https://boogie-banana.herokuapp.com/api/users",
-            {
-              userId: userInfo.sub,
-              email: userInfo.email,
-              name: userInfo.name,
-              nickname: userInfo.nickname,
-              picture: userInfo.picture,
-              updated_at: userInfo.updated_at
-            },
-            {
-              cancelToken: this.axiosCancelSource.token
-            }
-          );
+          axios.post("https://boogie-banana.herokuapp.com/api/users", {
+            userId: userInfo.sub,
+            email: userInfo.email,
+            name: userInfo.name,
+            nickname: userInfo.nickname,
+            picture: userInfo.picture,
+            updated_at: userInfo.updated_at
+          });
 
           this.props.updateProfilePicture(userInfo.picture);
         })
         .catch(err => {
-          throw err;
+          throw new Error(err.message);
         });
     }
   }
@@ -71,10 +64,6 @@ class App extends Component {
     }
     return true;
   };
-
-  componentWillUnmount() {
-    this.axiosCancelSource.cancel("Component unmounted.");
-  }
 
   render() {
     return (

@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import axios from "axios";
 import RecordWindow from "./RecordWindow";
 import FinishRecording from "./FinishRecording";
-import SongInput from "./SongInput";
+import SongInput from "../SongInput";
 import dotenv from "dotenv";
-import Navbar from "./Navbar";
+import Navbar from "../Navbar";
 dotenv.config();
 
 export class Record extends Component {
@@ -20,6 +20,7 @@ export class Record extends Component {
       error: ""
     };
   }
+
   setSongUrl = event => {
     this.setState({ code: event.target.value });
   };
@@ -33,16 +34,10 @@ export class Record extends Component {
       const songCode = this.state.code.substring(
         this.state.code.indexOf("=") + 1
       );
-      console.log(
-        `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
-          process.env.REACT_APP_YOUTUBE_API_KEY
-        }`
-      );
+
       axios
         .get(
-          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
-            process.env.REACT_APP_YOUTUBE_API_KEY
-          }`
+          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
         )
         .then(data => {
           this.props.addSong({
@@ -50,8 +45,7 @@ export class Record extends Component {
             code: songCode
           });
         })
-        .catch(err => {
-          console.log();
+        .catch(() => {
           this.setState({
             error: "Couldn't get title of youtube video. Please try again"
           });

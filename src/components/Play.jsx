@@ -1,25 +1,19 @@
 import React, { Component } from "react";
 import Navbar from "./Navbar";
-import SongMenu from "./SongMenu";
+import SongMenu from "./SongSelect/SongMenu";
 import { connect } from "react-redux";
-import DanceWindow from "./DanceWindow";
-import RecordWindow from "./RecordWindow";
-import FinishRecording from "./FinishRecording";
-import Score from "./Score";
+import DanceWindow from "./Dancing/DanceWindow";
+import RecordWindow from "./Record/RecordWindow";
+import FinishRecording from "./Record/FinishRecording";
+import Score from "./HighScore/Score";
 import axios from "axios";
 
 class App extends Component {
-  async omponentDidMount() {
-    if (this.props.location.pathname !== '/callback'){
-      try {
-        await this.props.auth.silentAuth();
-        this.forceUpdate();
-      } catch (err) {
-        if (err.error !== 'login_required') console.log(err.error);
-      }
-    }
-    
-    if (localStorage.getItem("isLoggedIn")) {
+  async componentDidMount() {
+    if (
+      localStorage.getItem("isLoggedIn") &&
+      this.props.auth.getAccessToken()
+    ) {
       axios
         .get("https://dev-boogie-woogie.auth0.com/userinfo", {
           headers: {
@@ -30,11 +24,11 @@ class App extends Component {
           return responseWithUserInfo.data;
         })
         .then(userInfo => {
-          localStorage.setItem("user-email",userInfo.email)
-          localStorage.setItem("user-name",userInfo.name)
-          localStorage.setItem("user-nickname",userInfo.nickname)
-          localStorage.setItem("user-picture",userInfo.picture)
-          localStorage.setItem("user-id",userInfo.sub)
+          localStorage.setItem("user-email", userInfo.email);
+          localStorage.setItem("user-name", userInfo.name);
+          localStorage.setItem("user-nickname", userInfo.nickname);
+          localStorage.setItem("user-picture", userInfo.picture);
+          localStorage.setItem("user-id", userInfo.sub);
 
           axios.post("https://boogie-banana.herokuapp.com/api/users", {
             userId: userInfo.sub,
@@ -44,11 +38,11 @@ class App extends Component {
             picture: userInfo.picture,
             updated_at: userInfo.updated_at
           });
-          
+
           this.props.updateProfilePicture(userInfo.picture);
         })
         .catch(err => {
-          throw err;
+          throw new Error(err.message);
         });
     }
   }
@@ -105,14 +99,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateProfilePicture: (pictureUrl) => {
+    updateProfilePicture: pictureUrl => {
       dispatch({
         type: "UPDATE_USER_PICTURE",
         payload: pictureUrl
-      })
+      });
     }
-  }
-}
+  };
+};
 
 export default connect(
   mapStateToProps,

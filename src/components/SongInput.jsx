@@ -9,6 +9,7 @@ import "../styles/songinput.css";
 
 import dotenv from "dotenv";
 dotenv.config();
+
 const MyButton = styled(Button)({
   marginTop: "20px"
 });
@@ -31,6 +32,7 @@ export class SongInput extends Component {
       error: ""
     };
   }
+
   setSongUrl = event => {
     this.setState({ code: event.target.value });
   };
@@ -44,16 +46,10 @@ export class SongInput extends Component {
       const songCode = this.state.code.substring(
         this.state.code.indexOf("=") + 1
       );
-      console.log(
-        `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
-          process.env.REACT_APP_YOUTUBE_API_KEY
-        }`
-      );
+
       axios
         .get(
-          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${
-            process.env.REACT_APP_YOUTUBE_API_KEY
-          }`
+          `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${songCode}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
         )
         .then(data => {
           this.props.addSong({
@@ -61,8 +57,7 @@ export class SongInput extends Component {
             code: songCode
           });
         })
-        .catch(err => {
-          console.log();
+        .catch(() => {
           this.setState({
             error: "Couldn't get title of youtube video. Please try again"
           });

@@ -1,7 +1,7 @@
 import VideoWindow from "./VideoWindow";
 import React, { Component } from "react";
 import Counter from "./Counter";
-import "../styles/dancewindow.css";
+import "../../styles/dancewindow.css";
 import { connect } from "react-redux";
 import YouTube from "react-youtube";
 import Timer from "./Timer";

@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import { styled } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import logo from "../images/logo.svg";
 import Retry from "./Retry";
@@ -33,10 +34,21 @@ class Navbar extends Component {
               <Grid item>
                 <Home />
               </Grid>
+              <Grid item style={{ position: "absolute", right: 100 }}>
+                <Link to="/about">
+                  <Button id="about_btn" style={{ color: "#fffff" }}>
+                    About Us
+                  </Button>
+                </Link>
+              </Grid>
 
               <Grid item style={{ position: "absolute", right: 10 }}>
                 {!this.props.auth.isAuthenticated() && (
-                  <Button color="inherit" onClick={this.props.auth.login}>
+                  <Button
+                    id="about_btn"
+                    color="inherit"
+                    onClick={this.props.auth.login}
+                  >
                     Login
                   </Button>
                 )}
@@ -48,7 +60,7 @@ class Navbar extends Component {
                 )}
               </Grid>
 
-              <Grid item style={{ position: "absolute", right: 100 }}>
+              <Grid item style={{ position: "absolute", right: 200 }}>
                 {this.props.indexOfSelectedSong !== "" &&
                   this.props.moveSelected !== "" && <Retry />}
               </Grid>
@@ -69,6 +81,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps
-)(Navbar);
+export default connect(mapStateToProps)(Navbar);

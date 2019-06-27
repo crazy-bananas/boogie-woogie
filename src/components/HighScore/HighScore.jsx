@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
-import Loading from "./Loading";
+import Loading from "./../Loading";
 import ScoreTable from "./ScoreTable";
 
 class HighShcore extends Component {
@@ -19,6 +19,9 @@ class HighShcore extends Component {
       )
       .then(data => {
         this.setState({ scoreList: data.data });
+      })
+      .catch(err => {
+        throw new Error(err.message);
       });
   };
   componentDidMount() {

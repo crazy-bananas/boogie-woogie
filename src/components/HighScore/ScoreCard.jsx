@@ -4,8 +4,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-import Trophy from "../images/trophy.png";
-import "../styles/scoreCard.css";
+import Trophy from "../../images/trophy.png";
+import "../../styles/scoreCard.css";
 import { connect } from "react-redux";
 import { styled } from "@material-ui/styles";
 
@@ -32,28 +32,18 @@ class ScoreCard extends Component {
   }
 
   componentDidMount() {
-    this.axiosCancelSource = axios.CancelToken.source();
-    axios.post(
-      "https://boogie-banana.herokuapp.com/api/scores",
-      {
-        songId: this.props.songSelected,
-        moveId: this.props.moveSelected,
-        user: localStorage.getItem("user-nickname") || "Anonymous",
-        score: this.props.score,
-        pic:
-          localStorage.getItem("user-picture") ||
-          "https://dummyimage.com/600x400/000/fff",
-        userId: localStorage.getItem("user-id") || "default"
-      },
-      {
-        cancelToken: this.axiosCancelSource.token
-      }
-    );
+    axios.post("https://boogie-banana.herokuapp.com/api/scores", {
+      songId: this.props.songSelected,
+      moveId: this.props.moveSelected,
+      user: localStorage.getItem("user-nickname") || "Anonymous",
+      score: this.props.score,
+      pic:
+        localStorage.getItem("user-picture") ||
+        "https://dummyimage.com/600x400/000/fff",
+      userId: localStorage.getItem("user-id") || "default"
+    });
   }
 
-  componentWillUnmount() {
-    this.axiosCancelSource.cancel("Component unmounted.");
-  }
   render() {
     return (
       <div id="card">

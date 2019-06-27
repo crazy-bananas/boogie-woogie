@@ -27,14 +27,12 @@ class SelectSongsAndMoves extends Component {
     this.setState({ shouldShow: newState });
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     if (this.state.moves.length === 0 && this.props.songList.length !== 0) {
       for (let i = 0; i < this.props.songList.length; ++i) {
         axios
           .get(
-            `https://boogie-banana.herokuapp.com/api/moves/${
-              this.props.songList[i].code
-            }`
+            `https://boogie-banana.herokuapp.com/api/moves/${this.props.songList[i].code}`
           )
           .then(reply => {
             const newMovesSet = [...this.state.moves];
