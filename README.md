@@ -16,7 +16,7 @@ Try it out yourself by [visiting the deployed version](https://boogie-woogie-ban
      style=" margin: 10px;" />
 
 #### Song Selection
- <iframe src="https://giphy.com/embed/ggQMMsFw0eb30ppHl9" width="500" height="234" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+ ![song selection Demo](docs/images/boogie.gif)
 
 #### Dance Page
 <img src="docs/images/DanceWindow.png"
